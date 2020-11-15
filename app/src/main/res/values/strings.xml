@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">network_ping</string>
-    <string name="button">Ping Pair</string>
+    <string name="high_button">Ping High</string>
+    <string name="low_button">Ping Low</string>
 </resources>
