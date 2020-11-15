@@ -2,5 +2,5 @@
     <string name="app_name">Playground</string>
     <string name="main_button">Click Please!</string>
     <string name="def_name">Hello World!!</string>
-    
+    <string name="display_t">Hello World display!!!!</string>
 </resources>
