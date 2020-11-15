@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">network_ping</string>
+    <string name="button">Ping Pair</string>
 </resources>
