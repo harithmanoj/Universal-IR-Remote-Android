@@ -21,11 +21,11 @@ public class MainActivity extends AppCompatActivity {
         outData = inData = "";
     }
 
-    public void pingHigh(View view) {
+    public void clickPingHigh(View view) {
         pingNow(1);
     }
 
-    public void pingLow(View view) {
+    public void clickPingLow(View view) {
         pingNow(0);
     }
 
