@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         }
         inData = inData + String.valueOf(var);
 
-        ((TextView)findViewById(R.id.inData)).setText("Out: " + inData);
+        ((TextView)findViewById(R.id.inData)).setText(" In: " + inData);
 
         ((TextView)findViewById(R.id.inCurrent)).setText(String.valueOf(var));
     }
