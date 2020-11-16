@@ -3,6 +3,7 @@ package com.harithmanoj.design.tutorial.network_ping;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -12,13 +13,15 @@ public class MainActivity extends AppCompatActivity {
 
     private String outData;
     private String inData;
-
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         outData = inData = "";
+        Log.d(TAG,"create MainActivity");
     }
 
     public void clickPingHigh(View view) {
@@ -39,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         ((TextView)findViewById(R.id.outData)).setText("Out: " + outData);
 
         ((TextView)findViewById(R.id.outCurrent)).setText(String.valueOf(var));
+        Log.i(TAG,"pinging with " + String.valueOf(var));
     }
 
     public void pingMe(int var) {
@@ -51,5 +55,6 @@ public class MainActivity extends AppCompatActivity {
         ((TextView)findViewById(R.id.inData)).setText(" In: " + inData);
 
         ((TextView)findViewById(R.id.inCurrent)).setText(String.valueOf(var));
+        Log.i(TAG,"pinged with " + String.valueOf(var));
     }
 }
