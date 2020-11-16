@@ -7,7 +7,11 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 public class MainActivity extends AppCompatActivity {
+
+    private String outData;
+    private String inData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,11 +28,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void pingNow(int var) {
-        Toast.makeText(getApplicationContext(), "Pinging the pair with "
-                + String.valueOf(var) + " now !!!", Toast.LENGTH_SHORT).show();
-        TextView tv = (TextView)findViewById(R.id.textView);
-        CharSequence text = tv.getText();
-        tv.setText(text + String.valueOf(var));
+
+
+        if(outData.length() == 8)  {
+            outData.substring(1);
+        }
+        outData = outData + String.valueOf(var);
+
+        ((TextView)findViewById(R.id.outData)).setText("Out: " + outData);
+
+        ((TextView)findViewById(R.id.outCurrent)).setText(String.valueOf(var));
     }
 
 }
