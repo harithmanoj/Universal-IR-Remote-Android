@@ -13,10 +13,12 @@ public class MainActivity extends AppCompatActivity {
     private String outData;
     private String inData;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        outData = inData = "";
     }
 
     public void pingHigh(View view) {
@@ -27,11 +29,10 @@ public class MainActivity extends AppCompatActivity {
         pingNow(0);
     }
 
-    public void pingNow(int var) {
-
+    private void pingNow(int var) {
 
         if(outData.length() == 8)  {
-            outData.substring(1);
+            outData = outData.substring(1);
         }
         outData = outData + String.valueOf(var);
 
@@ -40,4 +41,15 @@ public class MainActivity extends AppCompatActivity {
         ((TextView)findViewById(R.id.outCurrent)).setText(String.valueOf(var));
     }
 
+    public void pingMe(int var) {
+
+        if(inData.length() == 8) {
+            inData = inData.substring(1);
+        }
+        inData = inData + String.valueOf(var);
+
+        ((TextView)findViewById(R.id.inData)).setText("Out: " + inData);
+
+        ((TextView)findViewById(R.id.inCurrent)).setText(String.valueOf(var));
+    }
 }
