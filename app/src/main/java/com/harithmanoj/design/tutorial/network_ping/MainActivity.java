@@ -31,5 +31,4 @@ public class MainActivity extends AppCompatActivity {
         tv.setText(text + String.valueOf(var));
     }
 
-
 }
