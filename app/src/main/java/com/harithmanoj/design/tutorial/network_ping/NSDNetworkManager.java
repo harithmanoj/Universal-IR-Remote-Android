@@ -27,7 +27,7 @@ public class NSDNetworkManager {
         manager = (NsdManager)context.getSystemService(Context.NSD_SERVICE);
     }
 
-    public void initialiseNSD() {
+    public void initializeNsd() {
         initializeResolveListener();
     }
 
