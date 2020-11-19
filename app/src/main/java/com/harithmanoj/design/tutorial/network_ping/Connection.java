@@ -42,8 +42,8 @@ public class Connection {
         return port;
     }
 
-    public void setLocalPort(int port) {
-        port = port;
+    public void setLocalPort(int argport) {
+        port = argport;
     }
 
 
@@ -65,9 +65,9 @@ public class Connection {
 
     }
 
-    private synchronized void setSocket(Socket socket) {
+    private synchronized void setSocket(Socket argsocket) {
         Log.d(TAG, "setSocket being called.");
-        if (socket == null) {
+        if (argsocket == null) {
             Log.d(TAG, "Setting a null socket.");
         }
         if (socket != null) {
@@ -80,7 +80,7 @@ public class Connection {
                 }
             }
         }
-        socket = socket;
+        socket = argsocket;
     }
 
     private Socket getSocket() {
