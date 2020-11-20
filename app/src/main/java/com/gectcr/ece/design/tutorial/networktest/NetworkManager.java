@@ -28,6 +28,7 @@ public class NetworkManager {
     public String _serviceName = "NSDPing";
 
     NsdServiceInfo _serviceInfo;
+    boolean _isResolveSuccesfull;
 
     CopyOnWriteArrayList<NsdServiceInfo> _discoveredServices;
 
@@ -35,6 +36,7 @@ public class NetworkManager {
     public NetworkManager(Context aContext) {
         _context = aContext;
         _nsdManager = (NsdManager) _context.getSystemService(Context.NSD_SERVICE);
+        _isResolveSuccesfull = false;
     }
 
     public void initializeDiscoveryListener()
@@ -64,12 +66,13 @@ public class NetworkManager {
             public void onServiceFound(NsdServiceInfo serviceInfo) {
                 Log.d(TAG, "Servics found: " + serviceInfo);
 
-                if(!serviceInfo.getServiceType().equals(SERVICE_TYPE))
+                if(!serviceInfo.getServiceType().equals(SERVICE_TYPE)) {
                     Log.d(TAG, "Incompatible service type " + serviceInfo.getServiceType());
-                else if (serviceInfo.getServiceName().equals(_serviceName))
+                } else if (serviceInfo.getServiceName().equals(_serviceName)) {
                     Log.d(TAG, "Same Machine: " + _serviceName);
-                else if(!_discoveredServices.contains(serviceInfo))
+                } else if(!_discoveredServices.contains(serviceInfo)) {
                     _discoveredServices.add(serviceInfo);
+                }
             }
 
             @Override
@@ -86,13 +89,23 @@ public class NetworkManager {
         _resolveListener = new NsdManager.ResolveListener() {
             @Override
             public void onResolveFailed(NsdServiceInfo serviceInfo, int errorCode) {
-                
+                Log.e(TAG, "Resolve failed with " + errorCode);
+                _isResolveSuccesfull = false;
             }
 
             @Override
             public void onServiceResolved(NsdServiceInfo serviceInfo) {
+                Log.d(TAG, "Resolve successfull " + serviceInfo);
 
+                if(serviceInfo.getServiceName().equals(_serviceName)) {
+                    Log.e(TAG, "Same IP");
+                    _isResolveSuccesfull = false;
+                    return;
+                }
+                _serviceInfo = serviceInfo;
+                _isResolveSuccesfull = true;
             }
-        }
+        };
     }
+
 }
