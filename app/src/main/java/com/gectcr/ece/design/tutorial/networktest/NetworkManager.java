@@ -160,4 +160,28 @@ public class NetworkManager {
         );
     }
 
+    public void stopDiscovery() {
+        if(_discoveryListener != null) {
+            try {
+                _nsdManager.stopServiceDiscovery(_discoveryListener);
+            } finally {
+
+            }
+            _discoveryListener = null;
+        }
+    }
+
+    public void discoverServices() {
+        stopDiscovery();
+        initializeDiscoveryListener();
+        _nsdManager.discoverServices(
+                SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, _discoveryListener
+        );
+    }
+
+    public NsdServiceInfo getChosenServiceInfo() {
+        return _serviceInfo;
+    }
+
+
 }
