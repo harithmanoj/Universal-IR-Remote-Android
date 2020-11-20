@@ -28,7 +28,8 @@ public class NetworkManager {
     public String _serviceName = "NSDPing";
 
     NsdServiceInfo _serviceInfo;
-    boolean _isResolveSuccesfull;
+    boolean _isResolved;
+    boolean _isRegistered;
 
     CopyOnWriteArrayList<NsdServiceInfo> _discoveredServices;
 
@@ -36,7 +37,8 @@ public class NetworkManager {
     public NetworkManager(Context aContext) {
         _context = aContext;
         _nsdManager = (NsdManager) _context.getSystemService(Context.NSD_SERVICE);
-        _isResolveSuccesfull = false;
+        _isResolved = false;
+        _isRegistered = false;
     }
 
     public void initializeDiscoveryListener()
@@ -90,7 +92,6 @@ public class NetworkManager {
             @Override
             public void onResolveFailed(NsdServiceInfo serviceInfo, int errorCode) {
                 Log.e(TAG, "Resolve failed with " + errorCode);
-                _isResolveSuccesfull = false;
             }
 
             @Override
@@ -99,13 +100,41 @@ public class NetworkManager {
 
                 if(serviceInfo.getServiceName().equals(_serviceName)) {
                     Log.e(TAG, "Same IP");
-                    _isResolveSuccesfull = false;
+                    _isResolved = false;
                     return;
                 }
                 _serviceInfo = serviceInfo;
-                _isResolveSuccesfull = true;
+                _isResolved = true;
             }
         };
     }
+
+    public void initializeRegistrationListener() {
+        _registrationListener = new NsdManager.RegistrationListener() {
+            @Override
+            public void onRegistrationFailed(NsdServiceInfo serviceInfo, int errorCode) {
+                Log.e(TAG, "Registration failed with " + errorCode);
+            }
+
+            @Override
+            public void onUnregistrationFailed(NsdServiceInfo serviceInfo, int errorCode) {
+                Log.e(TAG, "UnRegistration failed with " + errorCode);
+            }
+
+            @Override
+            public void onServiceRegistered(NsdServiceInfo serviceInfo) {
+                _serviceName = serviceInfo.getServiceName();
+                Log.d(TAG, "Service Registered as " + _serviceName);
+                _isRegistered = true;
+            }
+
+            @Override
+            public void onServiceUnregistered(NsdServiceInfo serviceInfo) {
+                Log.d(TAG, "Service " + serviceInfo.getServiceName() + " unregistered");
+                _isRegistered = false;
+            }
+        };
+    }
+
 
 }
