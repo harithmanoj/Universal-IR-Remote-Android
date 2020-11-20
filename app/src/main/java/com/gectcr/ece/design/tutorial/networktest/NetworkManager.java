@@ -136,5 +136,28 @@ public class NetworkManager {
         };
     }
 
+    public void tearDown() {
+        if (_registrationListener != null) {
+            try {
+                _nsdManager.unregisterService(_registrationListener);
+            } finally {
+
+            }
+            _registrationListener = null;
+        }
+    }
+
+    public void registerService(int port) {
+        tearDown();
+        initializeRegistrationListener();
+        NsdServiceInfo serviceInfo = new NsdServiceInfo();
+        serviceInfo.setPort(port);
+        serviceInfo.setServiceName(_serviceName);
+        serviceInfo.setServiceType(SERVICE_TYPE);
+
+        _nsdManager.registerService(
+                serviceInfo, NsdManager.PROTOCOL_DNS_SD, _registrationListener
+        );
+    }
 
 }
