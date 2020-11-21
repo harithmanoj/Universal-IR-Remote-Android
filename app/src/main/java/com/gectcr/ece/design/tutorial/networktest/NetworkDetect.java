@@ -26,7 +26,7 @@ public class NetworkDetect extends AppCompatActivity {
     private static Handler _discoverHandler;
     private SpinnerListen _discoverySelectListener;
     static NetworkConnect _connection;
-    NsdServiceInfo _selectedServiceInfo;
+    NsdServiceInfo _selectedServiceInfo = null;
     Context _context = this;
 
     public static final String TAG = "NetworkDetect";
