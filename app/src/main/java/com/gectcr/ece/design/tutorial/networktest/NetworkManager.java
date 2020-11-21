@@ -4,6 +4,9 @@ package com.gectcr.ece.design.tutorial.networktest;
 import android.content.Context;
 import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 
@@ -31,14 +34,17 @@ public class NetworkManager {
     boolean _isResolved;
     boolean _isRegistered;
 
+    Handler _discoveryHandler;
+
     CopyOnWriteArrayList<NsdServiceInfo> _discoveredServices;
 
     // constructor
-    public NetworkManager(Context aContext) {
+    public NetworkManager(Context aContext, Handler discoveryhandler) {
         _context = aContext;
         _nsdManager = (NsdManager) _context.getSystemService(Context.NSD_SERVICE);
         _isResolved = false;
         _isRegistered = false;
+        _discoveryHandler = discoveryhandler;
     }
 
     public void initializeDiscoveryListener()
@@ -74,6 +80,17 @@ public class NetworkManager {
                     Log.d(TAG, "Same Machine: " + _serviceName);
                 } else if(!_discoveredServices.contains(serviceInfo)) {
                     _discoveredServices.add(serviceInfo);
+                    CharSequence[] allServices = new CharSequence[_discoveredServices.size()];
+
+                    for (int i = 0; i < _discoveredServices.size(); ++i) {
+                        allServices[i] = _discoveredServices.get(i).getServiceName() + " " + _discoveredServices.get(i).getServiceType();
+                    }
+
+                    Bundle msgBundle = new Bundle();
+                    msgBundle.putCharSequenceArray("services", allServices);
+                    Message message = new Message();
+                    message.setData(msgBundle);
+                    _discoveryHandler.sendMessage(message);
                 }
             }
 
@@ -183,5 +200,7 @@ public class NetworkManager {
         return _serviceInfo;
     }
 
-
+    public void resolveService(NsdServiceInfo service) {
+        _nsdManager.resolveService(service,_resolveListener);
+    }
 }

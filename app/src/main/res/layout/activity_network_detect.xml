@@ -23,6 +23,7 @@
         android:layout_marginStart="87dp"
         android:layout_marginTop="72dp"
         android:text="Register"
+        android:onClick="clickRegister"
         app:layout_constraintBottom_toTopOf="@+id/disc_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/service"
@@ -47,4 +48,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/service" />
+
+    <Button
+        android:id="@+id/connect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Connect"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/disc_list" />
 </androidx.constraintlayout.widget.ConstraintLayout>
