@@ -103,6 +103,7 @@ public class NetworkConnect {
             @Override
             public void run() {
                 try {
+                    Log.d(TAG, "Server thread run function now setting port");
                     _serverSocket = new ServerSocket(0);
                     setLocalPort(_serverSocket.getLocalPort());
 

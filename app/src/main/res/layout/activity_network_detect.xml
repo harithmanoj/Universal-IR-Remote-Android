@@ -7,43 +7,44 @@
     tools:context=".NetworkDetect">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/service"
         android:layout_width="148dp"
         android:layout_height="41dp"
         android:text="Ping"
         android:textSize="18sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/button3"
-        app:layout_constraintEnd_toStartOf="@+id/button3"
+        app:layout_constraintBaseline_toBaselineOf="@+id/reg_btn"
+        app:layout_constraintEnd_toStartOf="@+id/reg_btn"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/reg_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="87dp"
+        android:layout_marginTop="72dp"
         android:text="Register"
-        app:layout_constraintBottom_toTopOf="@+id/button4"
+        app:layout_constraintBottom_toTopOf="@+id/disc_btn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintStart_toEndOf="@+id/service"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/disc_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Discover"
-        app:layout_constraintBottom_toTopOf="@+id/spinner"
+        app:layout_constraintBottom_toTopOf="@+id/disc_list"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
-        android:id="@+id/spinner"
+        android:id="@+id/disc_list"
         android:layout_width="293dp"
         android:layout_height="40dp"
-        android:layout_marginTop="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button4" />
+        app:layout_constraintTop_toBottomOf="@+id/service" />
 </androidx.constraintlayout.widget.ConstraintLayout>
