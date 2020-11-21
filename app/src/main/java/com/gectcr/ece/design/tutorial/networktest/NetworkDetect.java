@@ -144,11 +144,15 @@ public class NetworkDetect extends AppCompatActivity {
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
         } else {
+            _networkManager.stopDiscovery();
+            _discoverHandler = null;
+            _networkManager._discoveryHandler = null;
             _networkManager.resolveService(_selectedServiceInfo);
             Log.d(TAG, "connecting to " + _selectedServiceInfo.getServiceName());
             _connection.connectToServer(_selectedServiceInfo.getHost(), _selectedServiceInfo.getPort());
         }
         Intent intent = new Intent(this, PingActivity.class);
+
         startActivity(intent);
     }
 
