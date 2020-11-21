@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,10 +23,9 @@ public class NetworkDetect extends AppCompatActivity {
 
     private TextView _service;
     private Spinner _discoveredServices;
-    private Handler _updateHandler;
-    private Handler _discoverHandler;
+    private static Handler _discoverHandler;
     private SpinnerListen _discoverySelectListener;
-    NetworkConnect _connection;
+    static NetworkConnect _connection;
     NsdServiceInfo _selectedServiceInfo;
     Context _context = this;
 
@@ -70,13 +70,14 @@ public class NetworkDetect extends AppCompatActivity {
                 _discoveredServices.setAdapter(adapter);
             }
         };
+        _discoverySelectListener = new SpinnerListen();
         _discoveredServices.setOnItemSelectedListener(_discoverySelectListener);
     }
 
     @Override
     protected void onStart() {
         Log.d(TAG, "Starting ");
-        _connection = new NetworkConnect(_updateHandler);
+        _connection = new NetworkConnect(PingActivity._updateHandler);
         _networkManager = new NetworkManager(this, _discoverHandler);
         _networkManager.initializeResolveListener();
 
@@ -147,7 +148,8 @@ public class NetworkDetect extends AppCompatActivity {
             Log.d(TAG, "connecting to " + _selectedServiceInfo.getServiceName());
             _connection.connectToServer(_selectedServiceInfo.getHost(), _selectedServiceInfo.getPort());
         }
-
+        Intent intent = new Intent(this, PingActivity.class);
+        startActivity(intent);
     }
 
 }

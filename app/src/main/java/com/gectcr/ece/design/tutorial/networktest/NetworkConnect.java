@@ -21,7 +21,7 @@ import java.util.concurrent.BlockingQueue;
 
 public class NetworkConnect {
     // asynchronous task execution handler (interface class)
-    private Handler _updateHandler;
+    private static Handler _updateHandler;
     private PingClient _pingClient;
     private PingServer _pingServer;
 
@@ -86,7 +86,7 @@ public class NetworkConnect {
     }
 
     public synchronized void updateMessages(String bit) {
-        Log.e(TAG, "recieving message " + bit);
+        Log.e(TAG, "receiving message " + bit);
 
         Bundle messageBundle = new Bundle();
         messageBundle.putInt("bit", Integer.valueOf(bit));

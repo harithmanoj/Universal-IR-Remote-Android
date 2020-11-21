@@ -34,7 +34,7 @@ public class NetworkManager {
     boolean _isResolved;
     boolean _isRegistered;
 
-    Handler _discoveryHandler;
+    static Handler _discoveryHandler;
 
     CopyOnWriteArrayList<NsdServiceInfo> _discoveredServices;
 
