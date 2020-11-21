@@ -4,14 +4,17 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class NetworkDetect extends AppCompatActivity {
 
@@ -21,12 +24,36 @@ public class NetworkDetect extends AppCompatActivity {
     private Spinner _discoveredServices;
     private Handler _updateHandler;
     private Handler _discoverHandler;
-
+    private SpinnerListen _discoverySelectListener;
     NetworkConnect _connection;
-
+    NsdServiceInfo _selectedServiceInfo;
     Context _context = this;
 
     public static final String TAG = "NetworkDetect";
+
+    public class SpinnerListen implements AdapterView.OnItemSelectedListener {
+
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            String serviceSelected = parent.getItemAtPosition(position).toString();
+            Log.d(TAG, "selected service is " + serviceSelected);
+
+            for(NsdServiceInfo i : _networkManager._discoveredServices) {
+                String name = i.getServiceName() + " " + i.getServiceType();
+                if ( name.equals(serviceSelected) )
+                {
+                    _selectedServiceInfo = i;
+                    break;
+                }
+            }
+
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+            _selectedServiceInfo = null;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +70,7 @@ public class NetworkDetect extends AppCompatActivity {
                 _discoveredServices.setAdapter(adapter);
             }
         };
-
+        _discoveredServices.setOnItemSelectedListener(_discoverySelectListener);
     }
 
     @Override
@@ -107,6 +134,20 @@ public class NetworkDetect extends AppCompatActivity {
         _networkManager.discoverServices();
     }
 
+    public void clickConnect(View view) {
+        if (_selectedServiceInfo == null) {
+            Context context = getApplicationContext();
+            CharSequence text = "No service selected";
+            int duration = Toast.LENGTH_LONG;
 
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+        } else {
+            _networkManager.resolveService(_selectedServiceInfo);
+            Log.d(TAG, "connecting to " + _selectedServiceInfo.getServiceName());
+            _connection.connectToServer(_selectedServiceInfo.getHost(), _selectedServiceInfo.getPort());
+        }
+
+    }
 
 }
