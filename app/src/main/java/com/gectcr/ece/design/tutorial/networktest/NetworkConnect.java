@@ -3,10 +3,15 @@ package com.gectcr.ece.design.tutorial.networktest;
 import android.os.Handler;
 import android.util.Log;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 public class NetworkConnect {
     // asynchronous task execution handler (interface class)
@@ -72,7 +77,7 @@ public class NetworkConnect {
                         }
                     }
                 } catch (IOException e) {
-                    Log.e(TAG, "error creating Server Socket " + e);
+                    Log.e(TAG, "error creating Server Socket " , e);
                     e.printStackTrace();
                 }
             }
@@ -91,14 +96,109 @@ public class NetworkConnect {
             try {
                 _serverSocket.close();
             } catch (IOException e) {
-                Log.e(TAG, "Error while closing serrver socket " + e);
+                Log.e(TAG, "Error while closing serrver socket " , e);
             }
         }
     }
 
     private class PingClient {
 
+        private InetAddress _clientAddress;
+        private int _clientPort;
 
+        private static final String CLIENT_TAG = "PingClient";
+
+        private Thread _sendThread;
+        private Thread _receiveThread;
+
+        public PingClient (InetAddress address, int port) {
+            Log.d(CLIENT_TAG, "construction");
+
+            _clientAddress = address;
+            _clientPort = port;
+
+            _sendThread = new Thread(new SendingThread());
+            _sendThread.start();
+        }
+
+        class SendingThread implements Runnable {
+            BlockingQueue<Integer> _pingQueue;
+            private int QUEUE_CAPACITY = 10;
+            public SendingThread() {
+                _pingQueue = new ArrayBlockingQueue<Integer>(10);
+            }
+
+
+            @Override
+            public void run() {
+                try {
+                    if (getSocket() == null) {
+                        setSocket(new Socket(_clientAddress, _clientPort));
+                        Log.d(CLIENT_TAG, "client side socket init");
+
+                    } else {
+                        Log.d(CLIENT_TAG, "Socket already initialised");
+                    }
+
+                    _receiveThread = new Thread(new ReceivingThread());
+                    _receiveThread.start();
+                } catch (UnknownHostException e) {
+                    Log.e(CLIENT_TAG, "Initialising socket failed with Unknown host", e);
+                } catch (IOException e) {
+                    Log.e(CLIENT_TAG, "Initialising Socket failed with IO exception", e);
+                }
+
+                while (true) {
+                    try {
+                        Integer bit = _pingQueue.take();
+                        sendMessage(bit);
+                    } catch (InterruptedException ie) {
+                        Log.d(CLIENT_TAG, "Message sending loop interrupted, exiting", ie);
+                    }
+                }
+            }
+        }
+
+        class ReceivingThread implements Runnable {
+
+
+            @Override
+            public void run() {
+                BufferedReader input;
+
+                try {
+                    input = new BufferedReader(new InputStreamReader(_socket.getInputStream()));
+
+                    while (!Thread.currentThread().isInterrupted() ) {
+                        String msg = null;
+                        msg = input.readLine();
+
+                        if (msg != null) {
+                            Log.d(CLIENT_TAG, "read from stream " + msg);
+                            updateMessages(msg);
+                        } else {
+                            Log.d(CLIENT_TAG, "null msg?");
+                            break;
+                        }
+
+                    }
+
+                    input.close();
+                } catch (IOException e) {
+                    Log.e(CLIENT_TAG, "Server loop error ", e);
+                }
+
+            }
+        }
+
+        public void tearDown() {
+            try {
+                getSocket().close();
+            } catch (IOException e) {
+                Log.e(CLIENT_TAG, "error when closing ");
+            }
+        }
+    }
 
 
 }
