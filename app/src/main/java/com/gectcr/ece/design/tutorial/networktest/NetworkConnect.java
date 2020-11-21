@@ -1,6 +1,8 @@
 package com.gectcr.ece.design.tutorial.networktest;
 
+import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import java.io.BufferedOutputStream;
@@ -20,6 +22,8 @@ import java.util.concurrent.BlockingQueue;
 public class NetworkConnect {
     // asynchronous task execution handler (interface class)
     private Handler _updateHandler;
+    private PingClient _pingClient;
+    private PingServer _pingServer;
 
     private static final String TAG = "NetworkConnect";
 
@@ -57,6 +61,39 @@ public class NetworkConnect {
 
     public int getLocalPort() {
         return _port;
+    }
+
+    public NetworkConnect(Handler handler) {
+        _updateHandler = handler;
+        _pingServer = new PingServer(handler);
+    }
+
+    public void tearDown() {
+        _pingServer.tearDown();
+        if(_pingClient != null) {
+            _pingClient.tearDown();
+        }
+    }
+
+    public void connectToServer(InetAddress address, int port) {
+        _pingClient = new PingClient(address, port);
+    }
+
+    public void sendMessage(int bit) {
+        if (_pingClient != null) {
+            _pingClient.sendMessage(bit);
+        }
+    }
+
+    public synchronized void updateMessages(String bit) {
+        Log.e(TAG, "recieving message " + bit);
+
+        Bundle messageBundle = new Bundle();
+        messageBundle.putInt("bit", Integer.valueOf(bit));
+
+        Message message = new Message();
+        message.setData(messageBundle);
+        _updateHandler.sendMessage(message);
     }
 
     private class PingServer {
