@@ -3,9 +3,13 @@ package com.gectcr.ece.design.tutorial.networktest;
 import android.os.Handler;
 import android.util.Log;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -198,6 +202,34 @@ public class NetworkConnect {
                 Log.e(CLIENT_TAG, "error when closing ");
             }
         }
+
+        public void sendMessage(Integer bit) {
+            try {
+                Socket socket = getSocket();
+
+                if (socket == null) {
+                    Log.e(CLIENT_TAG, "Socket is null");
+                } else if (socket.getOutputStream() == null) {
+                    Log.e(CLIENT_TAG, "Socket output stream is null");
+                }
+
+                PrintWriter out = new PrintWriter(
+                        new BufferedWriter(
+                                new OutputStreamWriter(getSocket().getOutputStream())
+                        ), true
+                );
+                out.println(bit);
+                out.flush();
+            } catch (UnknownHostException e) {
+                Log.e(CLIENT_TAG, "Unknown Host", e);
+            } catch (IOException e) {
+                Log.e(CLIENT_TAG, "I/O Exception", e);
+            } catch (Exception e) {
+                Log.e(CLIENT_TAG, "Error ", e);
+            }
+            Log.d(CLIENT_TAG, "Client sent message: " + bit.toString());
+        }
+
     }
 
 
