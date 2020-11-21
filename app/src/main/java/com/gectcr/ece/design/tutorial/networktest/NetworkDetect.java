@@ -19,13 +19,13 @@ import android.widget.Toast;
 
 public class NetworkDetect extends AppCompatActivity {
 
-    NetworkManager _networkManager;
+    protected static NetworkManager _networkManager;
 
     private TextView _service;
     private Spinner _discoveredServices;
     private static Handler _discoverHandler;
     private SpinnerListen _discoverySelectListener;
-    static NetworkConnect _connection;
+    protected static NetworkConnect _connection;
     NsdServiceInfo _selectedServiceInfo = null;
     Context _context = this;
 
@@ -105,20 +105,12 @@ public class NetworkDetect extends AppCompatActivity {
     @Override
     protected void onStop() {
         Log.d(TAG, "stopped");
-        _networkManager.tearDown();;
-        _connection.tearDown();
-        _networkManager = null;
-        _connection = null;
-        _discoverHandler = null;
         super.onStop();
     }
 
     @Override
     protected void onDestroy() {
         Log.d(TAG, "Being destroyed.");
-        _networkManager = null;
-        _connection = null;
-        _discoverHandler = null;
         super.onDestroy();
     }
 
@@ -145,15 +137,14 @@ public class NetworkDetect extends AppCompatActivity {
             toast.show();
         } else {
             _networkManager.stopDiscovery();
-            _discoverHandler = null;
-            _networkManager._discoveryHandler = null;
             _networkManager.resolveService(_selectedServiceInfo);
             Log.d(TAG, "connecting to " + _selectedServiceInfo.getServiceName());
             _connection.connectToServer(_selectedServiceInfo.getHost(), _selectedServiceInfo.getPort());
-        }
-        Intent intent = new Intent(this, PingActivity.class);
 
-        startActivity(intent);
+            Intent intent = new Intent(this, PingActivity.class);
+
+            startActivity(intent);
+        }
     }
 
 }

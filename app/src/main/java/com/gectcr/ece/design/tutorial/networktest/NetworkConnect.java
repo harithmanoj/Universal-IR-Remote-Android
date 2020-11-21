@@ -104,7 +104,7 @@ public class NetworkConnect {
             public void run() {
                 try {
                     Log.d(TAG, "Server thread run function now setting port");
-                    _serverSocket = new ServerSocket(0);
+                    _serverSocket = new ServerSocket(8080);
                     setLocalPort(_serverSocket.getLocalPort());
 
                     while (!Thread.currentThread().isInterrupted()) {
