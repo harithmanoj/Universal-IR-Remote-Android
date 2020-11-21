@@ -19,67 +19,51 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/TV"
-        android:layout_width="203dp"
-        android:layout_height="203dp"
-        android:layout_marginTop="128dp"
-        android:text="Button"
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="215dp"
+        android:layout_height="215dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/TV"
+        tools:layout_editor_absoluteY="96dp" />
+
+    <ImageButton
+        android:id="@+id/imageButton2"
+        android:layout_width="215dp"
+        android:layout_height="215dp"
+        android:layout_marginTop="12dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.066"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/imageButton"
+        app:srcCompat="@drawable/SetTopBox" />
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="203dp"
-        android:layout_height="203dp"
-        android:layout_marginStart="4dp"
-        android:text="Button"
-        app:layout_constraintStart_toEndOf="@+id/Projector"
-        tools:layout_editor_absoluteY="546dp" />
+    <ImageButton
+        android:id="@+id/imageButton3"
+        android:layout_width="215dp"
+        android:layout_height="215dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/imageButton"
+        app:srcCompat="@drawable/AC"
+        tools:layout_editor_absoluteY="96dp" />
 
-    <Button
-        android:id="@+id/AC"
-        android:layout_width="203dp"
-        android:layout_height="203dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="4dp"
-        android:text="Button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TV" />
-
-    <Button
-        android:id="@+id/Projector"
-        android:layout_width="203dp"
-        android:layout_height="203dp"
+    <ImageButton
+        android:id="@+id/imageButton6"
+        android:layout_width="215dp"
+        android:layout_height="215dp"
         android:layout_marginTop="8dp"
-        android:text="Button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.066"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/AC" />
+        app:layout_constraintTop_toBottomOf="@+id/imageButton2"
+        app:srcCompat="@drawable/Projctor" />
 
-    <Button
-        android:id="@+id/DVD"
-        android:layout_width="203dp"
-        android:layout_height="203dp"
-        android:layout_marginBottom="8dp"
-        android:text="Button"
-        app:layout_constraintBottom_toTopOf="@+id/button2"
+    <ImageButton
+        android:id="@+id/imageButton7"
+        android:layout_width="215dp"
+        android:layout_height="215dp"
+        android:layout_marginTop="12dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.272"
-        app:layout_constraintStart_toEndOf="@+id/AC" />
-
-    <Button
-        android:id="@+id/SetTopBox"
-        android:layout_width="203dp"
-        android:layout_height="203dp"
-        android:layout_marginBottom="4dp"
-        android:text="Button"
-        app:layout_constraintBottom_toTopOf="@+id/DVD"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.272"
-        app:layout_constraintStart_toEndOf="@+id/TV" />
+        app:layout_constraintTop_toBottomOf="@+id/imageButton3"
+        app:srcCompat="@drawable/DVD" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
