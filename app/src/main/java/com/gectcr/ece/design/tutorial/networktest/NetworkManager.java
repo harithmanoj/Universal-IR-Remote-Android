@@ -137,4 +137,55 @@ public class NetworkManager {
             }
         };
     }
+
+    public void initializeRegistrationListener() {
+        _registrationListener = new NsdManager.RegistrationListener() {
+            @Override
+            public void onRegistrationFailed(NsdServiceInfo serviceInfo, int errorCode) {
+                Log.e(TAG, "Registration failed with " + errorCode);
+            }
+
+            @Override
+            public void onUnregistrationFailed(NsdServiceInfo serviceInfo, int errorCode) {
+                Log.e(TAG, "UnRegistration failed with " + errorCode);
+            }
+
+            @Override
+            public void onServiceRegistered(NsdServiceInfo serviceInfo) {
+                _registeredName = serviceInfo.getServiceName();
+                Log.d(TAG, "Service Registered as " + _registeredName);
+                _isRegistered = true;
+            }
+
+            @Override
+            public void onServiceUnregistered(NsdServiceInfo serviceInfo) {
+                Log.d(TAG, "Service " + serviceInfo.getServiceName() + " unregistered");
+                _isRegistered = false;
+            }
+        };
+    }
+
+    public void tearDown() {
+        if (_registrationListener != null) {
+            try {
+                _nsdManager.unregisterService(_registrationListener);
+            } finally {
+
+            }
+            _registrationListener = null;
+        }
+    }
+
+    public void registerService(int port) {
+        tearDown();
+        initializeRegistrationListener();
+        NsdServiceInfo serviceInfo = new NsdServiceInfo();
+        serviceInfo.setPort(port);
+        serviceInfo.setServiceName(_registeredName);
+        serviceInfo.setServiceType(SERVICE_TYPE);
+
+        _nsdManager.registerService(
+                serviceInfo, NsdManager.PROTOCOL_DNS_SD, _registrationListener
+        );
+    }
 }
