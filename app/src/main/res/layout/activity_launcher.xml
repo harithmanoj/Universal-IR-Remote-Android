@@ -10,9 +10,26 @@
         android:id="@+id/LaunchServer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Launch Server"
-        android:onClick="clickLaunchClient"
         android:background="@color/colorAccent"
-        tools:layout_editor_absoluteX="155dp"
-        tools:layout_editor_absoluteY="182dp" />
+        android:onClick="clickLaunchServer"
+        android:text="Launch Server"
+        app:layout_constraintBottom_toTopOf="@+id/LaunchClient"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/LaunchClient"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        android:onClick="clickLaunchClient"
+        android:text="Launch Client"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.653" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
