@@ -103,7 +103,7 @@ public class DiscoverActivity extends AppCompatActivity {
     protected void onStart() {
         Log.d(TAG, "Starting");
         _discoveryThread = new HandlerThread("DiscoverHandler");
-
+        _discoveryThread.start();
         for (NsdServiceInfo i : _networkManager.getDiscoveredServices())
             _discoveredServices.add(i.getServiceName() + " " + i.getServiceType());
 
