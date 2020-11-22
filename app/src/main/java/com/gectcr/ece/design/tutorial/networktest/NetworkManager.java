@@ -115,4 +115,26 @@ public class NetworkManager {
             }
         };
     }
+
+    private void initialiseResolveListener() {
+        _resolveListener = new NsdManager.ResolveListener() {
+            @Override
+            public void onResolveFailed(NsdServiceInfo serviceInfo, int errorCode) {
+                Log.e(TAG, "resolve failed with " + errorCode);
+            }
+
+            @Override
+            public void onServiceResolved(NsdServiceInfo serviceInfo) {
+                Log.i(TAG, "Resolved " + serviceInfo.getServiceName() + " "
+                        + serviceInfo.getServiceType());
+
+                if(serviceInfo.getServiceName().equals(_registeredName)) {
+                    Log.e(TAG, "Same IP");
+                    return;
+                }
+
+                _selectedServiceInfo = serviceInfo;
+            }
+        };
+    }
 }
