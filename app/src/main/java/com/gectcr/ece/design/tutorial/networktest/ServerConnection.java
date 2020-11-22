@@ -14,6 +14,7 @@ public class ServerConnection {
     private Handler _updateHandler;
     private ClientConnection _communicationManager;
     private ServerSocket _serverSocket;
+    boolean _isServerAcquired = false;
 
     private Thread _serverThread;
 
@@ -38,9 +39,13 @@ public class ServerConnection {
         public void run() {
             try {
                 Log.d(TAG, "Server thread acquiring port");
-                _serverSocket = new ServerSocket(0);
-                _connectionPort = _serverSocket.getLocalPort();
 
+                synchronized (this) {
+                    _serverSocket = new ServerSocket(0);
+                    _connectionPort = _serverSocket.getLocalPort();
+                    _isServerAcquired = true;
+                    this.notifyAll();
+                }
                 while(!Thread.currentThread().isInterrupted()) {
                     Log.d(TAG, "Server socket created, waiting client");
                     Socket socket = _serverSocket.accept();
@@ -56,5 +61,9 @@ public class ServerConnection {
             }
 
         }
+    }
+
+    public void sendMessage(int var) {
+        _communicationManager.sendMessage(var);
     }
 }
