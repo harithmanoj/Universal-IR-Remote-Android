@@ -29,6 +29,12 @@ public class NetworkConnect {
 
     private Socket _socket;
 
+    protected boolean _isServerConnected = false;
+
+    public String getHostName() {
+        return _socket.getInetAddress().getHostName();
+    }
+
     private synchronized void setSocket(Socket socket) {
         Log.d(TAG, "setSocket called");
 
@@ -63,9 +69,8 @@ public class NetworkConnect {
         return _port;
     }
 
-    public NetworkConnect(Handler handler) {
-        _updateHandler = handler;
-        _pingServer = new PingServer(handler);
+    public NetworkConnect() {
+        _pingServer = new PingServer(_updateHandler);
     }
 
     public void tearDown() {
@@ -93,6 +98,7 @@ public class NetworkConnect {
 
         Message message = new Message();
         message.setData(messageBundle);
+
         _updateHandler.sendMessage(message);
     }
 
@@ -111,7 +117,7 @@ public class NetworkConnect {
                         Log.d(TAG, "Server Socket created, awaiting connection");
                         setSocket(_serverSocket.accept());
                         Log.d(TAG, "connected");
-
+                        _isServerConnected = true;
                         if(_pingClient == null) {
                             int port = _socket.getPort();
                             InetAddress address = _socket.getInetAddress();
@@ -175,7 +181,9 @@ public class NetworkConnect {
             public void run() {
                 try {
                     if (getSocket() == null) {
-                        setSocket(new Socket(_clientAddress, _clientPort));
+
+                        Socket temp = new Socket(_clientAddress, _clientPort);
+                        setSocket(temp);
                         Log.d(CLIENT_TAG, "client side socket init");
 
                     } else {

@@ -77,7 +77,7 @@ public class NetworkDetect extends AppCompatActivity {
     @Override
     protected void onStart() {
         Log.d(TAG, "Starting ");
-        _connection = new NetworkConnect(PingActivity._updateHandler);
+        _connection = new NetworkConnect();
         _networkManager = new NetworkManager(this, _discoverHandler);
         _networkManager.initializeResolveListener();
 
@@ -128,6 +128,18 @@ public class NetworkDetect extends AppCompatActivity {
     }
 
     public void clickConnect(View view) {
+        if (_connection._isServerConnected) {
+            Context context = getApplicationContext();
+            CharSequence text = "Client " + _connection.getHostName() + " connected";
+            int duration = Toast.LENGTH_LONG;
+
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+
+            Intent intent = new Intent(this, PingActivity.class);
+
+            startActivity(intent);
+        }
         if (_selectedServiceInfo == null) {
             Context context = getApplicationContext();
             CharSequence text = "No service selected";
@@ -138,6 +150,7 @@ public class NetworkDetect extends AppCompatActivity {
         } else {
             _networkManager.stopDiscovery();
             _networkManager.resolveService(_selectedServiceInfo);
+            _selectedServiceInfo = _networkManager.getChosenServiceInfo();
             Log.d(TAG, "connecting to " + _selectedServiceInfo.getServiceName());
             _connection.connectToServer(_selectedServiceInfo.getHost(), _selectedServiceInfo.getPort());
 

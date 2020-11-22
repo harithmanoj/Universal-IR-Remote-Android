@@ -4,6 +4,7 @@ package com.gectcr.ece.design.tutorial.networktest;
 import android.content.Context;
 import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -45,6 +46,8 @@ public class NetworkManager {
         _isResolved = false;
         _isRegistered = false;
         _discoveryHandler = discoveryhandler;
+        _serviceName = "Network Ping " + Build.MODEL;
+        _discoveredServices = new CopyOnWriteArrayList<NsdServiceInfo>();
     }
 
     public void initializeDiscoveryListener()
@@ -76,7 +79,7 @@ public class NetworkManager {
 
                 if(!serviceInfo.getServiceType().equals(SERVICE_TYPE)) {
                     Log.d(TAG, "Incompatible service type " + serviceInfo.getServiceType());
-                } else if (serviceInfo.getServiceName().equals(_serviceName)) {
+                } else if (serviceInfo.getServiceName().equals(_serviceName) && _isRegistered ) {
                     Log.d(TAG, "Same Machine: " + _serviceName);
                 } else if(!_discoveredServices.contains(serviceInfo)) {
                     _discoveredServices.add(serviceInfo);
