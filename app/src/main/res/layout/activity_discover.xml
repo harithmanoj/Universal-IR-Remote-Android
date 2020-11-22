@@ -6,4 +6,21 @@
     android:layout_height="match_parent"
     tools:context=".DiscoverActivity">
 
+    <Spinner
+        android:id="@+id/allDiscoveredServices"
+        android:layout_width="339dp"
+        android:layout_height="54dp"
+        app:layout_constraintBottom_toTopOf="@+id/connectToService"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="36dp" />
+
+    <Button
+        android:id="@+id/connectToService"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Connect"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.666"
+        tools:layout_editor_absoluteX="161dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
