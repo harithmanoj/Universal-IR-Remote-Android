@@ -98,9 +98,33 @@ public class PingActivity extends AppCompatActivity {
                     Log.d(TAG, "server interrupt for some reason");
                 }
             }
+            _connectionStatus.setText("Server Set up");
             _networkManager.registerService(_port);
+            synchronized (_networkManager._waitOnForRegister) {
+                try {
+                    while (!_networkManager.isRegistered()) {
+                        _networkManager._waitOnForRegister.wait();
+                    }
+                } catch (InterruptedException e) {
+                    Log.d(TAG, "server interrupt for some reason");
+                }
+                _connectionStatus.setText("NSD registered as " + _networkManager.getRegisteredName());
+            }
+            synchronized (_networkManager._waitOnForRegister) {
+                try {
+                    while (!_server._isServerAcquired) {
+                        _server._waitForClient.wait();
+                    }
+                } catch (InterruptedException e) {
+                    Log.d(TAG, "server interrupt for some reason");
+                }
+                _connectionStatus.setText("NSD registered as " + _networkManager.getRegisteredName()
+                        + "connected to " + _server.getHost());
+            }
         } else if (_mode.equals(LauncherActivity.CLIENT_CONNECTION)) {
             _client = new ClientConnection(_port,_address, _updateHandler);
+            _connectionStatus.setText("Connection Succes to " + _client.getHost());
+
         }
         super.onStart();
     }

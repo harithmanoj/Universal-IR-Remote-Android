@@ -48,6 +48,10 @@ public class ClientConnection {
         }
     }
 
+    public String getHost() {
+        return _connectionAddress.getHostName();
+    }
+
     public ClientConnection(int port, InetAddress addr, Handler update) {
         _connectionAddress = addr;
         _connectionPort = port;

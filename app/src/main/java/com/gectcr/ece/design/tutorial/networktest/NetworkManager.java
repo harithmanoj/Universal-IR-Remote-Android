@@ -33,6 +33,8 @@ public class NetworkManager {
 
     protected Handler _discoveryHandler;
 
+    public Object _waitOnForRegister = new Object();
+
     private CopyOnWriteArrayList<NsdServiceInfo> _discoveredServices;
 
     public CopyOnWriteArrayList<NsdServiceInfo> getDiscoveredServices() {
@@ -153,9 +155,12 @@ public class NetworkManager {
 
             @Override
             public void onServiceRegistered(NsdServiceInfo serviceInfo) {
-                _registeredName = serviceInfo.getServiceName();
-                Log.d(TAG, "Service Registered as " + _registeredName);
-                _isRegistered = true;
+                synchronized (_waitOnForRegister) {
+                    _registeredName = serviceInfo.getServiceName();
+                    Log.d(TAG, "Service Registered as " + _registeredName);
+                    _isRegistered = true;
+                    _waitOnForRegister.notifyAll();
+                }
             }
 
             @Override
