@@ -84,6 +84,7 @@ public class DiscoverActivity extends AppCompatActivity {
             Intent intent = new Intent(this, PingActivity.class);
             intent.putExtra(ADDRESS_KEY,_selectedFromList.getHost());
             intent.putExtra(PORT_KEY, _selectedFromList.getPort());
+            intent.putExtra(LauncherActivity.CONNECTION_MODEL, LauncherActivity.CLIENT_CONNECTION);
             startActivity(intent);
         } else {
             Toast.makeText(getApplicationContext(),
