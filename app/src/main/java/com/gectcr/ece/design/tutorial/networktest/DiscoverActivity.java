@@ -61,6 +61,16 @@ public class DiscoverActivity extends AppCompatActivity {
         _discoveredServicesSpinnerListener = new SpinnerListen();
         _discoveredServices = new CopyOnWriteArrayList<String>();
         _discoveredServicesUIList = (Spinner) findViewById(R.id.allDiscoveredServices);
+
+    }
+
+    public void clickConnect(View view ) {
+
+    }
+
+    @Override
+    protected void onStart() {
+        Log.d(TAG, "Starting");
         _discoveryThread = new HandlerThread("DiscoverHandler");
 
         for (NsdServiceInfo i : _networkManager.getDiscoveredServices())
@@ -80,9 +90,39 @@ public class DiscoverActivity extends AppCompatActivity {
             }
         };
         _networkManager = new NetworkManager(this, _discoveryHandler);
+
+        super.onStart();
     }
 
-    public void clickConnect(View view ) {
-
+    @Override
+    protected void onResume() {
+        Log.d(TAG, "Resuming");
+        if (_networkManager != null) {
+            _networkManager.discoverServices();
+        }
+        super.onResume();
     }
+
+    @Override
+    protected void onPause() {
+        Log.d(TAG, "Pausing");
+        if(_networkManager != null)
+            _networkManager.stopDiscover();
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        Log.d(TAG, "stopped");
+        super.onStop();
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        Log.d(TAG, "Being destroyed.");
+        super.onDestroy();
+    }
+
+    
 }
