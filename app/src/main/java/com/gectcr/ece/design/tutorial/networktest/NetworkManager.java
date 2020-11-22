@@ -89,13 +89,14 @@ public class NetworkManager {
                 Log.i(TAG, serviceInfo.getServiceName()
                         + " " + serviceInfo.getServiceType() + " found");
                 _discoveredServices.add(serviceInfo);
-                if(_discoveryHandler != null) {
+                if ((_discoveryHandler != null) && !_discoveredServices.contains(serviceInfo)) {
                     Bundle msgBundle = new Bundle();
                     msgBundle.putString(DISCOVERY_HANDLER_KEY,
                             serviceInfo.getServiceName() + " " + serviceInfo.getServiceType());
                     Message msg = new Message();
                     msg.setData(msgBundle);
                     _discoveryHandler.sendMessage(msg);
+
                 }
             }
 
@@ -104,7 +105,7 @@ public class NetworkManager {
                 Log.i(TAG, serviceInfo.getServiceName()
                         + " " + serviceInfo.getServiceType() + " lost");
                 _discoveredServices.remove(serviceInfo);
-                if(_discoveryHandler != null) {
+                if ((_discoveryHandler != null) && _discoveredServices.contains(serviceInfo)) {
                     Bundle msgBundle = new Bundle();
                     msgBundle.putString(DISCOVERY_HANDLER_LOST_KEY,
                             serviceInfo.getServiceName() + " " + serviceInfo.getServiceType());

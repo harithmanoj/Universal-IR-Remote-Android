@@ -1,10 +1,14 @@
 package com.gectcr.ece.design.tutorial.networktest;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,10 +20,11 @@ public class DiscoverActivity extends AppCompatActivity {
 
     NetworkManager _networkManager;
     Handler _discoveryHandler;
-    CopyOnWriteArrayList<CharSequence> _discoveredServices;
+    HandlerThread _discoveryThread;
+    CopyOnWriteArrayList<String> _discoveredServices;
     private Spinner _discoveredServicesUIList;
     public static final String TAG = "DiscoverActivity";
-    private NsdServiceInfo _selectedFromList;
+    private NsdServiceInfo _selectedFromList = null;
 
     public class SpinnerListen implements AdapterView.OnItemSelectedListener {
         @Override
@@ -46,14 +51,38 @@ public class DiscoverActivity extends AppCompatActivity {
 
     private SpinnerListen _discoveredServicesSpinnerListener;
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_discover);
+        _discoveredServicesSpinnerListener = new SpinnerListen();
+        _discoveredServices = new CopyOnWriteArrayList<String>();
+        _discoveredServicesUIList = (Spinner) findViewById(R.id.allDiscoveredServices);
+        _discoveryThread = new HandlerThread("DiscoverHandler");
 
+        for (NsdServiceInfo i : _networkManager.getDiscoveredServices())
+            _discoveredServices.add(i.getServiceName() + " " + i.getServiceType());
+
+        _discoveryHandler = new Handler(_discoveryThread.getLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                Bundle msgBundle = msg.getData();
+                String name = msgBundle.getString(NetworkManager.DISCOVERY_HANDLER_KEY);
+                if(name == null) {
+                    name = msgBundle.getString(NetworkManager.DISCOVERY_HANDLER_LOST_KEY);
+                    _discoveredServices.remove(name);
+                } else {
+                    _discoveredServices.add(name);
+                }
+            }
+        };
+        _networkManager = new NetworkManager(this, _discoveryHandler);
     }
 
     public void clickConnect(View view ) {
-        
+
     }
 }
