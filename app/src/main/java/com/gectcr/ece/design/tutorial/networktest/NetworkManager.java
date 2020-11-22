@@ -188,4 +188,23 @@ public class NetworkManager {
                 serviceInfo, NsdManager.PROTOCOL_DNS_SD, _registrationListener
         );
     }
+
+    public void stopDiscover() {
+        if(_discoveryListener != null) {
+            _nsdManager.stopServiceDiscovery(_discoveryListener);
+            _discoveryListener = null;
+        }
+    }
+
+    public void discoverServices() {
+        stopDiscover();
+        initialiseDiscoveryListener();
+        _nsdManager.discoverServices(SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, _discoveryListener);
+    }
+
+    public void resolveServices(NsdServiceInfo service) {
+        if(_resolveListener == null)
+            initialiseResolveListener();
+        _nsdManager.resolveService(service, _resolveListener);
+    }
 }
