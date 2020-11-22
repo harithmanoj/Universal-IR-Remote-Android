@@ -41,7 +41,6 @@ public class ClientConnection {
 
     public void tearDown() {
         _receiveThread.interrupt();
-        _sendThread.interrupt();
         try {
             _socket.close();
         } catch (IOException e) {
