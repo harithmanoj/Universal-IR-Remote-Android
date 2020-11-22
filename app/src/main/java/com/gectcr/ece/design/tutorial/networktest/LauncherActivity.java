@@ -21,6 +21,7 @@ public class LauncherActivity extends AppCompatActivity {
     public void clickLaunchServer(View view) {
         Intent intent = new Intent(this, PingActivity.class);
         intent.putExtra(CONNECTION_MODEL, SERVER_CONNECTION);
+        startActivity(intent);
     }
 
     public void clickLaunchClient(View view) {

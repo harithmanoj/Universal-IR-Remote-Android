@@ -51,7 +51,7 @@ public class PingActivity extends AppCompatActivity {
         _outCurrentUI = (TextView) findViewById(R.id.outCurrent);
         _inCurrentUI = (TextView) findViewById(R.id.inCurrent);
 
-        if (savedInstanceState.isEmpty()) {
+        if (savedInstanceState == null) {
            _outData = "Out : ";
            _inData = "In : ";
         } else {
@@ -64,7 +64,7 @@ public class PingActivity extends AppCompatActivity {
         _outCurrentUI.setText(out);
 
         Intent intent = getIntent();
-        Integer _mode = intent.getIntExtra(LauncherActivity.CONNECTION_MODEL, 0);
+        _mode = intent.getIntExtra(LauncherActivity.CONNECTION_MODEL, 0);
         if (_mode.equals(LauncherActivity.CLIENT_CONNECTION)) {
             _port = intent.getIntExtra(DiscoverActivity.PORT_KEY, -1);
             _address = (InetAddress) intent.getSerializableExtra(DiscoverActivity.ADDRESS_KEY);

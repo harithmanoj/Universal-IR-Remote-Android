@@ -104,9 +104,6 @@ public class DiscoverActivity extends AppCompatActivity {
         Log.d(TAG, "Starting");
         _discoveryThread = new HandlerThread("DiscoverHandler");
         _discoveryThread.start();
-        for (NsdServiceInfo i : _networkManager.getDiscoveredServices())
-            _discoveredServices.add(i.getServiceName() + " " + i.getServiceType());
-
         _discoveryHandler = new Handler(_discoveryThread.getLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
