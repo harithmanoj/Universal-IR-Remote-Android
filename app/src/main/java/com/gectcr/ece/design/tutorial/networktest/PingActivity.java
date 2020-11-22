@@ -1,12 +1,18 @@
 package com.gectcr.ece.design.tutorial.networktest;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
+import java.net.InetAddress;
 
 public class PingActivity extends AppCompatActivity {
 
@@ -21,10 +27,17 @@ public class PingActivity extends AppCompatActivity {
     private static final String OUT_CURRENT_KEY = "out.curr.ui";
     private TextView _inCurrentUI;
     private static final String IN_CURRENT_KEY = "in.curr.ui";
+    Handler _updateHandler;
+    HandlerThread _updateThread;
 
     public static final String TAG = "PingActivity";
 
     private NetworkManager _networkManager;
+    private ServerConnection _server;
+    private ClientConnection _client;
+    private Integer _mode;
+    private int _port;
+    private InetAddress _address;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,12 +64,90 @@ public class PingActivity extends AppCompatActivity {
         _outCurrentUI.setText(out);
 
         Intent intent = getIntent();
-        Integer mode = intent.getIntExtra(LauncherActivity.CONNECTION_MODEL, 0);
-        if (mode.equals(LauncherActivity.SERVER_CONNECTION)) {
-            _networkManager = new NetworkManager(this, null);
+        Integer _mode = intent.getIntExtra(LauncherActivity.CONNECTION_MODEL, 0);
+        if (_mode.equals(LauncherActivity.CLIENT_CONNECTION)) {
+            _port = intent.getIntExtra(DiscoverActivity.PORT_KEY, -1);
+            _address = (InetAddress) intent.getSerializableExtra(DiscoverActivity.ADDRESS_KEY);
+        }
+        _updateThread = new HandlerThread("UpdateHandler");
+        _updateThread.start();
+        _updateHandler = new Handler(_updateThread.getLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                String seq = msg.getData().getString(ClientConnection.REC_MSG_KEY);
+                for( int i=0; i < seq.length(); ++i) {
+                    pingMe((int)seq.charAt(i) - (int)'0');
+                }
+            }
+        };
+    }
 
+    @Override
+    protected void onStart() {
+
+
+        if (_mode.equals(LauncherActivity.SERVER_CONNECTION)) {
+            _networkManager = new NetworkManager(this, null);
+            _server = new ServerConnection(_updateHandler);
+            synchronized (_server) {
+                try {
+                   while(!_server._isServerAcquired) {
+                       _server.wait();
+                   }
+                } catch (InterruptedException e) {
+                    Log.d(TAG, "server interrupt for some reason");
+                }
+            }
+            _networkManager.registerService(_port);
+        } else if (_mode.equals(LauncherActivity.CLIENT_CONNECTION)) {
+            _client = new ClientConnection(_port,_address, _updateHandler);
+        }
+        super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        Log.d(TAG, "Now stopping");
+        if (_networkManager != null) {
+           _networkManager.tearDown();
+           _networkManager = null;
+        }
+        if (_client !=null ) {
+            _client.tearDown();
+            _client = null;
+        }
+        if (_server != null) {
+            _server.tearDown();
+            _server = null;
         }
 
+        super.onStop();
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+
+        outState.putString(OUT_DATA_KEY, _outData);
+        outState.putString(IN_DATA_KEY, _inData);
+        outState.putString(IN_CURRENT_KEY, (String)_inCurrentUI.getText());
+        outState.putString(OUT_CURRENT_KEY, (String)_outCurrentUI.getText());
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d(TAG, "Being destroyed.");
+        super.onDestroy();
     }
 
     public void clickPingHigh(View view) {
@@ -78,7 +169,12 @@ public class PingActivity extends AppCompatActivity {
 
         ((TextView)findViewById(R.id.outCurrent)).setText(String.valueOf(var));
         Log.i(TAG,"pinging with " + String.valueOf(var));
-        // connection send message
+
+        if(_mode.equals(LauncherActivity.CLIENT_CONNECTION)) {
+            _client.sendMessage(var);
+        } else if (_mode.equals(LauncherActivity.SERVER_CONNECTION)) {
+            _server.sendMessage(var);
+        }
 
     }
 
