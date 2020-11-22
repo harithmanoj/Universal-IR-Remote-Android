@@ -2,6 +2,7 @@ package com.gectcr.ece.design.tutorial.networktest;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,6 +23,8 @@ public class PingActivity extends AppCompatActivity {
     private static final String IN_CURRENT_KEY = "in.curr.ui";
 
     public static final String TAG = "PingActivity";
+
+    private NetworkManager _networkManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,12 @@ public class PingActivity extends AppCompatActivity {
         _inCurrentUI.setText(in);
         _outCurrentUI.setText(out);
 
+        Intent intent = getIntent();
+        Integer mode = intent.getIntExtra(LauncherActivity.CONNECTION_MODEL, 0);
+        if (mode.equals(LauncherActivity.SERVER_CONNECTION)) {
+            _networkManager = new NetworkManager(this, null);
+
+        }
 
     }
 
@@ -85,5 +94,4 @@ public class PingActivity extends AppCompatActivity {
         ((TextView)findViewById(R.id.inCurrent)).setText(String.valueOf(var));
         Log.i(TAG,"pinged with " + String.valueOf(var));
     }
-}
 }

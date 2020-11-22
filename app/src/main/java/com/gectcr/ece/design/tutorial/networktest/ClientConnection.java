@@ -39,6 +39,15 @@ public class ClientConnection {
     private BlockingQueue<Integer> _pingQueue;
     private int QUEUE_CAPACITY = 30;
 
+    public void tearDown() {
+        _receiveThread.interrupt();
+        _sendThread.interrupt();
+        try {
+            _socket.close();
+        } catch (IOException e) {
+            Log.e(TAG, "error when closing socket ", e);
+        }
+    }
 
     public ClientConnection(int port, InetAddress addr, Handler update) {
         _connectionAddress = addr;
@@ -55,9 +64,10 @@ public class ClientConnection {
         }
         _sendThread = new Thread(
                 new SendingThread(_socket,_pingQueue));
+        _sendThread.start();
         _receiveThread = new Thread(
                 new RecievingThread(_socket,_updateHandler));
-
+        _receiveThread.start();
     }
 
     public boolean sendMessage(int bit) {
@@ -131,26 +141,12 @@ public class ClientConnection {
                 String bits = new String("");
 
                 try {
-                    while(!_pingQueue.isEmpty()) {
-                        bits = bits + _pingQueue.take().toString();
-                    }
-                } catch (InterruptedException e) {
-                    Log.d(SEND_TAG, "Message sending loop interrupted, exiting", e);
-                }
-
-                try {
                     if (_socket == null) {
                         Log.e(SEND_TAG, "socket is null????wth");
+                        return;
                     } else if (_socket.getOutputStream() == null ) {
                         Log.e(SEND_TAG, "wth is output stream null");
-                    } else {
-                        PrintWriter out = new PrintWriter(
-                                new BufferedWriter(
-                                        new OutputStreamWriter(_socket.getOutputStream())),
-                                true
-                        );
-                        out.println(bits);
-                        out.flush();
+                        return;
                     }
                 } catch (UnknownHostException e) {
                     Log.e(SEND_TAG, "Unknown Host", e);
@@ -159,6 +155,27 @@ public class ClientConnection {
                 } catch (Exception e) {
                     Log.e(SEND_TAG, "Error ", e);
                 }
+
+                try {
+                    while(!_pingQueue.isEmpty()) {
+                        bits = bits + _pingQueue.take().toString();
+                    }
+                } catch (InterruptedException e) {
+                    Log.d(SEND_TAG, "Message sending loop interrupted, exiting", e);
+                }
+                PrintWriter out;
+                try{
+                    out = new PrintWriter(
+                        new BufferedWriter(
+                                new OutputStreamWriter(_socket.getOutputStream())),
+                        true
+                    );
+                    out.println(bits);
+                    out.flush();
+                } catch (IOException e) {
+                    Log.e(SEND_TAG, "I/O Exception", e);
+                }
+
                 Log.d(SEND_TAG, "Client sent message: " + bits);
             }
         }
