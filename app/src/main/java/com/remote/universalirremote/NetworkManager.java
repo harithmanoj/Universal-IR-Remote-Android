@@ -165,7 +165,7 @@ public class NetworkManager {
     }
 
     public void stopDiscover() {
-        if ((_discoveryListener != null) && (_nsdManager != null) {
+        if ((_discoveryListener != null) && (_nsdManager != null)) {
             _nsdManager.stopServiceDiscovery(_discoveryListener);
             _discoveryListener = null;
         }
@@ -185,7 +185,7 @@ public class NetworkManager {
             return false;
 
         if (!_discoveredServices.contains(service)) {
-            Log.e(TAG," The service " + service.getServiceName() + " is no longer visibble");
+            Log.e(TAG," The service " + service.getServiceName() + " is no longer visible");
             return false;
         }
 
