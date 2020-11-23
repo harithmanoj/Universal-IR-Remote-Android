@@ -37,7 +37,7 @@ public class NetworkManager {
     // Nsd API
     private NsdManager _nsdManager;
 
-   private NsdManager.ResolveListener _resolveListener;
+    private NsdManager.ResolveListener _resolveListener;
     private NsdManager.DiscoveryListener _discoveryListener;
 
     public static final String SERVICE_TYPE = "_http._tcp.";
@@ -53,5 +53,13 @@ public class NetworkManager {
 
     // List of all discovered services
     private CopyOnWriteArrayList<NsdServiceInfo> _discoveredServices;
+
+    public NetworkManager(Context context, Handler discovery) {
+        _context = context;
+        _nsdManager = (NsdManager) _context.getSystemService(Context.NSD_SERVICE);
+        _selectedServiceInfo = null;
+        _discoveryHandler = discovery;
+        _discoveredServices = new CopyOnWriteArrayList<NsdServiceInfo>();
+    }
 
 }
