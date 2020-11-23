@@ -62,4 +62,20 @@ public class NetworkManager {
         _discoveredServices = new CopyOnWriteArrayList<NsdServiceInfo>();
     }
 
+    public CopyOnWriteArrayList<NsdServiceInfo> getDiscoveredServices() {
+        return _discoveredServices;
+    }
+
+    public NsdServiceInfo getDiscoveredService(String name, String serviceType ) {
+
+        for (NsdServiceInfo i : _discoveredServices ) {
+            if ((i.getServiceType() == serviceType) && (i.getServiceName() == name)) {
+                return i;
+            }
+        }
+        return null;
+    }
+
+    
+
 }
