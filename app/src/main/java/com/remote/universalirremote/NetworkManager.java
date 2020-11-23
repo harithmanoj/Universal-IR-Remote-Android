@@ -21,7 +21,10 @@ package com.remote.universalirremote;
 import android.content.Context;
 import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
+import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -42,8 +45,15 @@ public class NetworkManager {
 
     public static final String SERVICE_TYPE = "_http._tcp.";
     public static final String TAG = "NetworkManager";
-    public static final String DISCOVERY_HANDLER_KEY = "disc_services";
-    public static final String DISCOVERY_HANDLER_LOST_KEY = "lost_services";
+
+    // Keys for Bundle passed in _discoveryHandler
+    public static final String DISCOVERED_SERVICE_NAME = "disc.serv.name";
+    public static final String DISCOVERED_SERVICE_TYPE = "disc.serv.type";
+
+    // Key and result of Bundle passed in _discoveryHandler to identify if service lost or found.
+    public static final String DISCOVER_OP = "disc.op";
+    public static final int DISCOVER_NEW = 1;
+    public static final int DISCOVER_LOST = 2;
 
     // Resolved service information.
     private NsdServiceInfo _selectedServiceInfo;
@@ -80,6 +90,61 @@ public class NetworkManager {
         return _selectedServiceInfo;
     }
 
-    
+    private void initialiseDiscoveryListener() {
+        _discoveryListener = new NsdManager.DiscoveryListener() {
+            @Override
+            public void onStartDiscoveryFailed(String serviceType, int errorCode) {
+                Log.e(TAG, "Discovery Start Failed " + errorCode);
+            }
+
+            @Override
+            public void onStopDiscoveryFailed(String serviceType, int errorCode) {
+                Log.e(TAG, "Discovery Stop Failed " + errorCode);
+            }
+
+            @Override
+            public void onDiscoveryStarted(String serviceType) {
+                Log.e(TAG, "Discovery Started ");
+            }
+
+            @Override
+            public void onDiscoveryStopped(String serviceType) {
+                Log.e(TAG, "Discovery Stopped ");
+            }
+
+            @Override
+            public void onServiceFound(NsdServiceInfo serviceInfo) {
+                Log.i(TAG, serviceInfo.getServiceName()
+                        + " " + serviceInfo.getServiceType() + " found");
+                _discoveredServices.add(serviceInfo);
+                if ((_discoveryHandler != null) && !_discoveredServices.contains(serviceInfo)) {
+                    Bundle msgBundle = new Bundle();
+                    msgBundle.putInt(DISCOVER_OP, DISCOVER_NEW);
+                    msgBundle.putString(DISCOVERED_SERVICE_NAME, serviceInfo.getServiceName());
+                    msgBundle.putString(DISCOVERED_SERVICE_TYPE, serviceInfo.getServiceType());
+                    Message msg = new Message();
+                    msg.setData(msgBundle);
+                    _discoveryHandler.sendMessage(msg);
+
+                }
+            }
+
+            @Override
+            public void onServiceLost(NsdServiceInfo serviceInfo) {
+                Log.i(TAG, serviceInfo.getServiceName()
+                        + " " + serviceInfo.getServiceType() + " lost");
+                _discoveredServices.remove(serviceInfo);
+                if ((_discoveryHandler != null) && _discoveredServices.contains(serviceInfo)) {
+                    Bundle msgBundle = new Bundle();
+                    msgBundle.putInt(DISCOVER_OP, DISCOVER_LOST);
+                    msgBundle.putString(DISCOVERED_SERVICE_NAME, serviceInfo.getServiceName());
+                    msgBundle.putString(DISCOVERED_SERVICE_TYPE, serviceInfo.getServiceType());
+                    Message msg = new Message();
+                    msg.setData(msgBundle);
+                    _discoveryHandler.sendMessage(msg);
+                }
+            }
+        };
+    }
 
 }
