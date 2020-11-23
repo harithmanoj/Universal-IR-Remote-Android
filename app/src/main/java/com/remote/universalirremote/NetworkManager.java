@@ -76,6 +76,10 @@ public class NetworkManager {
         return null;
     }
 
+    public NsdServiceInfo getChosenServiceInfo() {
+        return _selectedServiceInfo;
+    }
+
     
 
 }
