@@ -90,6 +90,15 @@ public class NetworkManager {
         return _selectedServiceInfo;
     }
 
+    public boolean setChosenServiceInfo( NsdServiceInfo service ) {
+        _selectedServiceInfo = service;
+        if (service == null)
+            return false;
+        if (!_discoveredServices.contains(service))
+            return false;
+        return true;
+    }
+
     private void initialiseDiscoveryListener() {
         _discoveryListener = new NsdManager.DiscoveryListener() {
             @Override
@@ -194,5 +203,6 @@ public class NetworkManager {
         _nsdManager.resolveService(service, _resolveListener);
         return true;
     }
+
 
 }
