@@ -31,6 +31,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /*
         Class to discover and resolve services of same type in the local area network.
         Uses android.os.nsd.NsdManager for implementation.
+
+        Usage:
+
  */
 public class NetworkManager {
 
@@ -64,6 +67,8 @@ public class NetworkManager {
     // List of all discovered services
     private CopyOnWriteArrayList<NsdServiceInfo> _discoveredServices;
 
+
+    // Constructor, pass context and handler to handle services found or lost.
     public NetworkManager(Context context, Handler discovery) {
         _context = context;
         _nsdManager = (NsdManager) _context.getSystemService(Context.NSD_SERVICE);
@@ -72,10 +77,13 @@ public class NetworkManager {
         _discoveredServices = new CopyOnWriteArrayList<NsdServiceInfo>();
     }
 
+    // get list of all discovered services
     public CopyOnWriteArrayList<NsdServiceInfo> getDiscoveredServices() {
         return _discoveredServices;
     }
 
+    // Returns service info of a service with name and serviceType given, null if not found.
+    // if discovery is stopped, start discovery and try again.
     public NsdServiceInfo getDiscoveredService(String name, String serviceType ) {
 
         for (NsdServiceInfo i : _discoveredServices ) {
@@ -86,19 +94,25 @@ public class NetworkManager {
         return null;
     }
 
+    // Get Service info of chosen service
     public NsdServiceInfo getChosenServiceInfo() {
         return _selectedServiceInfo;
     }
 
+    // Set service info of previously chosen service
+    // returns false if input is null.
+    // sets info but returns false if it is not present in list of services
+    // start discover and try again to check with current discovered services
     public boolean setChosenServiceInfo( NsdServiceInfo service ) {
-        _selectedServiceInfo = service;
         if (service == null)
             return false;
+        _selectedServiceInfo = service;
         if (!_discoveredServices.contains(service))
             return false;
         return true;
     }
 
+    // initialise discovery listener ( push messages to handler, logging)
     private void initialiseDiscoveryListener() {
         _discoveryListener = new NsdManager.DiscoveryListener() {
             @Override
@@ -156,6 +170,7 @@ public class NetworkManager {
         };
     }
 
+    // initialise resolve listener (set selected service info)
     private void initialiseResolveListener() {
         _resolveListener = new NsdManager.ResolveListener() {
             @Override
@@ -173,6 +188,7 @@ public class NetworkManager {
         };
     }
 
+    // stop discovery
     public void stopDiscover() {
         if ((_discoveryListener != null) && (_nsdManager != null)) {
             _nsdManager.stopServiceDiscovery(_discoveryListener);
@@ -180,6 +196,7 @@ public class NetworkManager {
         }
     }
 
+    // start discovery aborts if null _nsdManager
     public void discoverServices() {
         stopDiscover();
         if (_nsdManager != null ) {
@@ -189,6 +206,10 @@ public class NetworkManager {
         }
     }
 
+    // resolve service passed.
+    // returns false if _nsdManager is null
+    // returns false if service is not found in list of discovered services
+    // (start discovery to refresh list if discovery is not running)
     public boolean resolveServices(NsdServiceInfo service) {
         if(_nsdManager == null)
             return false;
