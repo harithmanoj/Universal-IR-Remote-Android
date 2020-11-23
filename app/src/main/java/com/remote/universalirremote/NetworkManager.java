@@ -164,4 +164,35 @@ public class NetworkManager {
         };
     }
 
+    public void stopDiscover() {
+        if ((_discoveryListener != null) && (_nsdManager != null) {
+            _nsdManager.stopServiceDiscovery(_discoveryListener);
+            _discoveryListener = null;
+        }
+    }
+
+    public void discoverServices() {
+        stopDiscover();
+        if (_nsdManager != null ) {
+            initialiseDiscoveryListener();
+            _nsdManager.discoverServices(SERVICE_TYPE,
+                    NsdManager.PROTOCOL_DNS_SD, _discoveryListener);
+        }
+    }
+
+    public boolean resolveServices(NsdServiceInfo service) {
+        if(_nsdManager == null)
+            return false;
+
+        if (!_discoveredServices.contains(service)) {
+            Log.e(TAG," The service " + service.getServiceName() + " is no longer visibble");
+            return false;
+        }
+
+        if (_resolveListener == null)
+            initialiseResolveListener();
+        _nsdManager.resolveService(service, _resolveListener);
+        return true;
+    }
+
 }
