@@ -34,6 +34,20 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
         Usage:
 
+        1) To Discover Services and resolve connection :
+            * Construct with context and a discovery handler.
+            * Select a service from list of services ( getChosenServiceInfo() )
+            * call resolveServices with selected service
+
+        2) To Ensure selected service remains visible :
+            * Construct with context and a discovery handler.
+            * start discovery
+            * pass service to setChosenServiceInfo
+            * if it returns false, the service is no longer visible
+            * discovery handler will be notified of all lost services
+            * if service is present now and later lost, handle it in the discoveryHandler
+                            ( graceful exit or crash and burn or ignore)
+
  */
 public class NetworkManager {
 
