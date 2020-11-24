@@ -20,14 +20,41 @@ package com.remote.universalirremote;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+
+import java.util.concurrent.ArrayBlockingQueue;
 
 public class MainActivity extends AppCompatActivity {
+
+    // UI element which lists all discovered services.
+    private Spinner _discoveredServicesUiList;
+
+    // List of all discovered Services.
+    private ArrayBlockingQueue<String> _discoveredServices;
+
+
+    // Selected Service Info
+    private NsdServiceInfo _selectedService;
+
+    // Discovery and resolution
+    private NetworkManager _networkManager;
+
+    // Thread for discovery handler to run on
+    private HandlerThread _discoveryThread;
+
+    // Handler to update spinner on discovery.
+    private Handler _discoveryHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
     }
 }
