@@ -18,14 +18,6 @@
  -->
 <resources>
     <string name="app_name">   Universal Remote control</string>
-    ArrayList<String> arrayList = new ArrayList<>();
-    arrayList.add("Blaster1");
-    arrayList.add("Blaster2");
-    arrayList.add("Blaster3");
-    arrayList.add("Blaster4");
-    arrayList.add("Blaster5");
-    arrayList.add("Blaster6");
-    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arrayList);
 
 
 
