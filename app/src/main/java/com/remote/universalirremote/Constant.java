@@ -32,4 +32,7 @@ public final class Constant {
 
     // Value for INT_LAUNCHER_KEY when MainActivity launches an activity.
     public static final int INT_LAUNCHER_MAIN = 0;
+
+    // Value for INT_LAUNCHER_KEY when DeviceSelect launches an activity.
+    public static final int INT_LAUNCHER_DEVICE_SELECT = 1;
 }
