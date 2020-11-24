@@ -103,11 +103,15 @@ public class MainActivity extends AppCompatActivity {
         _discoveredServicesAdapter.add(NO_SELECT);
         CopyOnWriteArrayList<NsdServiceInfo> list = _networkManager.getDiscoveredServices();
         for ( NsdServiceInfo i : list) {
-            _discoveredServicesAdapter.add(i.getServiceName());
+            _discoveredServicesAdapter.add(i.getServiceName()); // add all services
         }
-        _discoveredServicesAdapter.notifyDataSetChanged();
+        _discoveredServicesAdapter.notifyDataSetChanged(); // notify UI
     }
 
+    // onCreate instantiation.
+    // Initialized variables: _discoveredServicesAdapter
+    //                        _discoveredServicesUiList
+    //                        _discoveredServicesUiList.setOnItemSelectedListener(...)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -149,6 +153,10 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+    // Variables instantiated :     _discoveryThread
+    //                              _discoveryHandler
+    //                              _networkManager
+    // [ starts discovery ]
     @Override
     protected void onStart() {
         Log.d(TAG, "Starting ");
@@ -163,19 +171,19 @@ public class MainActivity extends AppCompatActivity {
                 int op = msgBundle.getInt(NetworkManager.DISCOVER_OP);
 
                 switch(op) {
-                    case NetworkManager.DISCOVER_NEW: {
+                    case NetworkManager.DISCOVER_NEW: { // add new service
                         _discoveredServicesAdapter.add(
                                 msgBundle.getString(NetworkManager.DISCOVERED_SERVICE_NAME));
                         _discoveredServicesAdapter.notifyDataSetChanged();
                     }
 
-                    case NetworkManager.DISCOVER_LOST: {
+                    case NetworkManager.DISCOVER_LOST: { // remove service
                         _discoveredServicesAdapter.remove(
                                 msgBundle.getString(NetworkManager.DISCOVERED_SERVICE_NAME));
                         _discoveredServicesAdapter.notifyDataSetChanged();
                     }
 
-                    case NetworkManager.DISCOVER_REFRESH: {
+                    case NetworkManager.DISCOVER_REFRESH: { // refresh UI
                         refreshSpinner();
                     }
                 }
@@ -183,7 +191,8 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         _networkManager = new NetworkManager(this, _discoveryHandler);
-        _networkManager.discoverServices();
+        refreshSpinner();
+        _networkManager.discoverServices();     // start discovery
         super.onStart();
     }
 }
