@@ -24,19 +24,20 @@ import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     // UI element which lists all discovered services.
     private Spinner _discoveredServicesUiList;
-
-    // List of all discovered Services.
-    private ArrayBlockingQueue<String> _discoveredServices;
-
 
     // Selected Service Info
     private NsdServiceInfo _selectedService;
@@ -49,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
 
     // Handler to update spinner on discovery.
     private Handler _discoveryHandler;
+
+    public static final String TAG = "MainActivity";
 
     private NsdServiceInfo getSelectedService() {
         return _selectedService;
@@ -77,11 +80,34 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void refreshSpinner() {
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        _discoveredServicesUiList = (Spinner) findViewById(R.id.spnr_blasterSelection);
+        _discoveredServicesUiList.setOnItemSelectedListener
+                (new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        String name = parent.getItemAtPosition(position).toString();
+                        Log.d(TAG, "selected service is " + name);
+                        if (!setSelectedService(name)) {
+                            Toast.makeText(getApplicationContext(),
+                                    "service " + name + " not found",
+                                    Toast.LENGTH_SHORT).show();
+                            refreshSpinner();
+                        }
+                    }
 
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        _selectedService = null;
+                    }
+                });
     }
 }
