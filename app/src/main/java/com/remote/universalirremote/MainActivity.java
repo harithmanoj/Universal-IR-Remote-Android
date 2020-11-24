@@ -1,20 +1,20 @@
-/*
-
-        Copyright (C) 2020  Contributors (in contributors file)
-
-        This program is free software: you can redistribute it and/or modify
-        it under the terms of the GNU General Public License as published by
-        the Free Software Foundation, either version 3 of the License, or
-        (at your option) any later version.
-
-        This program is distributed in the hope that it will be useful,
-        but WITHOUT ANY WARRANTY; without even the implied warranty of
-        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-        GNU General Public License for more details.
-
-        You should have received a copy of the GNU General Public License
-        along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
+//
+//
+//        Copyright (C) 2020  Contributors (in contributors file)
+//
+//        This program is free software: you can redistribute it and/or modify
+//        it under the terms of the GNU General Public License as published by
+//        the Free Software Foundation, either version 3 of the License, or
+//        (at your option) any later version.
+//
+//        This program is distributed in the hope that it will be useful,
+//        but WITHOUT ANY WARRANTY; without even the implied warranty of
+//        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//        GNU General Public License for more details.
+//
+//        You should have received a copy of the GNU General Public License
+//        along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
 
 package com.remote.universalirremote;
 
@@ -37,10 +37,34 @@ import android.widget.Toast;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class MainActivity extends AppCompatActivity {
 
-    // UI element which lists all discovered services.
-    private Spinner _discoveredServicesUiList;
+//
+//    Class for backend of Main (Launcher) activity.
+//
+//    Discovery and resolution of IR Blaster is done here
+//
+//    Usage:
+//        Select IR Blaster from drop down menu
+//        tap OK
+//        wait for resolution
+//
+//    Launch by:
+//        any other activity if service is lost
+//        intent:
+//            pass any data required as a Bundle
+//            declare constant in MainActivity to identify that activity and pass that code
+//
+//    Launches:
+//        DeviceSelect
+//        intent:
+//            passes:
+//                Launcher:           INT_LAUNCHER_KEY           : INT_LAUNCHER_MAIN (0)
+//                Blaster Address:    INT_SERVICE_KEY
+//                        NsdServiceInfo retrieve using getExtra().getParcelable(KEY)
+//
+//
+
+public class MainActivity extends AppCompatActivity {
 
     // Selected Service Info
     private NsdServiceInfo _selectedService;
@@ -63,9 +87,14 @@ public class MainActivity extends AppCompatActivity {
     // Spinner Content when no services are available.
     public static final String NO_SELECT = "None";
 
-    public static final String INT_ADDRESS_KEY = "com.remote.universalirremote.MainActivity.ADDRESS";
-    public static final String INT_PORT_KEY = "com.remote.universalirremote.MainActivity.PORT";
-    public static final String INT_NAME_KEY = "com.remote.universalirremote.MainActivity.NAME";
+    // Key for the service info passed to DeviceSelect activity
+    public static final String INT_SERVICE_KEY = "com.remote.universalirremote.MainActivity.SERVICE";
+
+    // Key to identify which activity launched intent
+    public static final String INT_LAUNCHER_KEY = "com.remote.universalirremote.LAUNCHER";
+
+    // Value for INT_LAUNCHER_KEY when MainActivity launches an activity.
+    public static final int INT_LAUNCHER_MAIN = 0;
 
 
     // Getter for selected service
@@ -124,9 +153,9 @@ public class MainActivity extends AppCompatActivity {
         _discoveredServicesAdapter = new ArrayAdapter<>(
                 this, R.layout.support_simple_spinner_dropdown_item,
                 new String[] {NO_SELECT});
-        _discoveredServicesUiList = (Spinner) findViewById(R.id.spnr_blasterSelection);
-        _discoveredServicesUiList.setAdapter(_discoveredServicesAdapter);
-        _discoveredServicesUiList.setOnItemSelectedListener
+        Spinner discoveredServicesUiList = (Spinner) findViewById(R.id.spnr_blasterSelection);
+        discoveredServicesUiList.setAdapter(_discoveredServicesAdapter);
+        discoveredServicesUiList.setOnItemSelectedListener
                 (new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -280,10 +309,9 @@ public class MainActivity extends AppCompatActivity {
                     _selectedService.getServiceName() + " resolved",
                     Toast.LENGTH_SHORT).show();
 
-            Intent intent = new Intent(this, /* Next activity */ );
-            intent.putExtra(INT_ADDRESS_KEY, _selectedService.getHost());
-            intent.putExtra(INT_PORT_KEY, _selectedService.getPort());
-            intent.putExtra(INT_NAME_KEY, _selectedService.getServiceName());
+            Intent intent = new Intent(this, DeviceSelect.class );
+            intent.putExtra(INT_LAUNCHER_KEY,INT_LAUNCHER_MAIN);
+            intent.putExtra(INT_SERVICE_KEY, _selectedService);
             startActivity(intent);
         }
     }

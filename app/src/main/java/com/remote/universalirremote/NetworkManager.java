@@ -1,20 +1,20 @@
-/*
-
-        Copyright (C) 2020  Contributors (in contributors file)
-
-        This program is free software: you can redistribute it and/or modify
-        it under the terms of the GNU General Public License as published by
-        the Free Software Foundation, either version 3 of the License, or
-        (at your option) any later version.
-
-        This program is distributed in the hope that it will be useful,
-        but WITHOUT ANY WARRANTY; without even the implied warranty of
-        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-        GNU General Public License for more details.
-
-        You should have received a copy of the GNU General Public License
-        along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
+//
+//
+//        Copyright (C) 2020  Contributors (in contributors file)
+//
+//        This program is free software: you can redistribute it and/or modify
+//        it under the terms of the GNU General Public License as published by
+//        the Free Software Foundation, either version 3 of the License, or
+//        (at your option) any later version.
+//
+//        This program is distributed in the hope that it will be useful,
+//        but WITHOUT ANY WARRANTY; without even the implied warranty of
+//        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//        GNU General Public License for more details.
+//
+//        You should have received a copy of the GNU General Public License
+//        along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
 package com.remote.universalirremote;
 
 
@@ -28,27 +28,27 @@ import android.util.Log;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
-/*
-        Class to discover and resolve services of same type in the local area network.
-        Uses android.os.nsd.NsdManager for implementation.
 
-        Usage:
+//        Class to discover and resolve services of same type in the local area network.
+//        Uses android.os.nsd.NsdManager for implementation.
+//
+//        Usage:
+//
+//        1) To Discover Services and resolve connection :
+//            * Construct with context and a discovery handler.
+//            * Select a service from list of services ( getChosenServiceInfo() )
+//            * call resolveServices with selected service
+//
+//        2) To Ensure selected service remains visible :
+//            * Construct with context and a discovery handler.
+//            * start discovery
+//            * pass service to setChosenServiceInfo
+//            * if it returns false, the service is no longer visible
+//            * discovery handler will be notified of all lost services
+//            * if service is present now and later lost, handle it in the discoveryHandler
+//                            ( graceful exit or crash and burn or ignore)
 
-        1) To Discover Services and resolve connection :
-            * Construct with context and a discovery handler.
-            * Select a service from list of services ( getChosenServiceInfo() )
-            * call resolveServices with selected service
 
-        2) To Ensure selected service remains visible :
-            * Construct with context and a discovery handler.
-            * start discovery
-            * pass service to setChosenServiceInfo
-            * if it returns false, the service is no longer visible
-            * discovery handler will be notified of all lost services
-            * if service is present now and later lost, handle it in the discoveryHandler
-                            ( graceful exit or crash and burn or ignore)
-
- */
 public class NetworkManager {
 
 
