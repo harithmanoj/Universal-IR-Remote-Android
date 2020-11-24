@@ -65,7 +65,6 @@ public class NetworkManager {
 
     // Keys for Bundle passed in _discoveryHandler
     public static final String DISCOVERED_SERVICE_NAME = "disc.serv.name";
-    public static final String DISCOVERED_SERVICE_TYPE = "disc.serv.type";
 
     // Key and result of Bundle passed in _discoveryHandler to identify if service lost or found.
     public static final String DISCOVER_OP = "disc.op";
@@ -96,26 +95,18 @@ public class NetworkManager {
         return _discoveredServices;
     }
 
-    // Returns service info of a service with name and serviceType given, null if not found.
+    // Returns service info of a service with name given, null if not found.
     // if discovery is stopped, start discovery and try again.
-    public NsdServiceInfo getDiscoveredService(String name, String serviceType ) {
+    public NsdServiceInfo getDiscoveredService(String name ) {
 
         for (NsdServiceInfo i : _discoveredServices ) {
-            if ((i.getServiceType() == serviceType) && (i.getServiceName() == name)) {
+            if (i.getServiceName() == name) {
                 return i;
             }
         }
         return null;
     }
 
-    public NsdServiceInfo getDiscoveredService(String displayName) {
-        for (NsdServiceInfo i : _discoveredServices ) {
-            if (displayName.equals(i.getServiceName() + " " + i.getServiceType())) {
-                return i;
-            }
-        }
-        return null;
-    }
 
     // Get Service info of chosen service
     public NsdServiceInfo getChosenServiceInfo() {
@@ -167,7 +158,6 @@ public class NetworkManager {
                     Bundle msgBundle = new Bundle();
                     msgBundle.putInt(DISCOVER_OP, DISCOVER_NEW);
                     msgBundle.putString(DISCOVERED_SERVICE_NAME, serviceInfo.getServiceName());
-                    msgBundle.putString(DISCOVERED_SERVICE_TYPE, serviceInfo.getServiceType());
                     Message msg = new Message();
                     msg.setData(msgBundle);
                     _discoveryHandler.sendMessage(msg);
@@ -184,7 +174,6 @@ public class NetworkManager {
                     Bundle msgBundle = new Bundle();
                     msgBundle.putInt(DISCOVER_OP, DISCOVER_LOST);
                     msgBundle.putString(DISCOVERED_SERVICE_NAME, serviceInfo.getServiceName());
-                    msgBundle.putString(DISCOVERED_SERVICE_TYPE, serviceInfo.getServiceType());
                     Message msg = new Message();
                     msg.setData(msgBundle);
                     _discoveryHandler.sendMessage(msg);
