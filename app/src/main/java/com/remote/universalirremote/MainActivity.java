@@ -18,6 +18,7 @@
 
 package com.remote.universalirremote;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.net.nsd.NsdServiceInfo;
@@ -148,4 +149,41 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+    @Override
+    protected void onStart() {
+        Log.d(TAG, "Starting ");
+        _discoveryThread = new HandlerThread("DiscoverHandler");
+        _discoveryThread.start();
+
+        _discoveryHandler = new Handler(_discoveryThread.getLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                Bundle msgBundle = msg.getData();
+
+                int op = msgBundle.getInt(NetworkManager.DISCOVER_OP);
+
+                switch(op) {
+                    case NetworkManager.DISCOVER_NEW: {
+                        _discoveredServicesAdapter.add(
+                                msgBundle.getString(NetworkManager.DISCOVERED_SERVICE_NAME));
+                        _discoveredServicesAdapter.notifyDataSetChanged();
+                    }
+
+                    case NetworkManager.DISCOVER_LOST: {
+                        _discoveredServicesAdapter.remove(
+                                msgBundle.getString(NetworkManager.DISCOVERED_SERVICE_NAME));
+                        _discoveredServicesAdapter.notifyDataSetChanged();
+                    }
+
+                    case NetworkManager.DISCOVER_REFRESH: {
+                        refreshSpinner();
+                    }
+                }
+
+            }
+        };
+        _networkManager = new NetworkManager(this, _discoveryHandler);
+        _networkManager.discoverServices();
+        super.onStart();
+    }
 }
