@@ -108,6 +108,15 @@ public class NetworkManager {
         return null;
     }
 
+    public NsdServiceInfo getDiscoveredService(String displayName) {
+        for (NsdServiceInfo i : _discoveredServices ) {
+            if (displayName.equals(i.getServiceName() + " " + i.getServiceType())) {
+                return i;
+            }
+        }
+        return null;
+    }
+
     // Get Service info of chosen service
     public NsdServiceInfo getChosenServiceInfo() {
         return _selectedServiceInfo;
