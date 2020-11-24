@@ -50,6 +50,33 @@ public class MainActivity extends AppCompatActivity {
     // Handler to update spinner on discovery.
     private Handler _discoveryHandler;
 
+    private NsdServiceInfo getSelectedService() {
+        return _selectedService;
+    }
+
+    private boolean setSelectedService(NsdServiceInfo service) {
+        if ((service == null ) || (_networkManager == null) )
+            return false;
+        if (!_networkManager.getDiscoveredServices().contains(service)) {
+            return false;
+        } else {
+            _selectedService = service;
+            return true;
+        }
+    }
+
+    private boolean setSelectedService(String name) {
+        if ((name == null ) || (_networkManager == null) )
+            return false;
+        NsdServiceInfo temp = _networkManager.getDiscoveredService(name);
+        if (temp == null) {
+            return false;
+        } else {
+            _selectedService = temp;
+            return true;
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
