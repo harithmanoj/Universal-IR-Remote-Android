@@ -195,4 +195,35 @@ public class MainActivity extends AppCompatActivity {
         _networkManager.discoverServices();     // start discovery
         super.onStart();
     }
+
+
+    @Override
+    protected void onResume() {
+        Log.d(TAG, "Resuming");
+        if (_networkManager != null) {
+            _networkManager.discoverServices();
+        }
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        Log.d(TAG, "Pausing");
+        if(_networkManager != null)
+            _networkManager.stopDiscover();
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        Log.d(TAG, "stopped");
+        super.onStop();
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        Log.d(TAG, "Being destroyed.");
+        super.onDestroy();
+    }
 }
