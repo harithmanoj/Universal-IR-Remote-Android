@@ -21,6 +21,7 @@ package com.remote.universalirremote;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,11 +32,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -63,6 +61,11 @@ public class MainActivity extends AppCompatActivity {
 
     // Spinner Content when no services are available.
     public static final String NO_SELECT = "None";
+
+    public static final String INT_ADDRESS_KEY = "com.remote.universalirremote.MainActivity.ADDRESS";
+    public static final String INT_PORT_KEY = "com.remote.universalirremote.MainActivity.PORT";
+    public static final String INT_NAME_KEY = "com.remote.universalirremote.MainActivity.NAME";
+
 
     // Getter for selected service
     private NsdServiceInfo getSelectedService() {
@@ -117,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        _discoveredServicesAdapter = new ArrayAdapter<String>(
+        _discoveredServicesAdapter = new ArrayAdapter<>(
                 this, R.layout.support_simple_spinner_dropdown_item,
                 new String[] {NO_SELECT});
         _discoveredServicesUiList = (Spinner) findViewById(R.id.spnr_blasterSelection);
@@ -225,5 +228,39 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         Log.d(TAG, "Being destroyed.");
         super.onDestroy();
+    }
+
+    public void clickConnect( View view ) {
+
+        if (_selectedService == null) {
+            Toast.makeText(getApplicationContext(),
+                    "No service Selected", Toast.LENGTH_LONG).show();
+        } else {
+            _networkManager.stopDiscover();
+            _networkManager.resolveServices(_selectedService);
+
+            synchronized (_networkManager._waitForResolution) {
+
+                try {
+                    while(!_networkManager._isResolved) {
+                        _networkManager._waitForResolution.wait();
+                    }
+                    _selectedService = _networkManager.getChosenServiceInfo();
+                } catch (InterruptedException ie) {
+                    Log.e(TAG, "interrupted Exception ", ie);
+                    ie.printStackTrace();
+                }
+
+            }
+            Toast.makeText(getApplicationContext(),
+                    "connecting " + _selectedService.getServiceName(),
+                    Toast.LENGTH_LONG).show();
+
+            Intent intent = new Intent(this, /* Next activity */ );
+            intent.putExtra(INT_ADDRESS_KEY, _selectedService.getHost());
+            intent.putExtra(INT_PORT_KEY, _selectedService.getPort());
+            intent.putExtra(INT_NAME_KEY, _selectedService.getServiceName());
+            startActivity(intent);
+        }
     }
 }
