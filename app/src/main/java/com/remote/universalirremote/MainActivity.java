@@ -38,6 +38,7 @@ import android.widget.Toast;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
+
 //
 //    Class for backend of Main (Launcher) activity.
 //
@@ -86,16 +87,6 @@ public class MainActivity extends AppCompatActivity {
 
     // Spinner Content when no services are available.
     public static final String NO_SELECT = "None";
-
-    // Key for the service info passed to DeviceSelect activity
-    public static final String INT_SERVICE_KEY = "com.remote.universalirremote.MainActivity.SERVICE";
-
-    // Key to identify which activity launched intent
-    public static final String INT_LAUNCHER_KEY = "com.remote.universalirremote.LAUNCHER";
-
-    // Value for INT_LAUNCHER_KEY when MainActivity launches an activity.
-    public static final int INT_LAUNCHER_MAIN = 0;
-
 
     // Getter for selected service
     private NsdServiceInfo getSelectedService() {
@@ -310,8 +301,8 @@ public class MainActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent(this, DeviceSelect.class );
-            intent.putExtra(INT_LAUNCHER_KEY,INT_LAUNCHER_MAIN);
-            intent.putExtra(INT_SERVICE_KEY, _selectedService);
+            intent.putExtra(Constant.INT_LAUNCHER_KEY,Constant.INT_LAUNCHER_MAIN);
+            intent.putExtra(Constant.INT_SERVICE_KEY, _selectedService);
             startActivity(intent);
         }
     }
