@@ -31,6 +31,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -206,6 +207,8 @@ public class MainActivity extends AppCompatActivity {
         if (_networkManager != null) {
             _networkManager.discoverServices();
         }
+        ProgressBar circle = (ProgressBar) findViewById(R.id.prg_resolveProgress);
+        circle.setVisibility(View.GONE);
         super.onResume();
     }
 
@@ -245,6 +248,12 @@ public class MainActivity extends AppCompatActivity {
             _networkManager.stopDiscover();
             _networkManager.resolveServices(_selectedService);
 
+            ProgressBar circle = (ProgressBar) findViewById(R.id.prg_resolveProgress);
+            circle.setVisibility(View.VISIBLE);
+            _selectedService = _networkManager.getChosenServiceInfo();
+            Toast.makeText(getApplicationContext(),
+                    "resolving " + _selectedService.getServiceName(),
+                    Toast.LENGTH_SHORT).show();
             synchronized (_networkManager._waitForResolution) {
 
                 try {
@@ -258,6 +267,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             }
+            circle.setVisibility(View.GONE);
             if(_networkManager.getChosenServiceInfo() == null) {
                 Toast.makeText(getApplicationContext(),
                         "cannot resolve " + _selectedService.getServiceName(),
@@ -267,8 +277,8 @@ public class MainActivity extends AppCompatActivity {
             }
             _selectedService = _networkManager.getChosenServiceInfo();
             Toast.makeText(getApplicationContext(),
-                    "connecting " + _selectedService.getServiceName(),
-                    Toast.LENGTH_LONG).show();
+                    _selectedService.getServiceName() + " resolved",
+                    Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent(this, /* Next activity */ );
             intent.putExtra(INT_ADDRESS_KEY, _selectedService.getHost());
