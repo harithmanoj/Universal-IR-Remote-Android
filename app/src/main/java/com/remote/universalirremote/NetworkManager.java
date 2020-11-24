@@ -51,8 +51,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class NetworkManager {
 
-    // Context of the activity
-    private Context _context;
 
     // Nsd API
     private NsdManager _nsdManager;
@@ -81,14 +79,19 @@ public class NetworkManager {
     // List of all discovered services
     private CopyOnWriteArrayList<NsdServiceInfo> _discoveredServices;
 
+    // Has service been resolved?
+    public boolean _isResolved;
+
+    // Object to wait on
+    public final Object _waitForResolution = new Object();
+
 
     // Constructor, pass context and handler to handle services found or lost.
     public NetworkManager(Context context, Handler discovery) {
-        _context = context;
-        _nsdManager = (NsdManager) _context.getSystemService(Context.NSD_SERVICE);
+        _nsdManager = (NsdManager) context.getSystemService(Context.NSD_SERVICE);
         _selectedServiceInfo = null;
         _discoveryHandler = discovery;
-        _discoveredServices = new CopyOnWriteArrayList<NsdServiceInfo>();
+        _discoveredServices = new CopyOnWriteArrayList<>();
     }
 
     // get list of all discovered services
@@ -101,7 +104,7 @@ public class NetworkManager {
     public NsdServiceInfo getDiscoveredServices(String name ) {
 
         for (NsdServiceInfo i : _discoveredServices ) {
-            if (i.getServiceName() == name) {
+            if (i.getServiceName().equals(name)) {
                 return i;
             }
         }
@@ -121,9 +124,9 @@ public class NetworkManager {
     public boolean setChosenServiceInfo( NsdServiceInfo service ) {
         if (service == null)
             return false;
-        _selectedServiceInfo = service;
         if (!_discoveredServices.contains(service))
             return false;
+        _selectedServiceInfo = service;
         return true;
     }
 
@@ -195,8 +198,11 @@ public class NetworkManager {
             public void onServiceResolved(NsdServiceInfo serviceInfo) {
                 Log.i(TAG, "Resolved " + serviceInfo.getServiceName() + " "
                         + serviceInfo.getServiceType());
-
-                _selectedServiceInfo = serviceInfo;
+                synchronized (_waitForResolution) {
+                    _isResolved = true;
+                    _selectedServiceInfo = serviceInfo;
+                    _waitForResolution.notifyAll();
+                }
             }
         };
     }
@@ -234,6 +240,7 @@ public class NetworkManager {
 
         if (_resolveListener == null)
             initialiseResolveListener();
+        _isResolved = false;
         _nsdManager.resolveService(service, _resolveListener);
         return true;
     }
