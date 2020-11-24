@@ -191,6 +191,11 @@ public class NetworkManager {
         _resolveListener = new NsdManager.ResolveListener() {
             @Override
             public void onResolveFailed(NsdServiceInfo serviceInfo, int errorCode) {
+                synchronized (_waitForResolution) {
+                    _isResolved = true;
+                    _selectedServiceInfo = null;
+                    _waitForResolution.notifyAll();
+                }
                 Log.e(TAG, "resolve failed with " + errorCode);
             }
 

@@ -230,6 +230,12 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    // Resolves Selected service and acquires address and port
+    // executes on clicking OK button
+    // Waits on resolve synchronisation
+    // On success ( a service is selected, the next activity is launched and port,
+    // address of service is passed
+    // On fail, a toast will inform user of resolve fail and exit function.
     public void clickConnect( View view ) {
 
         if (_selectedService == null) {
@@ -245,13 +251,21 @@ public class MainActivity extends AppCompatActivity {
                     while(!_networkManager._isResolved) {
                         _networkManager._waitForResolution.wait();
                     }
-                    _selectedService = _networkManager.getChosenServiceInfo();
+
                 } catch (InterruptedException ie) {
                     Log.e(TAG, "interrupted Exception ", ie);
                     ie.printStackTrace();
                 }
 
             }
+            if(_networkManager.getChosenServiceInfo() == null) {
+                Toast.makeText(getApplicationContext(),
+                        "cannot resolve " + _selectedService.getServiceName(),
+                        Toast.LENGTH_LONG).show();
+                _networkManager._isResolved = false;
+                return;
+            }
+            _selectedService = _networkManager.getChosenServiceInfo();
             Toast.makeText(getApplicationContext(),
                     "connecting " + _selectedService.getServiceName(),
                     Toast.LENGTH_LONG).show();
