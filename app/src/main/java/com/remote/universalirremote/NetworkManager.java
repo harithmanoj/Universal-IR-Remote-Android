@@ -70,6 +70,7 @@ public class NetworkManager {
     public static final String DISCOVER_OP = "disc.op";
     public static final int DISCOVER_NEW = 1;
     public static final int DISCOVER_LOST = 2;
+    public static final int DISCOVER_REFRESH = 3;
 
     // Resolved service information.
     private NsdServiceInfo _selectedServiceInfo;
@@ -97,7 +98,7 @@ public class NetworkManager {
 
     // Returns service info of a service with name given, null if not found.
     // if discovery is stopped, start discovery and try again.
-    public NsdServiceInfo getDiscoveredService(String name ) {
+    public NsdServiceInfo getDiscoveredServices(String name ) {
 
         for (NsdServiceInfo i : _discoveredServices ) {
             if (i.getServiceName() == name) {

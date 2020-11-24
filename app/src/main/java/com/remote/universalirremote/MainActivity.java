@@ -24,13 +24,16 @@ import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -51,12 +54,23 @@ public class MainActivity extends AppCompatActivity {
     // Handler to update spinner on discovery.
     private Handler _discoveryHandler;
 
+    // List of names of all services.
+    private ArrayAdapter<String> _discoveredServicesAdapter;
+
+    // Debug TAG
     public static final String TAG = "MainActivity";
 
+    // Spinner Content when no services are available.
+    public static final String NO_SELECT = "None";
+
+    // Getter for selected service
     private NsdServiceInfo getSelectedService() {
         return _selectedService;
     }
 
+    // Set selected service
+    // Returns false if service doesn't exist in _networkManger.getDiscoveredServices()
+    // or if parameters are null
     private boolean setSelectedService(NsdServiceInfo service) {
         if ((service == null ) || (_networkManager == null) )
             return false;
@@ -68,10 +82,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Set selected service ( take from _networkManger.getDiscoveredServices() with matching name).
+    // Returns false if it doesn't exist or if parameters are null
     private boolean setSelectedService(String name) {
         if ((name == null ) || (_networkManager == null) )
             return false;
-        NsdServiceInfo temp = _networkManager.getDiscoveredService(name);
+        NsdServiceInfo temp = _networkManager.getDiscoveredServices(name);
         if (temp == null) {
             return false;
         } else {
@@ -80,8 +96,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Refresh UI list of discovered services.
     public void refreshSpinner() {
-
+        _discoveredServicesAdapter.clear();
+        _discoveredServicesAdapter.add(NO_SELECT);
+        CopyOnWriteArrayList<NsdServiceInfo> list = _networkManager.getDiscoveredServices();
+        for ( NsdServiceInfo i : list) {
+            _discoveredServicesAdapter.add(i.getServiceName());
+        }
+        _discoveredServicesAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -89,18 +112,32 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        _discoveredServicesAdapter = new ArrayAdapter<String>(
+                this, R.layout.support_simple_spinner_dropdown_item,
+                new String[] {NO_SELECT});
         _discoveredServicesUiList = (Spinner) findViewById(R.id.spnr_blasterSelection);
+        _discoveredServicesUiList.setAdapter(_discoveredServicesAdapter);
         _discoveredServicesUiList.setOnItemSelectedListener
                 (new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         String name = parent.getItemAtPosition(position).toString();
+
+                        if(name.equals(NO_SELECT))
+                            onNothingSelected(parent);
+
                         Log.d(TAG, "selected service is " + name);
                         if (!setSelectedService(name)) {
                             Toast.makeText(getApplicationContext(),
                                     "service " + name + " not found",
                                     Toast.LENGTH_SHORT).show();
-                            refreshSpinner();
+                            if (_discoveryHandler != null) {
+                                Bundle msgBundle = new Bundle();
+                                msgBundle.putInt(NetworkManager.DISCOVER_OP, NetworkManager.DISCOVER_REFRESH);
+                                Message msg = new Message();
+                                msg.setData(msgBundle);
+                                _discoveryHandler.sendMessage(msg);
+                            }
                         }
                     }
 
@@ -110,4 +147,5 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
+
 }
