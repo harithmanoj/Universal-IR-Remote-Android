@@ -27,6 +27,8 @@ import android.view.MenuItem;
 
 public class DeviceSelect extends AppCompatActivity {
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,4 +47,6 @@ public class DeviceSelect extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }
