@@ -23,32 +23,32 @@ import android.app.Application;
 import java.util.List;
 
 public class DeviceInfoRepository {
-    private DeviceDataAccess _deviceDataAccessObject;
+    private DeviceDao _deviceDataAccess;
 
     DeviceInfoRepository(Application application) {
         UniversalRemoteDatabase db = UniversalRemoteDatabase.getDatabase(application);
-        _deviceDataAccessObject = db.deviceDataAccess();
+        _deviceDataAccess = db.deviceDataAccess();
     }
 
     List<DeviceData> getAllDevices() {
-        return _deviceDataAccessObject.getAllDevices();
+        return _deviceDataAccess.getAllDevices();
     }
 
     void insert(DeviceData device) {
         UniversalRemoteDatabase.databaseWriteExecutor.execute(
-                () -> _deviceDataAccessObject.insert(device)
+                () -> _deviceDataAccess.insert(device)
         );
     }
 
     void delete(DeviceData device) {
         UniversalRemoteDatabase.databaseWriteExecutor.execute(
-                () -> _deviceDataAccessObject.delete(device)
+                () -> _deviceDataAccess.delete(device)
         );
     }
 
     void update(DeviceData device) {
         UniversalRemoteDatabase.databaseWriteExecutor.execute(
-                () -> _deviceDataAccessObject.update(device)
+                () -> _deviceDataAccess.update(device)
         );
     }
 }

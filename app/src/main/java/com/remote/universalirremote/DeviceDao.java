@@ -30,7 +30,7 @@ import androidx.room.Update;
 import java.util.List;
 
 @Dao
-public interface DeviceDataAccess {
+public interface DeviceDao {
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
     void insert(DeviceData data);

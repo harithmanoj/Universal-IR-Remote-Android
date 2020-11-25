@@ -32,7 +32,7 @@ import java.util.concurrent.Executors;
 @Database(entities = {DeviceData.class}, version = 1, exportSchema = true)
 public abstract class UniversalRemoteDatabase extends RoomDatabase {
 
-    public abstract DeviceDataAccess deviceDataAccess();
+    public abstract DeviceDao deviceDataAccess();
 
     private static volatile UniversalRemoteDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
