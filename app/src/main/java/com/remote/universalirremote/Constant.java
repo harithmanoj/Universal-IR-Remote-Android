@@ -22,6 +22,9 @@ package com.remote.universalirremote;
 // Class to encapsulate application wide constants used eg: activity launcher key
 //
 public final class Constant {
+    // Spinner Content when no services are available.
+    public static final String NO_SELECT = "None";
+
     private Constant() {}
 
     // Key for the service info passed to DeviceSelect activity

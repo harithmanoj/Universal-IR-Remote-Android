@@ -85,9 +85,6 @@ public class MainActivity extends AppCompatActivity {
     // Debug TAG
     public static final String TAG = "MainActivity";
 
-    // Spinner Content when no services are available.
-    public static final String NO_SELECT = "None";
-
     // Getter for selected service
     private NsdServiceInfo getSelectedService() {
         return _selectedService;
@@ -124,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
     // Refresh UI list of discovered services.
     public void refreshSpinner() {
         _discoveredServicesAdapter.clear();
-        _discoveredServicesAdapter.add(NO_SELECT);
+        _discoveredServicesAdapter.add(Constant.NO_SELECT);
         CopyOnWriteArrayList<NsdServiceInfo> list = _networkManager.getDiscoveredServices();
         for ( NsdServiceInfo i : list) {
             _discoveredServicesAdapter.add(i.getServiceName()); // add all services
@@ -143,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
 
         _discoveredServicesAdapter = new ArrayAdapter<>(
                 this, R.layout.support_simple_spinner_dropdown_item,
-                new String[] {NO_SELECT});
+                new String[] {Constant.NO_SELECT});
         Spinner discoveredServicesUiList = (Spinner) findViewById(R.id.spnr_blasterSelection);
         discoveredServicesUiList.setAdapter(_discoveredServicesAdapter);
         discoveredServicesUiList.setOnItemSelectedListener
@@ -152,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         String name = parent.getItemAtPosition(position).toString();
 
-                        if(name.equals(NO_SELECT))
+                        if(name.equals(Constant.NO_SELECT))
                             onNothingSelected(parent);
 
                         Log.d(TAG, "selected service is " + name);
