@@ -20,6 +20,27 @@
 
 package com.remote.universalirremote;
 
+import androidx.room.Dao;
+import androidx.room.Delete;
+import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
+import androidx.room.Query;
+import androidx.room.Update;
+
+import java.util.List;
+
+@Dao
 public interface DeviceDataAccess {
 
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    void Insert(DeviceData data);
+
+    @Delete
+    void Delete(DeviceData data);
+
+    @Update
+    void Update(DeviceData data);
+
+    @Query("SELECT * FROM DeviceData")
+    List<DeviceData> getAllDevices();
 }

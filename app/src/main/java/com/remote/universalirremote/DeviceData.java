@@ -23,20 +23,20 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "device_info")
+@Entity(tableName = "DeviceData")
 public class DeviceData {
 
-    @ColumnInfo(name = "device_name")
+    @ColumnInfo(name = "deviceName")
     private String _deviceName;
 
-    @ColumnInfo(name = "protocol")
+    @ColumnInfo(name = "protocolInfo")
     private int _protocolInfo;
 
-    @ColumnInfo(name = "device_layout")
+    @ColumnInfo(name = "deviceLayout")
     private int _deviceLayout;
 
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "device_id")
+    @ColumnInfo(name = "DeviceDataId")
     private int _id;
 
     public String getName() {
