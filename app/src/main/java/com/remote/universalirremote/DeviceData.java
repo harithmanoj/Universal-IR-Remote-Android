@@ -19,5 +19,40 @@
 
 package com.remote.universalirremote;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "device_info")
 public class DeviceData {
+
+    @ColumnInfo(name = "device_name")
+    private String _deviceName;
+
+    @ColumnInfo(name = "protocol")
+    private int _protocolInfo;
+
+    @ColumnInfo(name = "device_layout")
+    private int _deviceLayout;
+
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "device_id")
+    private int _id;
+
+    public String getName() {
+        return _deviceName;
+    }
+
+    public int getProtocolUsed() {
+        return _protocolInfo;
+    }
+
+    public int getDeviceLayout() {
+        return _deviceLayout;
+    }
+
+    public int getDeviceId() {
+        return _id;
+    }
+
 }
