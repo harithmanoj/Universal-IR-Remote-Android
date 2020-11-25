@@ -26,7 +26,8 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "DeviceData")
 public class DeviceData {
 
-    @ColumnInfo(name = "deviceName")
+    @PrimaryKey
+    @ColumnInfo(name = "deviceNameId")
     private String _deviceName;
 
     @ColumnInfo(name = "protocolInfo")
@@ -35,13 +36,7 @@ public class DeviceData {
     @ColumnInfo(name = "deviceLayout")
     private int _deviceLayout;
 
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "DeviceDataId")
-    private int _id;
-
-    public String getName() {
-        return _deviceName;
-    }
+    public String getName() { return _deviceName; }
 
     public int getProtocolUsed() {
         return _protocolInfo;
@@ -49,10 +44,6 @@ public class DeviceData {
 
     public int getDeviceLayout() {
         return _deviceLayout;
-    }
-
-    public int getDeviceId() {
-        return _id;
     }
 
 }
