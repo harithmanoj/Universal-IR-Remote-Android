@@ -23,7 +23,7 @@ import android.app.Application;
 import java.util.List;
 
 public class DeviceInfoRepository {
-    private DeviceDao _deviceDataAccess;
+    private final DeviceDao _deviceDataAccess;
 
     DeviceInfoRepository(Application application) {
         UniversalRemoteDatabase db = UniversalRemoteDatabase.getDatabase(application);

@@ -24,10 +24,15 @@ import androidx.core.app.NavUtils;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Spinner;
 
 public class DeviceSelect extends AppCompatActivity {
 
+    private DeviceInfoRepository _deviceDataRepository;
 
+    private static final String TAG = "DeviceSelect";
+
+    private String _selectedDevice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +40,7 @@ public class DeviceSelect extends AppCompatActivity {
         setContentView(R.layout.activity_device_select);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        _deviceDataRepository = new DeviceInfoRepository(getApplication());
     }
 
     @Override
