@@ -33,13 +33,13 @@ import java.util.List;
 public interface DeviceDataAccess {
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    void Insert(DeviceData data);
+    void insert(DeviceData data);
 
     @Delete
-    void Delete(DeviceData data);
+    void delete(DeviceData data);
 
     @Update
-    void Update(DeviceData data);
+    void update(DeviceData data);
 
     @Query("SELECT * FROM DeviceData")
     List<DeviceData> getAllDevices();
