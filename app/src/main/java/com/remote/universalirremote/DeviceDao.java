@@ -43,4 +43,17 @@ public interface DeviceDao {
 
     @Query("SELECT * FROM DeviceData")
     List<DeviceData> getAllDevices();
+
+    @Query("SELECT deviceNameId FROM DeviceData")
+    List<String> getNames();
+
+    @Query("SELECT * FROM DeviceData WHERE deviceNameId = :name")
+    DeviceData getDevice(String name);
+
+    @Query("SELECT deviceLayout FROM DeviceData WHERE deviceNameId = :name")
+    int getLayout(String name);
+
+    @Query("SELECT protocolInfo FROM DeviceData WHERE deviceNameId = :name")
+    int getProtocolUsed(String name);
+
 }
