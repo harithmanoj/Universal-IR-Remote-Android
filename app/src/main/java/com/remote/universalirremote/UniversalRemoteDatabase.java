@@ -29,16 +29,27 @@ import androidx.room.RoomDatabase;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+//
+//    Singleton class for encapsulating database for the system including per
+//    device data and per device button IR data.
+//
 @Database(entities = {DeviceData.class}, version = 1, exportSchema = true)
 public abstract class UniversalRemoteDatabase extends RoomDatabase {
 
+    // access object
     public abstract DeviceDao deviceDataAccess();
 
+    // singleton instance
     private static volatile UniversalRemoteDatabase INSTANCE;
+
+    // executor limit
     private static final int NUMBER_OF_THREADS = 4;
+
+    // executor for asynchronous data
     static final ExecutorService databaseWriteExecutor =
             Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
+    // singleton instance access.
     static UniversalRemoteDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
             synchronized (UniversalRemoteDatabase.class) {

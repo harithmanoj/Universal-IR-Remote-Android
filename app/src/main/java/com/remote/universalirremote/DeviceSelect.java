@@ -35,14 +35,46 @@ import android.widget.Toast;
 
 import java.util.List;
 
+//
+// Actiity to select device from existing
+//
+// Usage :
+//              Select Device from Dropdown
+//              Tap OK
+//          OR
+//              Tap New ( + )
+//
+//
+//    Launch by:
+//        MainActivity
+//        intent:
+//            passes:
+//                Launcher:           INT_LAUNCHER_KEY           : INT_LAUNCHER_MAIN (0)
+//                Blaster Address:    INT_SERVICE_KEY
+//                        NsdServiceInfo retrieve using .getParcelable(KEY)
+//
+//
+//    Launches:
+//        multiple layouts not yet finalised
+//        MainActivity
+//                  on Back pressed.
+//
+//
 public class DeviceSelect extends AppCompatActivity {
 
+    // Repo for DeviceData table
     private DeviceInfoRepository _deviceDataRepository;
 
+    // debug TAG
     private static final String TAG = "DeviceSelect";
 
+    // Selected string
     private String _selectedDevice = null;
 
+    // onCreate instantiation.
+    // Initialized variables: _deviceDataRepository
+    //                        set back button
+    //                        UI devices drop down list ( populate from database )
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,6 +117,7 @@ public class DeviceSelect extends AppCompatActivity {
                 });
     }
 
+    // Menu item selected process
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -96,7 +129,7 @@ public class DeviceSelect extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
+    // click OK, launch selected remote
     public void clickOk(View view) {
 
         if(_selectedDevice == null) {
@@ -131,6 +164,7 @@ public class DeviceSelect extends AppCompatActivity {
         }
     }
 
+    // Add new remote
     public void clickNew( View view ) {
         Intent intent = new Intent(this, /* Device add activity */);
         intent.putExtra(Constant.INT_LAUNCHER_KEY, Constant.INT_LAUNCHER_DEVICE_SELECT);

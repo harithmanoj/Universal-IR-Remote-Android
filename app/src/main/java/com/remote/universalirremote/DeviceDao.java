@@ -29,6 +29,9 @@ import androidx.room.Update;
 
 import java.util.List;
 
+//
+//    Class to manage SQL query for table DeviceData
+//
 @Dao
 public interface DeviceDao {
 

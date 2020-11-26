@@ -24,6 +24,10 @@ import androidx.room.Query;
 
 import java.util.List;
 
+//
+//   Class for clean asynchronous access to DeviceData table
+//   all query are run as asynchronously using executors.
+//
 public class DeviceInfoRepository {
     private final DeviceDao _deviceDataAccess;
 
