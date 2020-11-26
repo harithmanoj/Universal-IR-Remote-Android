@@ -20,6 +20,8 @@ package com.remote.universalirremote;
 
 import android.app.Application;
 
+import androidx.room.Query;
+
 import java.util.List;
 
 public class DeviceInfoRepository {
@@ -50,5 +52,26 @@ public class DeviceInfoRepository {
         UniversalRemoteDatabase.databaseWriteExecutor.execute(
                 () -> _deviceDataAccess.update(device)
         );
+    }
+
+    boolean doesExist(String name) {
+        return (_deviceDataAccess.getDevice(name) == null);
+    }
+
+
+    List<String> getNames() {
+        return _deviceDataAccess.getNames();
+    }
+
+    DeviceData getDevice(String name) {
+        return _deviceDataAccess.getDevice(name);
+    }
+
+    int getLayout(String name) {
+        return _deviceDataAccess.getLayout(name);
+    }
+
+    int getProtocolUsed(String name) {
+        return _deviceDataAccess.getProtocolUsed(name);
     }
 }
