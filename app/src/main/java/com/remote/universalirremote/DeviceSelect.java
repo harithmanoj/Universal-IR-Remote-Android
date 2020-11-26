@@ -22,8 +22,9 @@ package com.remote.universalirremote;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 
+import android.content.Intent;
+import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
-import android.os.Message;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -96,4 +97,45 @@ public class DeviceSelect extends AppCompatActivity {
     }
 
 
+    public void clickOk(View view) {
+
+        if(_selectedDevice == null) {
+            Toast.makeText(getApplicationContext(),
+                    "Select a device ", Toast.LENGTH_LONG).show();
+        }
+        else {
+
+            DeviceData device = _deviceDataRepository.getDevice(_selectedDevice);
+
+            Intent intent;
+            switch( device.getDeviceLayout() ) {
+                case Constant.Layout.LAY_TV: {
+                    intent = new Intent(this, /* TV layout remote activity */);
+                }
+
+                case Constant.Layout.LAY_AC: {
+                    intent = new Intent(this, /* AC layout remote activity */);
+                }
+
+                default: {
+                    Toast.makeText(getApplicationContext(),
+                            "invalid layout", Toast.LENGTH_LONG).show();
+                    return;
+                }
+            }
+
+            intent.putExtra(Constant.INT_LAUNCHER_KEY, Constant.INT_LAUNCHER_DEVICE_SELECT);
+            intent.putExtra(Constant.INT_SERVICE_KEY,
+                    (NsdServiceInfo)getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY));
+            startActivity(intent);
+        }
+    }
+
+    public void clickNew( View view ) {
+        Intent intent = new Intent(this, /* Device add activity */);
+        intent.putExtra(Constant.INT_LAUNCHER_KEY, Constant.INT_LAUNCHER_DEVICE_SELECT);
+        intent.putExtra(Constant.INT_SERVICE_KEY,
+                (NsdServiceInfo)getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY));
+        startActivity(intent);
+    }
 }

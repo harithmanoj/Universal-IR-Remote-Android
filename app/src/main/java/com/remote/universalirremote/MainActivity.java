@@ -61,7 +61,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 //            passes:
 //                Launcher:           INT_LAUNCHER_KEY           : INT_LAUNCHER_MAIN (0)
 //                Blaster Address:    INT_SERVICE_KEY
-//                        NsdServiceInfo retrieve using getExtra().getParcelable(KEY)
+//                        NsdServiceInfo retrieve using .getParcelable(KEY)
 //
 //
 
