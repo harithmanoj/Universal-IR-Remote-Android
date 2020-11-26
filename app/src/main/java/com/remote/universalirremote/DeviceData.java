@@ -19,10 +19,15 @@
 
 package com.remote.universalirremote;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+//
+// Class to encapsulate device data table DeviceData in database
+//
+//
 @Entity(tableName = "DeviceData")
 public class DeviceData {
 
@@ -35,6 +40,12 @@ public class DeviceData {
 
     @ColumnInfo(name = "deviceLayout")
     private int _deviceLayout;
+
+    public DeviceData(@NonNull String name, @NonNull int protocol, @NonNull int layout) {
+        _deviceLayout = layout;
+        _deviceName = name;
+        _deviceLayout = layout;
+    }
 
     public String getName() { return _deviceName; }
 
