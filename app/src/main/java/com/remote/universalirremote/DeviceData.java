@@ -31,28 +31,35 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "DeviceData")
 public class DeviceData {
 
+    // Name of device also serves as primary key of device
     @PrimaryKey
     @ColumnInfo(name = "deviceNameId")
     private String _deviceName;
 
+    // Type of protocol
     @ColumnInfo(name = "protocolInfo")
     private int _protocolInfo;
 
+    // Type of layout
     @ColumnInfo(name = "deviceLayout")
     private int _deviceLayout;
 
+    // Constructor
     public DeviceData(@NonNull String name, @NonNull int protocol, @NonNull int layout) {
         _deviceLayout = layout;
         _deviceName = name;
         _deviceLayout = layout;
     }
 
+    // name getter
     public String getName() { return _deviceName; }
 
+    // protocol getter
     public int getProtocolUsed() {
         return _protocolInfo;
     }
 
+    // layout getter
     public int getDeviceLayout() {
         return _deviceLayout;
     }
