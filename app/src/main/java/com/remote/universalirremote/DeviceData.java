@@ -34,6 +34,7 @@ public class DeviceData {
     // Name of device also serves as primary key of device
     @PrimaryKey
     @ColumnInfo(name = "deviceNameId")
+    @NonNull
     private String _deviceName;
 
     // Type of protocol
@@ -45,17 +46,17 @@ public class DeviceData {
     private int _deviceLayout;
 
     // Constructor
-    public DeviceData(@NonNull String name, @NonNull int protocol, @NonNull int layout) {
-        _deviceLayout = layout;
-        _deviceName = name;
-        _deviceLayout = layout;
+    public DeviceData(@NonNull String _deviceName, @NonNull int _protocolInfo, @NonNull int _deviceLayout) {
+        this._deviceLayout = _deviceLayout;
+        this._deviceName = _deviceName;
+        this._protocolInfo = _protocolInfo;
     }
 
     // name getter
-    public String getName() { return _deviceName; }
+    public String getDeviceName() { return _deviceName; }
 
     // protocol getter
-    public int getProtocolUsed() {
+    public int getProtocolInfo() {
         return _protocolInfo;
     }
 
