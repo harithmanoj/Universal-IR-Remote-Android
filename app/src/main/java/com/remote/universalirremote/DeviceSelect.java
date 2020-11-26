@@ -23,8 +23,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 
 import android.os.Bundle;
+import android.os.Message;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
+
+import java.util.List;
 
 public class DeviceSelect extends AppCompatActivity {
 
@@ -32,7 +40,7 @@ public class DeviceSelect extends AppCompatActivity {
 
     private static final String TAG = "DeviceSelect";
 
-    private String _selectedDevice;
+    private String _selectedDevice = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +48,40 @@ public class DeviceSelect extends AppCompatActivity {
         setContentView(R.layout.activity_device_select);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         _deviceDataRepository = new DeviceInfoRepository(getApplication());
+
+        List<String> deviceNames = _deviceDataRepository.getNames();
+
+        deviceNames.add(0, Constant.NO_SELECT);
+
+        ArrayAdapter<String> DeviceAdapter = new ArrayAdapter<>(
+                this, R.layout.support_simple_spinner_dropdown_item,
+                deviceNames);
+        Spinner devicesUiList = (Spinner) findViewById(R.id.spnr_DeviceSelection);
+        devicesUiList.setAdapter(DeviceAdapter);
+
+        devicesUiList.setOnItemSelectedListener
+                (new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        String name = parent.getItemAtPosition(position).toString();
+
+                        if(name.equals(Constant.NO_SELECT))
+                            onNothingSelected(parent);
+
+                        Log.d(TAG, "selected device is " + name);
+                        if(_deviceDataRepository.doesExist(name))
+                            _selectedDevice = name;
+                        else
+                            onNothingSelected(parent);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        _selectedDevice = null;
+                    }
+                });
     }
 
     @Override

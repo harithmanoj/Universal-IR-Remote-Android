@@ -68,7 +68,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class MainActivity extends AppCompatActivity {
 
     // Selected Service Info
-    private NsdServiceInfo _selectedService;
+    private NsdServiceInfo _selectedService = null;
 
     // Discovery and resolution
     private NetworkManager _networkManager;
