@@ -140,36 +140,36 @@ public class DeviceSelect extends AppCompatActivity {
 
             DeviceData device = _deviceDataRepository.getDevice(_selectedDevice);
 
-            Intent intent;
-            switch( device.getDeviceLayout() ) {
-                case Constant.Layout.LAY_TV: {
-                    intent = new Intent(this, /* TV layout remote activity */);
-                }
-
-                case Constant.Layout.LAY_AC: {
-                    intent = new Intent(this, /* AC layout remote activity */);
-                }
-
-                default: {
-                    Toast.makeText(getApplicationContext(),
-                            "invalid layout", Toast.LENGTH_LONG).show();
-                    return;
-                }
-            }
-
-            intent.putExtra(Constant.INT_LAUNCHER_KEY, Constant.INT_LAUNCHER_DEVICE_SELECT);
-            intent.putExtra(Constant.INT_SERVICE_KEY,
-                    (NsdServiceInfo)getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY));
-            startActivity(intent);
+//            Intent intent;
+//            switch( device.getDeviceLayout() ) {
+//                case Constant.Layout.LAY_TV: {
+//                    intent = new Intent(this, /* TV layout remote activity */);
+//                }
+//
+//                case Constant.Layout.LAY_AC: {
+//                    intent = new Intent(this, /* AC layout remote activity */);
+//                }
+//
+//                default: {
+//                    Toast.makeText(getApplicationContext(),
+//                            "invalid layout", Toast.LENGTH_LONG).show();
+//                    return;
+//                }
+//            }
+//
+//            intent.putExtra(Constant.INT_LAUNCHER_KEY, Constant.INT_LAUNCHER_DEVICE_SELECT);
+//            intent.putExtra(Constant.INT_SERVICE_KEY,
+//                    (NsdServiceInfo)getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY));
+//            startActivity(intent);
         }
     }
 
     // Add new remote
     public void clickNew( View view ) {
-        Intent intent = new Intent(this, /* Device add activity */);
-        intent.putExtra(Constant.INT_LAUNCHER_KEY, Constant.INT_LAUNCHER_DEVICE_SELECT);
-        intent.putExtra(Constant.INT_SERVICE_KEY,
-                (NsdServiceInfo)getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY));
-        startActivity(intent);
+//        Intent intent = new Intent(this, /* Device add activity */);
+//        intent.putExtra(Constant.INT_LAUNCHER_KEY, Constant.INT_LAUNCHER_DEVICE_SELECT);
+//        intent.putExtra(Constant.INT_SERVICE_KEY,
+//                (NsdServiceInfo)getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY));
+//        startActivity(intent);
     }
 }
