@@ -38,4 +38,14 @@ public final class Constant {
 
     // Value for INT_LAUNCHER_KEY when DeviceSelect launches an activity.
     public static final int INT_LAUNCHER_DEVICE_SELECT = 1;
+
+    public static final class Layout {
+
+        // Value to identify TV remote layout
+        public static final int LAY_TV = 0;
+
+        // Value to identify AC remote layout
+        public static final int LAY_AC = 1;
+
+    }
 }
