@@ -22,6 +22,9 @@ package com.remote.universalirremote;
 // Class to encapsulate application wide constants used eg: activity launcher key
 //
 public final class Constant {
+    // Spinner Content when no services are available.
+    public static final String NO_SELECT = "None";
+
     private Constant() {}
 
     // Key for the service info passed to DeviceSelect activity
@@ -35,4 +38,14 @@ public final class Constant {
 
     // Value for INT_LAUNCHER_KEY when DeviceSelect launches an activity.
     public static final int INT_LAUNCHER_DEVICE_SELECT = 1;
+
+    public static final class Layout {
+
+        // Value to identify TV remote layout
+        public static final int LAY_TV = 0;
+
+        // Value to identify AC remote layout
+        public static final int LAY_AC = 1;
+
+    }
 }
