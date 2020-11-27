@@ -49,9 +49,9 @@ public final class Constant {
 
     }
     
-public static final class Protocols {
-        
-        // Values for protocols (compatible with decode_type_t enumeration in ESP32 code)
+    
+    // Values for protocols (compatible with decode_type_t enumeration in ESP32 code)
+    public static final class Protocols {
         public static final int UNKNOWN = -1,
         public static final int UNUSED = 0,
         public static final int RC5 = 1,
