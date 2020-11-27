@@ -47,5 +47,8 @@ public final class Constant {
         // Value to identify AC remote layout
         public static final int LAY_AC = 1;
 
+        // Value to identify general remote layout
+        public static final int LAY_GEN = 2;
+
     }
 }

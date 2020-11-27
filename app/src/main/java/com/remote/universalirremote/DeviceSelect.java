@@ -36,13 +36,13 @@ import android.widget.Toast;
 import java.util.List;
 
 //
-// Actiity to select device from existing
+// Activity to select device from existing
 //
-// Usage :
-//              Select Device from Dropdown
-//              Tap OK
-//          OR
-//              Tap New ( + )
+// Usage:
+//          Select Device from Dropdown
+//          Tap OK
+//      OR
+//          Tap New ( + )
 //
 //
 //    Launch by:
@@ -52,7 +52,6 @@ import java.util.List;
 //                Launcher:           INT_LAUNCHER_KEY           : INT_LAUNCHER_MAIN (0)
 //                Blaster Address:    INT_SERVICE_KEY
 //                        NsdServiceInfo retrieve using .getParcelable(KEY)
-//
 //
 //    Launches:
 //        multiple layouts not yet finalised
