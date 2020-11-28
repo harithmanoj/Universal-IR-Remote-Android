@@ -25,7 +25,7 @@
         android:id="@+id/btn_sendNow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
+        android:text="send"
         app:layout_constraintBaseline_toBaselineOf="@+id/text_sendMessage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/text_sendMessage" />
@@ -34,7 +34,7 @@
         android:id="@+id/btn_getMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
+        android:text="get"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.544"
