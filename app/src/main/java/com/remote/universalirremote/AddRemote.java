@@ -103,7 +103,7 @@ public class AddRemote extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-    
+
     public int getProtocol(String prt) {
         return -20;
     }
