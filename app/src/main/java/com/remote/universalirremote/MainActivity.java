@@ -297,7 +297,7 @@ public class MainActivity extends AppCompatActivity {
                     _selectedService.getServiceName() + " resolved",
                     Toast.LENGTH_SHORT).show();
 
-            Intent intent = new Intent(this, DeviceSelect.class );
+            Intent intent = new Intent(this, Ping.class );
             intent.putExtra(Constant.INT_LAUNCHER_KEY,Constant.INT_LAUNCHER_MAIN);
             intent.putExtra(Constant.INT_SERVICE_KEY, _selectedService);
             startActivity(intent);
