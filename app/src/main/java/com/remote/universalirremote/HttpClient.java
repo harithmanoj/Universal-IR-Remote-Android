@@ -19,5 +19,40 @@
 
 package com.remote.universalirremote;
 
+import android.net.nsd.NsdServiceInfo;
+import android.util.Log;
+
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 public class HttpClient {
+    private NsdServiceInfo _serviceInfo;
+    private HttpURLConnection _httpConnection;
+    private String _serviceUrl;
+
+    public static final String TAG = "HttpClient";
+
+    public HttpClient(NsdServiceInfo info) {
+        _serviceInfo = info;
+        _serviceUrl = new String("http://") + _serviceInfo.getHost().getHostAddress();
+    }
+
+    public void connect() {
+        try {
+            URL url = new URL(_serviceUrl);
+            _httpConnection = url.openConnection();
+        } catch (MalformedURLException ex) {
+            Log.e(TAG, "malformed url exception ", ex);
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            Log.e(TAG, "IO exception ", ex);
+            ex.printStackTrace();
+        }
+    }
+
+    
 }
