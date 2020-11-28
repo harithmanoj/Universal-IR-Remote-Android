@@ -57,7 +57,12 @@ import java.util.List;
 //        multiple layouts not yet finalised
 //        MainActivity
 //                  on Back pressed.
-//
+//        AddRemote
+//        intent:
+//            passes:
+//                Launcher:           INT_LAUNCHER_KEY           : INT_LAUNCHER_DEVICE_SELECT (1)
+//                Blaster Address:    INT_SERVICE_KEY
+//                        NsdServiceInfo retrieve using .getParcelable(KEY)
 //
 public class DeviceSelect extends AppCompatActivity {
 
