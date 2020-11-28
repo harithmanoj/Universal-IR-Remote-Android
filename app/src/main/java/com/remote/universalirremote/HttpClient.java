@@ -28,6 +28,9 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class HttpClient {
     private NsdServiceInfo _serviceInfo;
@@ -54,5 +57,32 @@ public class HttpClient {
         }
     }
 
-    
+    public static class Request {
+
+        public static class Property {
+            public final String _propertyName;
+            public final String _propertyValue;
+
+            public Property(String name, String value ) {
+                _propertyName = name;
+                _propertyValue = value;
+            }
+        }
+
+        public final String _urlParameters;
+        public final byte[] _postData;
+        public final String _requestMethod;
+        public final ArrayList<Property> _requestProperties;
+
+        public Request(String urlParam, byte[] data, String method, Property... properties) {
+            _urlParameters = urlParam;
+            _postData = data;
+            _requestMethod = method;
+            ArrayList<Property> tempProperties = new ArrayList<Property>(Arrays.asList(properties));
+            tempProperties.add(new Property("Content-Length", Integer.toString(data.length)));
+            _requestProperties = tempProperties;
+        }
+
+    }
+
 }
