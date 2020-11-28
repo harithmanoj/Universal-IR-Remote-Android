@@ -158,17 +158,18 @@ public class DeviceSelect extends AppCompatActivity {
 //
 //            intent.putExtra(Constant.INT_LAUNCHER_KEY, Constant.INT_LAUNCHER_DEVICE_SELECT);
 //            intent.putExtra(Constant.INT_SERVICE_KEY,
-//                    (NsdServiceInfo)getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY));
+//                    (NsdServiceInfo)getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY))
+//            intent.putExtra(Constant.INT_SELECTED_DEVICE, device.getDeviceName());
 //            startActivity(intent);
         }
     }
 
     // Add new remote
     public void clickNew( View view ) {
-//        Intent intent = new Intent(this, /* Device add activity */);
-//        intent.putExtra(Constant.INT_LAUNCHER_KEY, Constant.INT_LAUNCHER_DEVICE_SELECT);
-//        intent.putExtra(Constant.INT_SERVICE_KEY,
-//                (NsdServiceInfo)getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY));
-//        startActivity(intent);
-    }
+        Intent intent = new Intent(this, AddRemote.class);
+        intent.putExtra(Constant.INT_LAUNCHER_KEY, Constant.INT_LAUNCHER_DEVICE_SELECT);
+        intent.putExtra(Constant.INT_SERVICE_KEY,
+                (NsdServiceInfo)getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY));
+        startActivity(intent);
+  }
 }
