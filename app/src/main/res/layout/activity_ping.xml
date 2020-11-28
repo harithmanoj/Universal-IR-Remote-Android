@@ -53,21 +53,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.004">
+
         <TextView
             android:id="@+id/txt_leftSent"
-            android:layout_width="203dp"
-            android:layout_height="497dp"
+            android:layout_width="203sp"
+            android:layout_height="497sp"
             android:gravity="left"
             android:text="Text on the Left"
+            android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/txt_rightRecieved"
-            android:layout_width="206dp"
-            android:layout_height="495dp"
+            android:layout_width="203sp"
+            android:layout_height="497sp"
             android:gravity="right"
             android:text="Text on the right"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -113,7 +113,8 @@ public class HttpClient {
             _postData = data;
             _requestMethod = method;
             ArrayList<Property> tempProperties = new ArrayList<>(Arrays.asList(properties));
-            tempProperties.add(new Property("Content-Length", Integer.toString(data.length)));
+            if(method.equals("POST"))
+                tempProperties.add(new Property("Content-Length", Integer.toString(data.length)));
             _requestProperties = tempProperties;
         }
 
