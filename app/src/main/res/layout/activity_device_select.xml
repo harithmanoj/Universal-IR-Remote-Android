@@ -71,7 +71,7 @@
         android:id="@+id/textView_DeviceSelection"
         android:layout_width="150dp"
         android:layout_height="50dp"
-        android:text="Select Device"
+        android:text="Select Device :"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
