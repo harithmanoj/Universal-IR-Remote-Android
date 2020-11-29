@@ -200,12 +200,14 @@ public class MainActivity extends AppCompatActivity {
                         _discoveredServicesList.add(
                                 msgBundle.getString(NetworkManager.DISCOVERED_SERVICE_NAME));
                         _discoveredServicesAdapter.notifyDataSetChanged();
+                        refreshSpinner();
                     }
 
                     case NetworkManager.DISCOVER_LOST: { // remove service
                         _discoveredServicesList.remove(
                                 msgBundle.getString(NetworkManager.DISCOVERED_SERVICE_NAME));
                         _discoveredServicesAdapter.notifyDataSetChanged();
+                        refreshSpinner();
                     }
 
                     case NetworkManager.DISCOVER_REFRESH: { // refresh UI
