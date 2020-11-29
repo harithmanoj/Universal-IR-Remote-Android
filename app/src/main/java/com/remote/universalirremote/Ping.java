@@ -48,6 +48,7 @@ public class Ping extends AppCompatActivity {
     protected void onStart() {
         Intent intent = getIntent();
         _responseHandlerThread = new HandlerThread("HttpResponseHandler");
+        _responseHandlerThread.start();
         _responseHandler = new Handler(_responseHandlerThread.getLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
