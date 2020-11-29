@@ -6,9 +6,13 @@ import android.content.Intent;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Xml;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -90,11 +94,15 @@ public class Ping extends AppCompatActivity {
 
     public void clickSend(View view) {
         String msg = ((EditText) findViewById(R.id.text_sendMessage)).getText().toString();
+
+        StringBuilder xmlMessage = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+        xmlMessage.append("<message> " + msg + " </message>");
+
         try {
             String response = _httpConnection.transaction(
                     new HttpClient.Request(
-                            msg.getBytes(), "POST",
-                            new HttpClient.Request.Property("Content-Type", "text/plain"),
+                            xmlMessage.toString().getBytes(), "POST",
+                            new HttpClient.Request.Property("Content-Type", "application/xml"),
                             new HttpClient.Request.Property("charset", "utf-8")
                     )
             );
@@ -110,7 +118,7 @@ public class Ping extends AppCompatActivity {
             String response = _httpConnection.transaction(
                     new HttpClient.Request(
                             null, "GET",
-                            new HttpClient.Request.Property("Content-Type", "text/plain"),
+                            new HttpClient.Request.Property("Content-Type", "application/xml"),
                             new HttpClient.Request.Property("charset", "utf-8")
                     )
             );
