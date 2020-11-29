@@ -32,22 +32,24 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.net.ssl.HttpsURLConnection;
+
 public class HttpClient {
     private final NsdServiceInfo _serviceInfo;
-    private HttpURLConnection _httpConnection;
+    private HttpsURLConnection _httpsConnection;
     private String _serviceUrl;
 
     public static final String TAG = "HttpClient";
 
     public HttpClient(NsdServiceInfo info) {
         _serviceInfo = info;
-        _serviceUrl = "http://" + _serviceInfo.getHost().getHostAddress();
+        _serviceUrl = "https://" + _serviceInfo.getHost().getHostAddress();
     }
 
     public void connect() {
         try {
             URL url = new URL(_serviceUrl);
-            _httpConnection = (HttpURLConnection)url.openConnection();
+            _httpsConnection = (HttpsURLConnection)url.openConnection();
         } catch (MalformedURLException ex) {
             Log.e(TAG, "malformed url exception ", ex);
             ex.printStackTrace();
@@ -58,25 +60,25 @@ public class HttpClient {
     }
 
     public String transaction(Request request) throws IOException {
-        _httpConnection.setDoOutput(true);
-        _httpConnection.setInstanceFollowRedirects(false);
-        _httpConnection.setRequestMethod(request._requestMethod);
+        _httpsConnection.setDoOutput(true);
+        _httpsConnection.setInstanceFollowRedirects(false);
+        _httpsConnection.setRequestMethod(request._requestMethod);
         for(Request.Property i : request._requestProperties) {
-            _httpConnection.setRequestProperty(i._propertyName, i._propertyValue);
+            _httpsConnection.setRequestProperty(i._propertyName, i._propertyValue);
         }
 
-        _httpConnection.connect();
+        _httpsConnection.connect();
         if(request._requestMethod.equals("POST")) {
-            OutputStream os = _httpConnection.getOutputStream();
+            OutputStream os = _httpsConnection.getOutputStream();
             os.write(request._postData);
             os.flush();
             os.close();
         }
 
-        int responseCode = _httpConnection.getResponseCode();
+        int responseCode = _httpsConnection.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_OK) { //success
             BufferedReader in = new BufferedReader(new InputStreamReader(
-                    _httpConnection.getInputStream()));
+                    _httpsConnection.getInputStream()));
             String inputLine;
             StringBuilder response = new StringBuilder();
 
@@ -85,7 +87,7 @@ public class HttpClient {
             }
             in.close();
 
-            _httpConnection.disconnect();
+            _httpsConnection.disconnect();
             return response.toString();
         } else {
             throw new IOException(request._requestMethod +
