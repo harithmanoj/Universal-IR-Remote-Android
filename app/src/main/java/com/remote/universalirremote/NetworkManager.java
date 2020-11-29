@@ -157,8 +157,10 @@ public class NetworkManager {
             public void onServiceFound(NsdServiceInfo serviceInfo) {
                 Log.i(TAG, serviceInfo.getServiceName()
                         + " " + serviceInfo.getServiceType() + " found");
+				if(_discoveredServices.contains(serviceInfo))
+					return;
                 _discoveredServices.add(serviceInfo);
-                if ((_discoveryHandler != null) && !_discoveredServices.contains(serviceInfo)) {
+                if ((_discoveryHandler != null)) {
                     Bundle msgBundle = new Bundle();
                     msgBundle.putInt(DISCOVER_OP, DISCOVER_NEW);
                     msgBundle.putString(DISCOVERED_SERVICE_NAME, serviceInfo.getServiceName());
@@ -173,8 +175,10 @@ public class NetworkManager {
             public void onServiceLost(NsdServiceInfo serviceInfo) {
                 Log.i(TAG, serviceInfo.getServiceName()
                         + " " + serviceInfo.getServiceType() + " lost");
+				if(!_discoveredServices.contains(serviceInfo))
+					return;
                 _discoveredServices.remove(serviceInfo);
-                if ((_discoveryHandler != null) && _discoveredServices.contains(serviceInfo)) {
+                if ((_discoveryHandler != null)) {
                     Bundle msgBundle = new Bundle();
                     msgBundle.putInt(DISCOVER_OP, DISCOVER_LOST);
                     msgBundle.putString(DISCOVERED_SERVICE_NAME, serviceInfo.getServiceName());
