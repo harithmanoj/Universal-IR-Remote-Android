@@ -20,6 +20,9 @@
 package com.remote.universalirremote;
 
 import android.net.nsd.NsdServiceInfo;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -28,9 +31,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -40,6 +46,17 @@ public class HttpClient {
     private String _serviceUrl;
 
     public static final String TAG = "HttpClient";
+
+    // executor limit
+    private static final int NUMBER_OF_THREADS = 4;
+
+    public static final String RESPONSE_KEY = "response.transaction";
+    public static final String RESPONSE_CODE_KEY = "response.key.transaction";
+    public static final String TRANSACTION_KEY = "transaction.method";
+
+    // executor for asynchronous data
+    static final ExecutorService _networkTransactionExecutor =
+            Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
     public HttpClient(NsdServiceInfo info) {
         _serviceInfo = info;
@@ -59,40 +76,57 @@ public class HttpClient {
         }
     }
 
-    public String transaction(Request request) throws IOException {
-        _httpsConnection.setDoOutput(true);
-        _httpsConnection.setInstanceFollowRedirects(false);
-        _httpsConnection.setRequestMethod(request._requestMethod);
-        for(Request.Property i : request._requestProperties) {
-            _httpsConnection.setRequestProperty(i._propertyName, i._propertyValue);
-        }
+    public void transaction(Request request, Handler _handleResponse) {
 
-        _httpsConnection.connect();
-        if(request._requestMethod.equals("POST")) {
-            OutputStream os = _httpsConnection.getOutputStream();
-            os.write(request._postData);
-            os.flush();
-            os.close();
-        }
+        _networkTransactionExecutor.execute(
+                () -> {
+                    try {
+                        _httpsConnection.setDoOutput(true);
+                        _httpsConnection.setInstanceFollowRedirects(false);
+                        _httpsConnection.setRequestMethod(request._requestMethod);
+                        for (Request.Property i : request._requestProperties) {
+                            _httpsConnection.setRequestProperty(i._propertyName, i._propertyValue);
+                        }
 
-        int responseCode = _httpsConnection.getResponseCode();
-        if (responseCode == HttpURLConnection.HTTP_OK) { //success
-            BufferedReader in = new BufferedReader(new InputStreamReader(
-                    _httpsConnection.getInputStream()));
-            String inputLine;
-            StringBuilder response = new StringBuilder();
+                        _httpsConnection.connect();
+                        if (request._requestMethod.equals("POST")) {
+                            OutputStream os = _httpsConnection.getOutputStream();
+                            os.write(request._postData);
+                            os.flush();
+                            os.close();
+                        }
+                        Bundle msgBundle = new Bundle();
+                        int responseCode = _httpsConnection.getResponseCode();
+                        if (responseCode == HttpURLConnection.HTTP_OK) { //success
+                            BufferedReader in = new BufferedReader(new InputStreamReader(
+                                    _httpsConnection.getInputStream()));
+                            String inputLine;
+                            StringBuilder response = new StringBuilder();
 
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
+                            while ((inputLine = in.readLine()) != null) {
+                                response.append(inputLine);
+                            }
+                            in.close();
+                            msgBundle.putString(RESPONSE_KEY, response.toString());
+                        }
 
-            _httpsConnection.disconnect();
-            return response.toString();
-        } else {
-            throw new IOException(request._requestMethod +
-                    " response " + ((Integer)responseCode).toString());
-        }
+                        _httpsConnection.disconnect();
+
+                        msgBundle.putInt(RESPONSE_CODE_KEY, responseCode);
+                        msgBundle.putString(TRANSACTION_KEY, request._requestMethod);
+                        Message msg = new Message();
+                        msg.setData(msgBundle);
+                        _handleResponse.sendMessage(msg);
+
+                    } catch (IOException ex) {
+                        Log.e(TAG, " exception at transaction executor", ex);
+                        ex.printStackTrace();
+                    }
+
+                }
+        );
+
+
     }
 
     public static class Request {

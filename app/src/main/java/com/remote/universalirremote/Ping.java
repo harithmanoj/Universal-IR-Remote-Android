@@ -1,14 +1,19 @@
 package com.remote.universalirremote;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Message;
 import android.util.Log;
 import android.util.Xml;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.HeaderViewListAdapter;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -16,6 +21,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class Ping extends AppCompatActivity {
 
@@ -25,6 +32,9 @@ public class Ping extends AppCompatActivity {
     int lines = 0;
     ArrayList<String> _sentList;
     ArrayList<String> _recList;
+
+    HandlerThread _responseHandlerThread;
+    Handler _responseHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +47,22 @@ public class Ping extends AppCompatActivity {
     @Override
     protected void onStart() {
         Intent intent = getIntent();
+        _responseHandlerThread = new HandlerThread("HttpResponseHandler");
+        _responseHandler = new Handler(_responseHandlerThread.getLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                if(msg.getData().getInt(HttpClient.RESPONSE_CODE_KEY) == HttpsURLConnection.HTTP_OK) {
+                    runOnUiThread(
+                            () -> addToRec(msg.getData().getString(HttpClient.TRANSACTION_KEY))
+                    );
+                } else {
+                    Log.e("PING", "unknown problem response not ok "
+                            + ((Integer)msg.getData()
+                            .getInt(HttpClient.RESPONSE_CODE_KEY)).toString());
+                }
+
+            }
+        };
         _httpConnection = new HttpClient((NsdServiceInfo)intent.getParcelableExtra(Constant.INT_SERVICE_KEY));
         _httpConnection.connect();
         super.onStart();
@@ -98,33 +124,25 @@ public class Ping extends AppCompatActivity {
         StringBuilder xmlMessage = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
         xmlMessage.append("<message> " + msg + " </message>");
 
-        try {
-            String response = _httpConnection.transaction(
+        _httpConnection.transaction(
                     new HttpClient.Request(
                             xmlMessage.toString().getBytes(), "POST",
                             new HttpClient.Request.Property("Content-Type", "application/xml"),
                             new HttpClient.Request.Property("charset", "utf-8")
-                    )
+                    ), _responseHandler
             );
-            addToRec(response);
             addToSend(msg);
-        } catch (IOException ex) {
-            Log.e("PING", "error in http client", ex);
-        }
+
     }
 
     public void clickGet(View view) {
-        try {
-            String response = _httpConnection.transaction(
-                    new HttpClient.Request(
-                            null, "GET",
-                            new HttpClient.Request.Property("Content-Type", "application/xml"),
-                            new HttpClient.Request.Property("charset", "utf-8")
-                    )
-            );
-            addToRec(response);
-        } catch (IOException ex) {
-            Log.e("PING", "error in http client", ex);
-        }
+        _httpConnection.transaction(
+                new HttpClient.Request(
+                        null, "GET",
+                        new HttpClient.Request.Property("Content-Type", "application/xml"),
+                        new HttpClient.Request.Property("charset", "utf-8")
+                ), _responseHandler
+        );
+
     }
 }
