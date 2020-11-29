@@ -80,9 +80,6 @@ public class MainActivity extends AppCompatActivity {
     // Handler to update spinner on discovery.
     private Handler _discoveryHandler;
 
-    // List of names of all services.
-    private ArrayAdapter<String> _discoveredServicesAdapter;
-
     private ArrayList<String> _discoveredServicesList;
 
     // Debug TAG
@@ -129,11 +126,14 @@ public class MainActivity extends AppCompatActivity {
         for ( NsdServiceInfo i : list) {
             _discoveredServicesList.add(i.getServiceName()); // add all services
         }
-        _discoveredServicesAdapter = new ArrayAdapter<>(
-                this, R.layout.support_simple_spinner_dropdown_item,
-                _discoveredServicesList);
+        refreshSpinnerQuick();
+    }
+
+    public void refreshSpinnerQuick() {
         Spinner discoveredServicesUiList = findViewById(R.id.spnr_blasterSelection);
-        discoveredServicesUiList.setAdapter(_discoveredServicesAdapter);
+        discoveredServicesUiList.setAdapter(new ArrayAdapter<>(
+                this, R.layout.support_simple_spinner_dropdown_item,
+                _discoveredServicesList));
     }
 
     // onCreate instantiation.
@@ -146,11 +146,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         _discoveredServicesList = new ArrayList<>();
         _discoveredServicesList.add(Constant.NO_SELECT);
-        _discoveredServicesAdapter = new ArrayAdapter<>(
-                this, R.layout.support_simple_spinner_dropdown_item,
-                _discoveredServicesList);
         Spinner discoveredServicesUiList = findViewById(R.id.spnr_blasterSelection);
-        discoveredServicesUiList.setAdapter(_discoveredServicesAdapter);
+        discoveredServicesUiList.setAdapter(new ArrayAdapter<>(
+                this, R.layout.support_simple_spinner_dropdown_item,
+                _discoveredServicesList));
         discoveredServicesUiList.setOnItemSelectedListener
                 (new AdapterView.OnItemSelectedListener() {
                     @Override
@@ -203,21 +202,13 @@ public class MainActivity extends AppCompatActivity {
                     case NetworkManager.DISCOVER_NEW: { // add new service
                         _discoveredServicesList.add(
                                 msgBundle.getString(NetworkManager.DISCOVERED_SERVICE_NAME));
-                        _discoveredServicesAdapter = new ArrayAdapter<>(
-                                this, R.layout.support_simple_spinner_dropdown_item,
-                                _discoveredServicesList);
-                        Spinner discoveredServicesUiList = findViewById(R.id.spnr_blasterSelection);
-                        discoveredServicesUiList.setAdapter(_discoveredServicesAdapter);
+                        refreshSpinnerQuick();
                     }
 
                     case NetworkManager.DISCOVER_LOST: { // remove service
                         _discoveredServicesList.remove(
                                 msgBundle.getString(NetworkManager.DISCOVERED_SERVICE_NAME));
-                        _discoveredServicesAdapter = new ArrayAdapter<>(
-                                this, R.layout.support_simple_spinner_dropdown_item,
-                                _discoveredServicesList);
-                        Spinner discoveredServicesUiList = findViewById(R.id.spnr_blasterSelection);
-                        discoveredServicesUiList.setAdapter(_discoveredServicesAdapter);
+                        refreshSpinnerQuick();
                     }
 
                     case NetworkManager.DISCOVER_REFRESH: { // refresh UI
