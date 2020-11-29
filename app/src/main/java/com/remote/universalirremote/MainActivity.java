@@ -283,7 +283,6 @@ public class MainActivity extends AppCompatActivity {
 
             ProgressBar circle = (ProgressBar) findViewById(R.id.prg_resolveProgress);
             circle.setVisibility(View.VISIBLE);
-            _selectedService = _networkManager.getChosenServiceInfo();
             Toast.makeText(getApplicationContext(),
                     "resolving " + _selectedService.getServiceName(),
                     Toast.LENGTH_SHORT).show();
