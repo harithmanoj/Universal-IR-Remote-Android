@@ -210,6 +210,7 @@ public class NetworkManager {
                 synchronized (_waitForResolution) {
                     _isResolved = true;
                     _selectedServiceInfo = serviceInfo;
+                    Log.i(TAG, "synch, service assigned");
                     _waitForResolution.notifyAll();
                 }
             }
