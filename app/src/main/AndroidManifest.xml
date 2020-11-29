@@ -27,6 +27,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".AddRemote">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.remote.universalirremote.DeviceSelect" />
+        </activity>
         <activity android:name=".DeviceSelect">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

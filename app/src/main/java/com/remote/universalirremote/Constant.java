@@ -39,6 +39,8 @@ public final class Constant {
     // Value for INT_LAUNCHER_KEY when DeviceSelect launches an activity.
     public static final int INT_LAUNCHER_DEVICE_SELECT = 1;
 
+    public static final String INT_SELECTED_DEVICE = "com.remote.universalirremote.DEVICE.SELECTED";
+
     public static final class Layout {
 
         // Value to identify TV remote layout

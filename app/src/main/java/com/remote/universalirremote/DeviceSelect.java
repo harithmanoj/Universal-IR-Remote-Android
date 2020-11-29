@@ -57,7 +57,12 @@ import java.util.List;
 //        multiple layouts not yet finalised
 //        MainActivity
 //                  on Back pressed.
-//
+//        AddRemote
+//        intent:
+//            passes:
+//                Launcher:           INT_LAUNCHER_KEY           : INT_LAUNCHER_DEVICE_SELECT (1)
+//                Blaster Address:    INT_SERVICE_KEY
+//                        NsdServiceInfo retrieve using .getParcelable(KEY)
 //
 public class DeviceSelect extends AppCompatActivity {
 
@@ -158,17 +163,18 @@ public class DeviceSelect extends AppCompatActivity {
 //
 //            intent.putExtra(Constant.INT_LAUNCHER_KEY, Constant.INT_LAUNCHER_DEVICE_SELECT);
 //            intent.putExtra(Constant.INT_SERVICE_KEY,
-//                    (NsdServiceInfo)getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY));
+//                    (NsdServiceInfo)getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY))
+//            intent.putExtra(Constant.INT_SELECTED_DEVICE, device.getDeviceName());
 //            startActivity(intent);
         }
     }
 
     // Add new remote
     public void clickNew( View view ) {
-//        Intent intent = new Intent(this, /* Device add activity */);
-//        intent.putExtra(Constant.INT_LAUNCHER_KEY, Constant.INT_LAUNCHER_DEVICE_SELECT);
-//        intent.putExtra(Constant.INT_SERVICE_KEY,
-//                (NsdServiceInfo)getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY));
-//        startActivity(intent);
-    }
+        Intent intent = new Intent(this, AddRemote.class);
+        intent.putExtra(Constant.INT_LAUNCHER_KEY, Constant.INT_LAUNCHER_DEVICE_SELECT);
+        intent.putExtra(Constant.INT_SERVICE_KEY,
+                (NsdServiceInfo)getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY));
+        startActivity(intent);
+  }
 }
