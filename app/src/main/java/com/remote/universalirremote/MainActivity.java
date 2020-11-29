@@ -194,19 +194,34 @@ public class MainActivity extends AppCompatActivity {
 
                 switch(op) {
                     case NetworkManager.DISCOVER_NEW: { // add new service
-                        _discoveredServicesAdapter.add(
-                                msgBundle.getString(NetworkManager.DISCOVERED_SERVICE_NAME));
-                        _discoveredServicesAdapter.notifyDataSetChanged();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                _discoveredServicesAdapter.add(
+                                        msgBundle.getString(NetworkManager.DISCOVERED_SERVICE_NAME));
+                                _discoveredServicesAdapter.notifyDataSetChanged();
+                            }
+                        });
                     }
 
                     case NetworkManager.DISCOVER_LOST: { // remove service
-                        _discoveredServicesAdapter.remove(
-                                msgBundle.getString(NetworkManager.DISCOVERED_SERVICE_NAME));
-                        _discoveredServicesAdapter.notifyDataSetChanged();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                _discoveredServicesAdapter.remove(
+                                        msgBundle.getString(NetworkManager.DISCOVERED_SERVICE_NAME));
+                                _discoveredServicesAdapter.notifyDataSetChanged();
+                            }
+                        });
                     }
 
                     case NetworkManager.DISCOVER_REFRESH: { // refresh UI
-                        refreshSpinner();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                refreshSpinner();
+                            }
+                        });
                     }
                 }
 
