@@ -141,9 +141,8 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<String> servicesList = new ArrayList<>();
         servicesList.add(Constant.NO_SELECT);
         Spinner discoveredServicesUiList = findViewById(R.id.spnr_blasterSelection);
-        _discoveredServicesAdapter = new ArrayAdapter<>(
-                this, R.layout.support_simple_spinner_dropdown_item,
-                servicesList);
+		_discoveredServicesAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, servicesList);
+		_discoveredServicesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         discoveredServicesUiList.setAdapter(_discoveredServicesAdapter);
         discoveredServicesUiList.setOnItemSelectedListener
                 (new AdapterView.OnItemSelectedListener() {
