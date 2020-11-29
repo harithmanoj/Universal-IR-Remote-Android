@@ -129,7 +129,11 @@ public class MainActivity extends AppCompatActivity {
         for ( NsdServiceInfo i : list) {
             _discoveredServicesList.add(i.getServiceName()); // add all services
         }
-        _discoveredServicesAdapter.notifyDataSetChanged(); // notify UI
+        _discoveredServicesAdapter = new ArrayAdapter<>(
+                this, R.layout.support_simple_spinner_dropdown_item,
+                _discoveredServicesList);
+        Spinner discoveredServicesUiList = findViewById(R.id.spnr_blasterSelection);
+        discoveredServicesUiList.setAdapter(_discoveredServicesAdapter);
     }
 
     // onCreate instantiation.
@@ -199,15 +203,21 @@ public class MainActivity extends AppCompatActivity {
                     case NetworkManager.DISCOVER_NEW: { // add new service
                         _discoveredServicesList.add(
                                 msgBundle.getString(NetworkManager.DISCOVERED_SERVICE_NAME));
-                        _discoveredServicesAdapter.notifyDataSetChanged();
-                        refreshSpinner();
+                        _discoveredServicesAdapter = new ArrayAdapter<>(
+                                this, R.layout.support_simple_spinner_dropdown_item,
+                                _discoveredServicesList);
+                        Spinner discoveredServicesUiList = findViewById(R.id.spnr_blasterSelection);
+                        discoveredServicesUiList.setAdapter(_discoveredServicesAdapter);
                     }
 
                     case NetworkManager.DISCOVER_LOST: { // remove service
                         _discoveredServicesList.remove(
                                 msgBundle.getString(NetworkManager.DISCOVERED_SERVICE_NAME));
-                        _discoveredServicesAdapter.notifyDataSetChanged();
-                        refreshSpinner();
+                        _discoveredServicesAdapter = new ArrayAdapter<>(
+                                this, R.layout.support_simple_spinner_dropdown_item,
+                                _discoveredServicesList);
+                        Spinner discoveredServicesUiList = findViewById(R.id.spnr_blasterSelection);
+                        discoveredServicesUiList.setAdapter(_discoveredServicesAdapter);
                     }
 
                     case NetworkManager.DISCOVER_REFRESH: { // refresh UI
