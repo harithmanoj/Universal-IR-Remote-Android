@@ -26,7 +26,7 @@
     android:background="@drawable/back"
     tools:context=".AddRemote">
 
-    <EditText
+    <TextView
         android:id="@+id/textViewDeviceSelect"
         android:layout_width="150dp"
         android:layout_height="50dp"
@@ -67,7 +67,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.818" />
 
-    <EditText
+    <TextView
         android:id="@+id/textViewProtocolSelect"
         android:layout_width="150dp"
         android:layout_height="50dp"
@@ -93,7 +93,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.393" />
 
-    <EditText
+    <TextView
         android:id="@+id/textViewName"
         android:layout_width="150dp"
         android:layout_height="50dp"
