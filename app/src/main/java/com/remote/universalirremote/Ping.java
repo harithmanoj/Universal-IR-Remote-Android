@@ -67,6 +67,9 @@ public class Ping extends AppCompatActivity {
         _httpConnection = new HttpClient((NsdServiceInfo)intent.getParcelableExtra(Constant.INT_SERVICE_KEY));
         _httpConnection.connect();
         super.onStart();
+
+        _sentList = new ArrayList<String>();
+        _recList = new ArrayList<String>();
     }
 
     public void update() {
@@ -122,12 +125,12 @@ public class Ping extends AppCompatActivity {
     public void clickSend(View view) {
         String msg = ((EditText) findViewById(R.id.text_sendMessage)).getText().toString();
 
-        StringBuilder xmlMessage = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        xmlMessage.append("<message> " + msg + " </message>");
+        StringBuilder Message = new StringBuilder("");
+        Message.append(msg);
 
         _httpConnection.transaction(
                     new HttpClient.Request(
-                            xmlMessage.toString().getBytes(), "POST",
+                            Message.toString().getBytes(), "POST",
                             new HttpClient.Request.Property("Content-Type", "application/xml"),
                             new HttpClient.Request.Property("charset", "utf-8")
                     ), _responseHandler
