@@ -65,7 +65,7 @@ public class Ping extends AppCompatActivity {
             }
         };
         _httpConnection = new HttpClient((NsdServiceInfo)intent.getParcelableExtra(Constant.INT_SERVICE_KEY));
-        _httpConnection.connect();
+        _httpConnection.connect(_responseHandler);
         super.onStart();
 
         _sentList = new ArrayList<String>();
@@ -133,7 +133,7 @@ public class Ping extends AppCompatActivity {
                             Message.toString().getBytes(), "POST",
                             new HttpClient.Request.Property("Content-Type", "application/xml"),
                             new HttpClient.Request.Property("charset", "utf-8")
-                    ), _responseHandler
+                    )
             );
             addToSend(msg);
 
@@ -145,7 +145,7 @@ public class Ping extends AppCompatActivity {
                         null, "GET",
                         new HttpClient.Request.Property("Content-Type", "application/xml"),
                         new HttpClient.Request.Property("charset", "utf-8")
-                ), _responseHandler
+                )
         );
 
     }
