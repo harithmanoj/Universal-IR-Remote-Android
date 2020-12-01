@@ -19,6 +19,7 @@
 
 package com.remote.universalirremote;
 
+import android.content.Intent;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
 import android.os.Handler;
@@ -67,13 +68,25 @@ public class HttpClient {
             public void handleMessage(@NonNull Message msg) {
                 Request request = (Request) msg.getData().getParcelable(TRANSACTION_KEY);
                 try {
+                    try {
+                        URL url = new URL(_serviceUrl);
+                        _httpConnection = (HttpURLConnection)url.openConnection();
+                    } catch (MalformedURLException ex) {
+                        Log.e(TAG, "malformed url exception ", ex);
+                        ex.printStackTrace();
+                    } catch (IOException ex) {
+                        Log.e(TAG, "IO exception ", ex);
+                        ex.printStackTrace();
+                    }
                     _httpConnection.setInstanceFollowRedirects(false);
-                    _httpConnection.setDoOutput(true);
+                    if(request._requestMethod.equals("POST"))
+                        _httpConnection.setDoOutput(true);
+                    _httpConnection.setDoInput(true);
                     _httpConnection.setRequestMethod(request._requestMethod);
                     for (Request.Property i : request._requestProperties) {
                         _httpConnection.setRequestProperty(i._propertyName, i._propertyValue);
                     }
-
+                    Log.i(TAG, "going to connect");
                     _httpConnection.connect();
                     if (request._requestMethod.equals("POST")) {
                         OutputStream os = _httpConnection.getOutputStream();
@@ -90,14 +103,19 @@ public class HttpClient {
                         StringBuilder response = new StringBuilder();
 
                         while ((inputLine = in.readLine()) != null) {
+                            Log.d(TAG, "read info " + inputLine);
                             response.append(inputLine);
                         }
                         in.close();
                         msgBundle.putString(RESPONSE_KEY, response.toString());
                     }
+                    else
+                    {
+                        Log.e(TAG, "response not OK " + ((Integer)responseCode).toString());
+                    }
 
                     _httpConnection.disconnect();
-
+                    Log.i(TAG, "disconnected");
                     msgBundle.putInt(RESPONSE_CODE_KEY, responseCode);
                     msgBundle.putString(TRANSACTION_KEY, request._requestMethod);
                     Message msgr = new Message();
@@ -116,16 +134,6 @@ public class HttpClient {
 
     public void connect(Handler response) {
         _responseHandler = response;
-        try {
-            URL url = new URL(_serviceUrl);
-            _httpConnection = (HttpURLConnection)url.openConnection();
-        } catch (MalformedURLException ex) {
-            Log.e(TAG, "malformed url exception ", ex);
-            ex.printStackTrace();
-        } catch (IOException ex) {
-            Log.e(TAG, "IO exception ", ex);
-            ex.printStackTrace();
-        }
     }
 
     public void transaction(Request request) {
