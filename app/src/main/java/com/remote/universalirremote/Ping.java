@@ -54,7 +54,7 @@ public class Ping extends AppCompatActivity {
             public void handleMessage(@NonNull Message msg) {
                 if(msg.getData().getInt(HttpClient.RESPONSE_CODE_KEY) == HttpsURLConnection.HTTP_OK) {
                     runOnUiThread(
-                            () -> addToRec(msg.getData().getString(HttpClient.TRANSACTION_KEY))
+                            () -> addToRec(msg.getData().getString(HttpClient.RESPONSE_KEY))
                     );
                 } else {
                     Log.e("PING", "unknown problem response not ok "
