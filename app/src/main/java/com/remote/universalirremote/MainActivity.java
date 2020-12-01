@@ -177,34 +177,23 @@ public class MainActivity extends AppCompatActivity {
 
                 switch(op) {
                     case NetworkManager.DISCOVER_NEW: { // add new service
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                _discoveredServicesAdapter.add(
-                                        msgBundle.getString(NetworkManager.DISCOVERED_SERVICE_NAME));
-                                _discoveredServicesAdapter.notifyDataSetChanged();
-                            }
+                        runOnUiThread(() -> {
+                            _discoveredServicesAdapter.add(
+                                    msgBundle.getString(NetworkManager.DISCOVERED_SERVICE_NAME));
+                            _discoveredServicesAdapter.notifyDataSetChanged();
                         });
                     }
 
                     case NetworkManager.DISCOVER_LOST: { // remove service
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                _discoveredServicesAdapter.remove(
-                                        msgBundle.getString(NetworkManager.DISCOVERED_SERVICE_NAME));
-                                _discoveredServicesAdapter.notifyDataSetChanged();
-                            }
+                        runOnUiThread(() -> {
+                            _discoveredServicesAdapter.remove(
+                                    msgBundle.getString(NetworkManager.DISCOVERED_SERVICE_NAME));
+                            _discoveredServicesAdapter.notifyDataSetChanged();
                         });
                     }
 
                     case NetworkManager.DISCOVER_REFRESH: { // refresh UI
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                refreshSpinner();
-                            }
-                        });
+                        runOnUiThread(() -> refreshSpinner());
                     }
                 }
 
