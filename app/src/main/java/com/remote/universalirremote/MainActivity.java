@@ -35,6 +35,7 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
@@ -79,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
     // Handler to update spinner on discovery.
     private Handler _discoveryHandler;
 
-    // List of names of all services.
     private ArrayAdapter<String> _discoveredServicesAdapter;
 
     // Debug TAG
@@ -121,12 +121,13 @@ public class MainActivity extends AppCompatActivity {
     // Refresh UI list of discovered services.
     public void refreshSpinner() {
         _discoveredServicesAdapter.clear();
-        _discoveredServicesAdapter.add(Constant.NO_SELECT);
+        ArrayList<String> servicesList = new ArrayList<>();
+        servicesList.add(Constant.NO_SELECT);
         CopyOnWriteArrayList<NsdServiceInfo> list = _networkManager.getDiscoveredServices();
         for ( NsdServiceInfo i : list) {
-            _discoveredServicesAdapter.add(i.getServiceName()); // add all services
+            servicesList.add(i.getServiceName()); // add all services
         }
-        _discoveredServicesAdapter.notifyDataSetChanged(); // notify UI
+        _discoveredServicesAdapter.addAll(servicesList);
     }
 
     // onCreate instantiation.
@@ -137,11 +138,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        _discoveredServicesAdapter = new ArrayAdapter<>(
-                this, R.layout.support_simple_spinner_dropdown_item,
-                new String[] {Constant.NO_SELECT});
-        Spinner discoveredServicesUiList = (Spinner) findViewById(R.id.spnr_blasterSelection);
+        ArrayList<String> servicesList = new ArrayList<>();
+        servicesList.add(Constant.NO_SELECT);
+        Spinner discoveredServicesUiList = findViewById(R.id.spnr_blasterSelection);
+		_discoveredServicesAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, servicesList);
+		_discoveredServicesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         discoveredServicesUiList.setAdapter(_discoveredServicesAdapter);
         discoveredServicesUiList.setOnItemSelectedListener
                 (new AdapterView.OnItemSelectedListener() {
@@ -193,19 +194,34 @@ public class MainActivity extends AppCompatActivity {
 
                 switch(op) {
                     case NetworkManager.DISCOVER_NEW: { // add new service
-                        _discoveredServicesAdapter.add(
-                                msgBundle.getString(NetworkManager.DISCOVERED_SERVICE_NAME));
-                        _discoveredServicesAdapter.notifyDataSetChanged();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                _discoveredServicesAdapter.add(
+                                        msgBundle.getString(NetworkManager.DISCOVERED_SERVICE_NAME));
+                                _discoveredServicesAdapter.notifyDataSetChanged();
+                            }
+                        });
                     }
 
                     case NetworkManager.DISCOVER_LOST: { // remove service
-                        _discoveredServicesAdapter.remove(
-                                msgBundle.getString(NetworkManager.DISCOVERED_SERVICE_NAME));
-                        _discoveredServicesAdapter.notifyDataSetChanged();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                _discoveredServicesAdapter.remove(
+                                        msgBundle.getString(NetworkManager.DISCOVERED_SERVICE_NAME));
+                                _discoveredServicesAdapter.notifyDataSetChanged();
+                            }
+                        });
                     }
 
                     case NetworkManager.DISCOVER_REFRESH: { // refresh UI
-                        refreshSpinner();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                refreshSpinner();
+                            }
+                        });
                     }
                 }
 
@@ -267,7 +283,6 @@ public class MainActivity extends AppCompatActivity {
 
             ProgressBar circle = (ProgressBar) findViewById(R.id.prg_resolveProgress);
             circle.setVisibility(View.VISIBLE);
-            _selectedService = _networkManager.getChosenServiceInfo();
             Toast.makeText(getApplicationContext(),
                     "resolving " + _selectedService.getServiceName(),
                     Toast.LENGTH_SHORT).show();
