@@ -72,8 +72,20 @@ public class HttpClient {
             public void handleMessage(@NonNull Message msg) {
                 Request request = (Request) msg.getData().getParcelable(TRANSACTION_KEY);
                 try {
+                    try {
+                        URL url = new URL(_serviceUrl);
+                        _httpConnection = (HttpURLConnection)url.openConnection();
+                    } catch (MalformedURLException ex) {
+                        Log.e(TAG, "malformed url exception ", ex);
+                        ex.printStackTrace();
+                    } catch (IOException ex) {
+                        Log.e(TAG, "IO exception ", ex);
+                        ex.printStackTrace();
+                    }
                     _httpConnection.setInstanceFollowRedirects(false);
-                    _httpConnection.setDoOutput(true);
+                    if(request._requestMethod.equals("POST"))
+                        _httpConnection.setDoOutput(true);
+                    _httpConnection.setDoInput(true);
                     _httpConnection.setRequestMethod(request._requestMethod);
                     for (Request.Property i : request._requestProperties) {
                         _httpConnection.setRequestProperty(i._propertyName, i._propertyValue);
@@ -121,16 +133,6 @@ public class HttpClient {
 
     public void connect(Handler response) {
         _responseHandler = response;
-        try {
-            URL url = new URL(_serviceUrl);
-            _httpConnection = (HttpURLConnection)url.openConnection();
-        } catch (MalformedURLException ex) {
-            Log.e(TAG, "malformed url exception ", ex);
-            ex.printStackTrace();
-        } catch (IOException ex) {
-            Log.e(TAG, "IO exception ", ex);
-            ex.printStackTrace();
-        }
     }
 
     public void transaction(Request request) {
