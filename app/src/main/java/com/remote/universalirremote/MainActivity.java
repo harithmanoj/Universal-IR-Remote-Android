@@ -80,29 +80,12 @@ public class MainActivity extends AppCompatActivity {
     // Handler to update spinner on discovery.
     private Handler _discoveryHandler;
 
+    // Adapter to interface with the discovery spinner
     private ArrayAdapter<String> _discoveredServicesAdapter;
 
     // Debug TAG
     public static final String TAG = "MainActivity";
 
-    // Getter for selected service
-    private NsdServiceInfo getSelectedService() {
-        return _selectedService;
-    }
-
-    // Set selected service
-    // Returns false if service doesn't exist in _networkManger.getDiscoveredServices()
-    // or if parameters are null
-    private boolean setSelectedService(NsdServiceInfo service) {
-        if ((service == null ) || (_networkManager == null) )
-            return false;
-        if (!_networkManager.getDiscoveredServices().contains(service)) {
-            return false;
-        } else {
-            _selectedService = service;
-            return true;
-        }
-    }
 
     // Set selected service ( take from _networkManger.getDiscoveredServices() with matching name).
     // Returns false if it doesn't exist or if parameters are null
@@ -141,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<String> servicesList = new ArrayList<>();
         servicesList.add(Constant.NO_SELECT);
         Spinner discoveredServicesUiList = findViewById(R.id.spnr_blasterSelection);
-		_discoveredServicesAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, servicesList);
+		_discoveredServicesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, servicesList);
 		_discoveredServicesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         discoveredServicesUiList.setAdapter(_discoveredServicesAdapter);
         discoveredServicesUiList.setOnItemSelectedListener
