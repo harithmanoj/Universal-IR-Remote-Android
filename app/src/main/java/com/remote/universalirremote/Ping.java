@@ -132,7 +132,8 @@ public class Ping extends AppCompatActivity {
                     new HttpClient.Request(
                             Message.toString().getBytes(), "POST",
                             new HttpClient.Request.Property("Content-Type", "application/xml"),
-                            new HttpClient.Request.Property("charset", "utf-8")
+                            new HttpClient.Request.Property("charset", "utf-8"),
+                            new HttpClient.Request.Property("Connection", "close")
                     )
             );
             addToSend(msg);
@@ -144,7 +145,8 @@ public class Ping extends AppCompatActivity {
                 new HttpClient.Request(
                         null, "GET",
                         new HttpClient.Request.Property("Content-Type", "application/xml"),
-                        new HttpClient.Request.Property("charset", "utf-8")
+                        new HttpClient.Request.Property("charset", "utf-8"),
+                        new HttpClient.Request.Property("Connection", "close")
                 )
         );
 
