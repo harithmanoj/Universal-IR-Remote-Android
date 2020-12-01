@@ -19,6 +19,7 @@
 
 package com.remote.universalirremote;
 
+import android.content.Intent;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
 import android.os.Handler;
@@ -85,7 +86,7 @@ public class HttpClient {
                     for (Request.Property i : request._requestProperties) {
                         _httpConnection.setRequestProperty(i._propertyName, i._propertyValue);
                     }
-
+                    Log.i(TAG, "going to connect");
                     _httpConnection.connect();
                     if (request._requestMethod.equals("POST")) {
                         OutputStream os = _httpConnection.getOutputStream();
@@ -102,14 +103,19 @@ public class HttpClient {
                         StringBuilder response = new StringBuilder();
 
                         while ((inputLine = in.readLine()) != null) {
+                            Log.d(TAG, "read info " + inputLine);
                             response.append(inputLine);
                         }
                         in.close();
                         msgBundle.putString(RESPONSE_KEY, response.toString());
                     }
+                    else
+                    {
+                        Log.e(TAG, "response not OK " + ((Integer)responseCode).toString());
+                    }
 
                     _httpConnection.disconnect();
-
+                    Log.i(TAG, "disconnected");
                     msgBundle.putInt(RESPONSE_CODE_KEY, responseCode);
                     msgBundle.putString(TRANSACTION_KEY, request._requestMethod);
                     Message msgr = new Message();
