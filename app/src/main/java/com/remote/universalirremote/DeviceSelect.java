@@ -58,7 +58,7 @@ import java.util.List;
 //        multiple layouts not yet finalised
 //        MainActivity
 //                  on Back pressed.
-//        AddRemote
+//        NewDevice
 //        intent:
 //            passes:
 //                Launcher:           INT_LAUNCHER_KEY           : INT_LAUNCHER_DEVICE_SELECT (1)
@@ -185,7 +185,7 @@ public class DeviceSelect extends AppCompatActivity {
 
     // Add new remote
     public void clickNew( View view ) {
-        Intent intent = new Intent(this, AddRemote.class);
+        Intent intent = new Intent(this, NewDevice.class);
         intent.putExtra(Constant.INT_LAUNCHER_KEY, Constant.INT_LAUNCHER_DEVICE_SELECT);
         intent.putExtra(Constant.INT_SERVICE_KEY,
                 (NsdServiceInfo)getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY));

@@ -58,7 +58,7 @@ import android.widget.Toast;
 //                  on Back pressed.
 //
 //
-public class AddRemote extends AppCompatActivity {
+public class NewDevice extends AppCompatActivity {
 
     DeviceInfoRepository _deviceDataRepository;
 
