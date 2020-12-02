@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!--
 
     Copyright (C) 2020  Contributors (in contributors file)
@@ -17,6 +18,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
  -->
+
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.remote.universalirremote">
 
@@ -30,6 +33,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".TvRemote"></activity>
         <activity android:name=".AddRemote">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
