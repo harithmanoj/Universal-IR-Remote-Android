@@ -104,9 +104,11 @@ public class AddRemote extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public int getProtocol(String prt) {
+    public static int getProtocol(String prt) {
         return -20;
     }
+
+    public static String getProtocol(int prt) { return ""; }
 
     public void clickCreate(View view) {
         String name = ((EditText) findViewById(_editTextName)).getText().toString();

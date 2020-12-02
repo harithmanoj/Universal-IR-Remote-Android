@@ -31,6 +31,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -72,8 +73,8 @@ public class DeviceSelect extends AppCompatActivity {
     // debug TAG
     private static final String TAG = "DeviceSelect";
 
-    // Selected string
-    private String _selectedDevice = null;
+    // Selected device
+    private DeviceData _selectedDevice = null;
 
     // onCreate instantiation.
     // Initialized variables: _deviceDataRepository
@@ -92,11 +93,12 @@ public class DeviceSelect extends AppCompatActivity {
 
         deviceNames.add(0, Constant.NO_SELECT);
 
-        ArrayAdapter<String> DeviceAdapter = new ArrayAdapter<>(
+        ArrayAdapter<String> deviceListAdapter = new ArrayAdapter<>(
                 this, R.layout.support_simple_spinner_dropdown_item,
                 deviceNames);
+        deviceListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         Spinner devicesUiList = (Spinner) findViewById(R.id.spnr_DeviceSelection);
-        devicesUiList.setAdapter(DeviceAdapter);
+        devicesUiList.setAdapter(deviceListAdapter);
 
         devicesUiList.setOnItemSelectedListener
                 (new AdapterView.OnItemSelectedListener() {
@@ -108,10 +110,33 @@ public class DeviceSelect extends AppCompatActivity {
                             onNothingSelected(parent);
 
                         Log.d(TAG, "selected device is " + name);
-                        if(_deviceDataRepository.doesExist(name))
-                            _selectedDevice = name;
+                        if(_deviceDataRepository.doesExist(name)) {
+                            _selectedDevice = _deviceDataRepository.getDevice(name);
+                            TextView info = findViewById(R.id.text_selectedDeviceInfo);
+
+                            String layout = null;
+                            if(_selectedDevice.getDeviceLayout() == Constant.Layout.LAY_AC) {
+                                layout = "AC";
+                            } else if (_selectedDevice.getDeviceLayout() == Constant.Layout.LAY_GEN) {
+                                layout = "misc";
+                            } else if (_selectedDevice.getDeviceLayout() == Constant.Layout.LAY_TV) {
+                                layout = "TV";
+                            }
+
+                            info.setText(
+                                    new StringBuilder().append("Device : ")
+                                            .append(_selectedDevice.getDeviceName())
+                                            .append(" type ").append(layout).append("\n")
+                                            .append("protocol used : ")
+                                            .append(AddRemote.getProtocol(
+                                                    _selectedDevice.getProtocolInfo())).toString()
+                            );
+
+                        }
                         else
                             onNothingSelected(parent);
+
+
                     }
 
                     @Override
@@ -119,16 +144,16 @@ public class DeviceSelect extends AppCompatActivity {
                         _selectedDevice = null;
                     }
                 });
+
     }
 
     // Menu item selected process
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
+        // Respond to the action bar's Up/Home button
+        if (item.getItemId() == android.R.id.home) {
+            NavUtils.navigateUpFromSameTask(this);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -139,11 +164,7 @@ public class DeviceSelect extends AppCompatActivity {
         if(_selectedDevice == null) {
             Toast.makeText(getApplicationContext(),
                     "Select a device ", Toast.LENGTH_LONG).show();
-        }
-        else {
-
-            DeviceData device = _deviceDataRepository.getDevice(_selectedDevice);
-
+        } else {
 //            Intent intent;
 //            switch( device.getDeviceLayout() ) {
 //                case Constant.Layout.LAY_TV: {
