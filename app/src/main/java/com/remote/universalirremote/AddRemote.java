@@ -26,10 +26,8 @@ import androidx.core.app.NavUtils;
 import android.content.Intent;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
-import android.text.Editable;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -63,13 +61,9 @@ public class AddRemote extends AppCompatActivity {
 
     DeviceInfoRepository _deviceDataRepository;
 
-    private static final String AC_SPINNER = "AC layout";
-    private static final String TV_SPINNER = "TV layout";
-    private static final String GEN_SPINNER = "Generic layout";
-
-    private static final int _layoutDropdownId = ;
-    private static final int _editTextName = ;
-    private static final int _protocolDropDownId = ;
+    private static final int _layoutDropdownId = R.id.spnr_DeviceSelect;
+    private static final int _editTextName = R.id.editTextName;
+    private static final int _protocolDropDownId = R.id.spnr_protocolSelect;
 
 
     @Override
@@ -81,7 +75,7 @@ public class AddRemote extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this, R.layout.support_simple_spinner_dropdown_item,
                 new String[] {
-                        Constant.NO_SELECT, AC_SPINNER, TV_SPINNER, GEN_SPINNER });
+                        Constant.NO_SELECT, Constant.Layout.AC_SPINNER, Constant.Layout.TV_SPINNER, Constant.Layout.GEN_SPINNER });
         ((Spinner) findViewById(_layoutDropdownId)).setAdapter(adapter);
         ArrayAdapter<String> protocolAdapter = new ArrayAdapter<>(
                 this, R.layout.support_simple_spinner_dropdown_item,
@@ -110,6 +104,28 @@ public class AddRemote extends AppCompatActivity {
 
     public static String getProtocol(int prt) { return ""; }
 
+    public static String getLayout(int lay) {
+        if(lay == Constant.Layout.LAY_AC) {
+            return Constant.Layout.AC_SPINNER;
+        } else if (lay == Constant.Layout.LAY_GEN) {
+            return Constant.Layout.GEN_SPINNER;
+        } else if (lay == Constant.Layout.LAY_TV) {
+            return Constant.Layout.TV_SPINNER;
+        } else
+            return null;
+    }
+
+    public static int getLayout(String lay) {
+        if(lay.equals(Constant.Layout.AC_SPINNER)) {
+            return Constant.Layout.LAY_AC;
+        } else if(lay.equals(Constant.Layout.GEN_SPINNER)) {
+            return Constant.Layout.LAY_GEN;
+        } else if(lay.equals(Constant.Layout.TV_SPINNER)) {
+            return Constant.Layout.LAY_TV;
+        } else
+            return -1;
+    }
+
     public void clickCreate(View view) {
         String name = ((EditText) findViewById(_editTextName)).getText().toString();
         String layout = ((Spinner)findViewById(_layoutDropdownId)).getSelectedItem().toString();
@@ -126,11 +142,11 @@ public class AddRemote extends AppCompatActivity {
         }
         DeviceData device = null;
 
-        if(layout.equals(AC_SPINNER))
+        if(layout.equals(Constant.Layout.AC_SPINNER))
             device = (new DeviceData(name, Constant.Layout.LAY_AC, getProtocol(protocol)));
-        else if (layout.equals(TV_SPINNER))
+        else if (layout.equals(Constant.Layout.TV_SPINNER))
             device = (new DeviceData(name, Constant.Layout.LAY_TV, getProtocol(protocol)));
-        else if (layout.equals(GEN_SPINNER))
+        else if (layout.equals(Constant.Layout.GEN_SPINNER))
             device = (new DeviceData(name, Constant.Layout.LAY_GEN, getProtocol(protocol)));
         else {
             Toast.makeText(getApplicationContext(), "No layout selected", Toast.LENGTH_LONG).show();

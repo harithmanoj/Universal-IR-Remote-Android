@@ -114,14 +114,7 @@ public class DeviceSelect extends AppCompatActivity {
                             _selectedDevice = _deviceDataRepository.getDevice(name);
                             TextView info = findViewById(R.id.text_selectedDeviceInfo);
 
-                            String layout = null;
-                            if(_selectedDevice.getDeviceLayout() == Constant.Layout.LAY_AC) {
-                                layout = "AC";
-                            } else if (_selectedDevice.getDeviceLayout() == Constant.Layout.LAY_GEN) {
-                                layout = "misc";
-                            } else if (_selectedDevice.getDeviceLayout() == Constant.Layout.LAY_TV) {
-                                layout = "TV";
-                            }
+                            String layout = AddRemote.getLayout(_selectedDevice.getDeviceLayout());
 
                             info.setText(
                                     new StringBuilder().append("Device : ")
