@@ -21,7 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class tvRemote extends AppCompatActivity {
+public class TvRemote extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
