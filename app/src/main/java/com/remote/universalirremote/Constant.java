@@ -43,6 +43,43 @@ public final class Constant {
 
     public static final String INT_SELECTED_DEVICE = "com.remote.universalirremote.DEVICE.SELECTED";
 
+    public static int getProtocol(String prt) {
+        for( int i = 0; i< Protocols._protocolList.length; ++ i) {
+            if (prt.equals(Protocols._protocolList[i]))
+                return i;
+        }
+        return -1;
+    }
+
+    public static String getProtocol(int prt) {
+        if ((prt >= 0) && (prt < Protocols._protocolList.length) ) {
+            return Protocols._protocolList[prt];
+        }
+        return null;
+    }
+
+    public static String getLayout(int lay) {
+        if(lay == Layout.LAY_AC) {
+            return Layout.AC_SPINNER;
+        } else if (lay == Layout.LAY_GEN) {
+            return Layout.GEN_SPINNER;
+        } else if (lay == Layout.LAY_TV) {
+            return Layout.TV_SPINNER;
+        } else
+            return null;
+    }
+
+    public static int getLayout(String lay) {
+        if(lay.equals(Layout.AC_SPINNER)) {
+            return Layout.LAY_AC;
+        } else if(lay.equals(Layout.GEN_SPINNER)) {
+            return Layout.LAY_GEN;
+        } else if(lay.equals(Layout.TV_SPINNER)) {
+            return Layout.LAY_TV;
+        } else
+            return -1;
+    }
+
     public static final class Layout {
 
         // Value to identify TV remote layout

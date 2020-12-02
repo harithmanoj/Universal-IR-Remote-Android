@@ -114,14 +114,14 @@ public class DeviceSelect extends AppCompatActivity {
                             _selectedDevice = _deviceDataRepository.getDevice(name);
                             TextView info = findViewById(R.id.text_selectedDeviceInfo);
 
-                            String layout = AddRemote.getLayout(_selectedDevice.getDeviceLayout());
+                            String layout = Constant.getLayout(_selectedDevice.getDeviceLayout());
 
                             info.setText(
                                     new StringBuilder().append("Device : ")
                                             .append(_selectedDevice.getDeviceName())
                                             .append(" type ").append(layout).append("\n")
                                             .append("protocol used : ")
-                                            .append(AddRemote.getProtocol(
+                                            .append(Constant.getProtocol(
                                                     _selectedDevice.getProtocolInfo())).toString()
                             );
 
