@@ -29,7 +29,6 @@ import android.os.HandlerThread;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -80,35 +79,22 @@ public class MainActivity extends AppCompatActivity {
     // Handler to update spinner on discovery.
     private Handler _discoveryHandler;
 
+    // Adapter to interface with the discovery spinner
     private ArrayAdapter<String> _discoveredServicesAdapter;
 
     // Debug TAG
     public static final String TAG = "MainActivity";
 
-    // Getter for selected service
-    private NsdServiceInfo getSelectedService() {
-        return _selectedService;
-    }
-
-    // Set selected service
-    // Returns false if service doesn't exist in _networkManger.getDiscoveredServices()
-    // or if parameters are null
-    private boolean setSelectedService(NsdServiceInfo service) {
-        if ((service == null ) || (_networkManager == null) )
-            return false;
-        if (!_networkManager.getDiscoveredServices().contains(service)) {
-            return false;
-        } else {
-            _selectedService = service;
-            return true;
-        }
-    }
 
     // Set selected service ( take from _networkManger.getDiscoveredServices() with matching name).
     // Returns false if it doesn't exist or if parameters are null
     private boolean setSelectedService(String name) {
         if ((name == null ) || (_networkManager == null) )
             return false;
+        if (name.equals(Constant.NO_SELECT)) {
+            _selectedService = null;
+            return false;
+        }
         NsdServiceInfo temp = _networkManager.getDiscoveredServices(name);
         if (temp == null) {
             return false;
@@ -140,39 +126,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ArrayList<String> servicesList = new ArrayList<>();
         servicesList.add(Constant.NO_SELECT);
-        Spinner discoveredServicesUiList = findViewById(R.id.spnr_blasterSelection);
-		_discoveredServicesAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, servicesList);
+		_discoveredServicesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, servicesList);
 		_discoveredServicesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        discoveredServicesUiList.setAdapter(_discoveredServicesAdapter);
-        discoveredServicesUiList.setOnItemSelectedListener
-                (new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        String name = parent.getItemAtPosition(position).toString();
-
-                        if(name.equals(Constant.NO_SELECT))
-                            onNothingSelected(parent);
-
-                        Log.d(TAG, "selected service is " + name);
-                        if (!setSelectedService(name)) {
-                            Toast.makeText(getApplicationContext(),
-                                    "service " + name + " not found",
-                                    Toast.LENGTH_SHORT).show();
-                            if (_discoveryHandler != null) {
-                                Bundle msgBundle = new Bundle();
-                                msgBundle.putInt(NetworkManager.DISCOVER_OP, NetworkManager.DISCOVER_REFRESH);
-                                Message msg = new Message();
-                                msg.setData(msgBundle);
-                                _discoveryHandler.sendMessage(msg);
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-                        _selectedService = null;
-                    }
-                });
+        ((Spinner)findViewById(R.id.spnr_blasterSelection)).setAdapter(_discoveredServicesAdapter);
     }
 
     // Variables instantiated :     _discoveryThread
@@ -194,34 +150,23 @@ public class MainActivity extends AppCompatActivity {
 
                 switch(op) {
                     case NetworkManager.DISCOVER_NEW: { // add new service
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                _discoveredServicesAdapter.add(
-                                        msgBundle.getString(NetworkManager.DISCOVERED_SERVICE_NAME));
-                                _discoveredServicesAdapter.notifyDataSetChanged();
-                            }
+                        runOnUiThread(() -> {
+                            _discoveredServicesAdapter.add(
+                                    msgBundle.getString(NetworkManager.DISCOVERED_SERVICE_NAME));
+                            _discoveredServicesAdapter.notifyDataSetChanged();
                         });
                     }
 
                     case NetworkManager.DISCOVER_LOST: { // remove service
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                _discoveredServicesAdapter.remove(
-                                        msgBundle.getString(NetworkManager.DISCOVERED_SERVICE_NAME));
-                                _discoveredServicesAdapter.notifyDataSetChanged();
-                            }
+                        runOnUiThread(() -> {
+                            _discoveredServicesAdapter.remove(
+                                    msgBundle.getString(NetworkManager.DISCOVERED_SERVICE_NAME));
+                            _discoveredServicesAdapter.notifyDataSetChanged();
                         });
                     }
 
                     case NetworkManager.DISCOVER_REFRESH: { // refresh UI
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                refreshSpinner();
-                            }
-                        });
+                        runOnUiThread(() -> refreshSpinner());
                     }
                 }
 
@@ -274,6 +219,20 @@ public class MainActivity extends AppCompatActivity {
     // On fail, a toast will inform user of resolve fail and exit function.
     public void clickConnect( View view ) {
 
+        long pos = ((Spinner)findViewById(R.id.spnr_blasterSelection)).getSelectedItemPosition();
+        String name = _discoveredServicesAdapter.getItem((int)pos);
+        if (!setSelectedService(name)) {
+            Toast.makeText(getApplicationContext(),
+                    "service " + name + " not found",
+                    Toast.LENGTH_SHORT).show();
+            if (_discoveryHandler != null) {
+                Bundle msgBundle = new Bundle();
+                msgBundle.putInt(NetworkManager.DISCOVER_OP, NetworkManager.DISCOVER_REFRESH);
+                Message msg = new Message();
+                msg.setData(msgBundle);
+                _discoveryHandler.sendMessage(msg);
+            }
+        }
         if (_selectedService == null) {
             Toast.makeText(getApplicationContext(),
                     "No service Selected", Toast.LENGTH_LONG).show();

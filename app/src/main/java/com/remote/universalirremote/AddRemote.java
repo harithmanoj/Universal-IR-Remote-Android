@@ -26,10 +26,9 @@ import androidx.core.app.NavUtils;
 import android.content.Intent;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
-import android.text.Editable;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -63,13 +62,9 @@ public class AddRemote extends AppCompatActivity {
 
     DeviceInfoRepository _deviceDataRepository;
 
-    private static final String AC_SPINNER = "AC layout";
-    private static final String TV_SPINNER = "TV layout";
-    private static final String GEN_SPINNER = "Generic layout";
-
-    private static final int _layoutDropdownId = ;
-    private static final int _editTextName = ;
-    private static final int _protocolDropDownId = ;
+    private static final int _layoutDropdownId = R.id.spnr_DeviceSelect;
+    private static final int _editTextName = R.id.editTextName;
+    private static final int _protocolDropDownId = R.id.spnr_protocolSelect;
 
 
     @Override
@@ -81,15 +76,43 @@ public class AddRemote extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this, R.layout.support_simple_spinner_dropdown_item,
                 new String[] {
-                        Constant.NO_SELECT, AC_SPINNER, TV_SPINNER, GEN_SPINNER });
-        ((Spinner) findViewById(_layoutDropdownId)).setAdapter(adapter);
+                        Constant.NO_SELECT, Constant.Layout.AC_SPINNER, Constant.Layout.TV_SPINNER, Constant.Layout.GEN_SPINNER });
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Spinner layoutUI = findViewById(_layoutDropdownId);
+        layoutUI.setAdapter(adapter);
+        layoutUI.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                int layout = Constant.getLayout(
+                        adapter.getItem(position)
+                );
+                if(layout == Constant.Layout.LAY_AC) {
+
+                    ((Spinner) findViewById(_protocolDropDownId)).setVisibility(View.VISIBLE);
+
+                } else {
+
+                    ((Spinner) findViewById(_protocolDropDownId)).setVisibility(View.INVISIBLE);
+                    ((Spinner)findViewById(_protocolDropDownId)).setSelection(Constant.Protocols.RAW);
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                ((Spinner) findViewById(_protocolDropDownId)).setVisibility(View.INVISIBLE);
+                ((Spinner)findViewById(_protocolDropDownId)).setSelection(Constant.Protocols.RAW);
+            }
+        });
+
         ArrayAdapter<String> protocolAdapter = new ArrayAdapter<>(
                 this, R.layout.support_simple_spinner_dropdown_item,
-                new String [] {
-                        Constant.NO_SELECT
-                }
+                Constant.Protocols._protocolList
         );
-        ((Spinner) findViewById(_protocolDropDownId)).setAdapter(protocolAdapter);
+        Spinner protocolUI = findViewById(_protocolDropDownId);
+        protocolUI.setAdapter(protocolAdapter);
+        protocolUI.setVisibility(View.INVISIBLE);
     }
 
     // Menu item selected process
@@ -104,38 +127,34 @@ public class AddRemote extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public int getProtocol(String prt) {
-        return -20;
-    }
-
     public void clickCreate(View view) {
         String name = ((EditText) findViewById(_editTextName)).getText().toString();
         String layout = ((Spinner)findViewById(_layoutDropdownId)).getSelectedItem().toString();
         String protocol = ((Spinner) findViewById(_protocolDropDownId)).getSelectedItem().toString();
 
-        if(name == null) {
+        if(name == null || name.equals(Constant.NO_SELECT)) {
             Toast.makeText(getApplicationContext(), "No name selected", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if(protocol == null) {
+        if(protocol == null || protocol.equals(Constant.NO_SELECT)) {
             Toast.makeText(getApplicationContext(), "No protocol selected", Toast.LENGTH_LONG).show();
             return;
         }
-        DeviceData device = null;
 
-        if(layout.equals(AC_SPINNER))
-            device = (new DeviceData(name, Constant.Layout.LAY_AC, getProtocol(protocol)));
-        else if (layout.equals(TV_SPINNER))
-            device = (new DeviceData(name, Constant.Layout.LAY_TV, getProtocol(protocol)));
-        else if (layout.equals(GEN_SPINNER))
-            device = (new DeviceData(name, Constant.Layout.LAY_GEN, getProtocol(protocol)));
-        else {
+        if(layout == null || layout.equals(Constant.NO_SELECT)) {
             Toast.makeText(getApplicationContext(), "No layout selected", Toast.LENGTH_LONG).show();
             return;
         }
+        if(_deviceDataRepository.doesExist(name)) {
+            Toast.makeText(getApplicationContext(), "Device name exists", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        DeviceData device = new DeviceData(name, Constant.getLayout(layout), Constant.getProtocol(protocol));
         _deviceDataRepository.insert(device);
         Intent intent = null;
+
 //      switch( device.getDeviceLayout() ) {
 //          case Constant.Layout.LAY_TV: {
 //               intent = new Intent(this, /* TV layout remote activity */);
@@ -154,7 +173,7 @@ public class AddRemote extends AppCompatActivity {
 //
          intent.putExtra(Constant.INT_LAUNCHER_KEY, Constant.INT_LAUNCHER_DEVICE_SELECT);
          intent.putExtra(Constant.INT_SERVICE_KEY,
-                 (NsdServiceInfo)getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY))
+                 (NsdServiceInfo)getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY));
          intent.putExtra(Constant.INT_SELECTED_DEVICE, device.getDeviceName());
          startActivity(intent);
     }

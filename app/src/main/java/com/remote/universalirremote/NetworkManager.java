@@ -53,7 +53,7 @@ public class NetworkManager {
 
 
     // Nsd API
-    private NsdManager _nsdManager;
+    private final NsdManager _nsdManager;
 
     private NsdManager.ResolveListener _resolveListener;
     private NsdManager.DiscoveryListener _discoveryListener;
@@ -77,7 +77,7 @@ public class NetworkManager {
     protected Handler _discoveryHandler;
 
     // List of all discovered services
-    private CopyOnWriteArrayList<NsdServiceInfo> _discoveredServices;
+    private final CopyOnWriteArrayList<NsdServiceInfo> _discoveredServices;
 
     // Has service been resolved?
     public boolean _isResolved;
@@ -117,19 +117,6 @@ public class NetworkManager {
         return _selectedServiceInfo;
     }
 
-    // Set service info of previously chosen service
-    // returns false if input is null.
-    // sets info but returns false if it is not present in list of services
-    // start discover and try again to check with current discovered services
-    public boolean setChosenServiceInfo( NsdServiceInfo service ) {
-        if (service == null)
-            return false;
-        if (!_discoveredServices.contains(service))
-            return false;
-        _selectedServiceInfo = service;
-        return true;
-    }
-
     // initialise discovery listener ( push messages to handler, logging)
     private void initialiseDiscoveryListener() {
         _discoveryListener = new NsdManager.DiscoveryListener() {
@@ -159,16 +146,15 @@ public class NetworkManager {
                         + " " + serviceInfo.getServiceType() + " found");
 				if(_discoveredServices.contains(serviceInfo))
 					return;
-                _discoveredServices.add(serviceInfo);
-                if ((_discoveryHandler != null)) {
-                    Bundle msgBundle = new Bundle();
-                    msgBundle.putInt(DISCOVER_OP, DISCOVER_NEW);
-                    msgBundle.putString(DISCOVERED_SERVICE_NAME, serviceInfo.getServiceName());
-                    Message msg = new Message();
-                    msg.setData(msgBundle);
-                    _discoveryHandler.sendMessage(msg);
 
-                }
+                Bundle msgBundle = new Bundle();
+                msgBundle.putInt(DISCOVER_OP, DISCOVER_NEW);
+                msgBundle.putString(DISCOVERED_SERVICE_NAME, serviceInfo.getServiceName());
+                Message msg = new Message();
+                msg.setData(msgBundle);
+                _discoveryHandler.sendMessage(msg);
+
+
             }
 
             @Override
@@ -178,14 +164,13 @@ public class NetworkManager {
 				if(!_discoveredServices.contains(serviceInfo))
 					return;
                 _discoveredServices.remove(serviceInfo);
-                if ((_discoveryHandler != null)) {
-                    Bundle msgBundle = new Bundle();
-                    msgBundle.putInt(DISCOVER_OP, DISCOVER_LOST);
-                    msgBundle.putString(DISCOVERED_SERVICE_NAME, serviceInfo.getServiceName());
-                    Message msg = new Message();
-                    msg.setData(msgBundle);
-                    _discoveryHandler.sendMessage(msg);
-                }
+                Bundle msgBundle = new Bundle();
+                msgBundle.putInt(DISCOVER_OP, DISCOVER_LOST);
+                msgBundle.putString(DISCOVERED_SERVICE_NAME, serviceInfo.getServiceName());
+                Message msg = new Message();
+                msg.setData(msgBundle);
+                _discoveryHandler.sendMessage(msg);
+
             }
         };
     }
@@ -219,7 +204,7 @@ public class NetworkManager {
 
     // stop discovery
     public void stopDiscover() {
-        if ((_discoveryListener != null) && (_nsdManager != null)) {
+        if (_discoveryListener != null) {
             _nsdManager.stopServiceDiscovery(_discoveryListener);
             _discoveryListener = null;
         }
@@ -228,31 +213,19 @@ public class NetworkManager {
     // start discovery aborts if null _nsdManager
     public void discoverServices() {
         stopDiscover();
-        if (_nsdManager != null ) {
-            initialiseDiscoveryListener();
-            _nsdManager.discoverServices(SERVICE_TYPE,
-                    NsdManager.PROTOCOL_DNS_SD, _discoveryListener);
-        }
+        initialiseDiscoveryListener();
+        _nsdManager.discoverServices(SERVICE_TYPE,
+                NsdManager.PROTOCOL_DNS_SD, _discoveryListener);
+
     }
 
     // resolve service passed.
-    // returns false if _nsdManager is null
-    // returns false if service is not found in list of discovered services
     // (start discovery to refresh list if discovery is not running)
-    public boolean resolveServices(NsdServiceInfo service) {
-        if(_nsdManager == null)
-            return false;
-
-        if (!_discoveredServices.contains(service)) {
-            Log.e(TAG," The service " + service.getServiceName() + " is no longer visible");
-            return false;
-        }
-
+    public void resolveServices(NsdServiceInfo service) {
         if (_resolveListener == null)
             initialiseResolveListener();
         _isResolved = false;
         _nsdManager.resolveService(service, _resolveListener);
-        return true;
     }
 
 

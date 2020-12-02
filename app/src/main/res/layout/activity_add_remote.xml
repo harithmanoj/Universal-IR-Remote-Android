@@ -32,7 +32,6 @@
         android:layout_height="50dp"
         android:autofillHints=""
         android:ems="10"
-        android:inputType="textPersonName"
         android:text="Device Type :"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -47,6 +46,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="CREATE"
+        android:onClick="clickCreate"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -74,7 +74,6 @@
         android:layout_height="50dp"
         android:autofillHints=""
         android:ems="10"
-        android:inputType="textPersonName"
         android:text="Selelect Protocol :"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -86,8 +85,8 @@
 
     <Spinner
         android:id="@+id/spnr_DeviceSelect"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
+        android:layout_width="210dp"
+        android:layout_height="47dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.944"
@@ -101,7 +100,6 @@
         android:layout_height="50dp"
         android:autofillHints=""
         android:ems="10"
-        android:inputType="textPersonName"
         android:text="Device Name :"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -117,11 +115,9 @@
         android:layout_height="50dp"
         android:ems="10"
         android:inputType="textPostalAddress"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textViewName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.944"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.192" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
