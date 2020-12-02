@@ -19,6 +19,8 @@
 package com.remote.universalirremote;
 
 
+import java.util.ArrayList;
+
 // Class to encapsulate application wide constants used eg: activity launcher key
 //
 public final class Constant {
@@ -52,12 +54,117 @@ public final class Constant {
         // Value to identify general remote layout
         public static final int LAY_GEN = 2;
 
+        public static final String AC_SPINNER = "AC layout";
+        public static final String TV_SPINNER = "TV layout";
+        public static final String GEN_SPINNER = "Generic layout";
     }
     
     
     // Values for protocols (compatible with decode_type_t enumeration in ESP32 code)
     public static final class Protocols {
-        
+
+        public static final String[] _protocolList = {
+                NO_SELECT,
+                "Unused",
+                "RC5",
+                "RC6",
+                "NEC",
+                "SONY",
+                "PANASONIC",
+                "JVC",
+                "SAMSUNG",
+                "WHYNTER",
+                "AIWA_RC_T501",
+                "LG",
+                "SANYO",
+                "MITSUBISHI",
+                "DISH",
+                "SHARP",
+                "COOLIX",
+                "DAIKIN",
+                "DENON ",
+                "KELVINATOR ",
+                "SHERWOOD",
+                "MITSUBISHI_AC",
+                "RCMM ",
+                "SANYO_LC7461 ",
+                "RC5X ",
+                "GREE",
+                "PRONTO ",
+                "NEC_LIKE ",
+                "ARGO ",
+                "TROTEC ",
+                "NIKAI ",
+                "RAW ",
+                "GLOBALCACHE ",
+                "TOSHIBA_AC ",
+                "FUJITSU_AC",
+                "MIDEA ",
+                "MAGIQUEST ",
+                "LASERTAG ",
+                "CARRIER_AC ",
+                "HAIER_AC ",
+                "MITSUBISHI2 ",
+                "HITACHI_AC ",
+                "HITACHI_AC1 ",
+                "HITACHI_AC2 ",
+                "GICABLE",
+                "HAIER_AC_YRW02 ",
+                "WHIRLPOOL_AC ",
+                "SAMSUNG_AC",
+                "LUTRON ",
+                "ELECTRA_AC ",
+                "PANASONIC_AC ",
+                "PIONEER ",
+                "LG2 ",
+                "MWM ",
+                "DAIKIN2",
+                "VESTEL_AC",
+                "TECO",
+                "SAMSUNG36 ",
+                "TCL112AC",
+                "LEGOPF",
+                "MITSUBISHI_HEAVY_88",
+                "MITSUBISHI_HEAVY_152",
+                "DAIKIN216",
+                "SHARP_AC",
+                "GOODWEATHER",
+                "INAX",
+                "DAIKIN160",
+                "NEOCLIMA",
+                "DAIKIN176",
+                "DAIKIN128",
+                "AMCOR",
+                "DAIKIN152",
+                "MITSUBISHI136",
+                "MITSUBISHI112",
+                "HITACHI_AC424",
+                "SONY_38K",
+                "EPSON",
+                "SYMPHONY",
+                "HITACHI_AC3",
+                "DAIKIN64",
+                "AIRWELL",
+                "DELONGHI_AC",
+                "DOSHISHA",
+                "MULTIBRACKETS",
+                "CARRIER_AC40",
+                "CARRIER_AC64",
+                "HITACHI_AC344",
+                "CORONA_AC",
+                "MIDEA24",
+                "ZEPEAL",
+                "SANYO_AC",
+                "VOLTAS",
+                "METZ",
+                "TRANSCOLD",
+                "TECHNIBEL_AC",
+                "MIRAGE",
+                "ELITESCREENS",
+                "PANASONIC_AC32"
+        };
+
+
         public static final int UNKNOWN = -1;
         public static final int UNUSED = 0;
         public static final int RC5 = 1;
