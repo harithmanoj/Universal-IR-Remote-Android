@@ -28,6 +28,7 @@ import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -76,14 +77,42 @@ public class AddRemote extends AppCompatActivity {
                 this, R.layout.support_simple_spinner_dropdown_item,
                 new String[] {
                         Constant.NO_SELECT, Constant.Layout.AC_SPINNER, Constant.Layout.TV_SPINNER, Constant.Layout.GEN_SPINNER });
-        ((Spinner) findViewById(_layoutDropdownId)).setAdapter(adapter);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Spinner layoutUI = findViewById(_layoutDropdownId);
+        layoutUI.setAdapter(adapter);
+        layoutUI.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                int layout = Constant.getLayout(
+                        adapter.getItem(position)
+                );
+                if(layout == Constant.Layout.LAY_AC) {
+
+                    ((Spinner) findViewById(_protocolDropDownId)).setVisibility(View.VISIBLE);
+
+                } else {
+
+                    ((Spinner) findViewById(_protocolDropDownId)).setVisibility(View.INVISIBLE);
+                    ((Spinner)findViewById(_protocolDropDownId)).setSelection(Constant.Protocols.RAW);
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                ((Spinner) findViewById(_protocolDropDownId)).setVisibility(View.INVISIBLE);
+                ((Spinner)findViewById(_protocolDropDownId)).setSelection(Constant.Protocols.RAW);
+            }
+        });
+
         ArrayAdapter<String> protocolAdapter = new ArrayAdapter<>(
                 this, R.layout.support_simple_spinner_dropdown_item,
-                new String [] {
-                        Constant.NO_SELECT
-                }
+                Constant.Protocols._protocolList
         );
-        ((Spinner) findViewById(_protocolDropDownId)).setAdapter(protocolAdapter);
+        Spinner protocolUI = findViewById(_protocolDropDownId);
+        protocolUI.setAdapter(protocolAdapter);
+        protocolUI.setVisibility(View.INVISIBLE);
     }
 
     // Menu item selected process
@@ -98,62 +127,34 @@ public class AddRemote extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static int getProtocol(String prt) {
-        return -20;
-    }
-
-    public static String getProtocol(int prt) { return ""; }
-
-    public static String getLayout(int lay) {
-        if(lay == Constant.Layout.LAY_AC) {
-            return Constant.Layout.AC_SPINNER;
-        } else if (lay == Constant.Layout.LAY_GEN) {
-            return Constant.Layout.GEN_SPINNER;
-        } else if (lay == Constant.Layout.LAY_TV) {
-            return Constant.Layout.TV_SPINNER;
-        } else
-            return null;
-    }
-
-    public static int getLayout(String lay) {
-        if(lay.equals(Constant.Layout.AC_SPINNER)) {
-            return Constant.Layout.LAY_AC;
-        } else if(lay.equals(Constant.Layout.GEN_SPINNER)) {
-            return Constant.Layout.LAY_GEN;
-        } else if(lay.equals(Constant.Layout.TV_SPINNER)) {
-            return Constant.Layout.LAY_TV;
-        } else
-            return -1;
-    }
-
     public void clickCreate(View view) {
         String name = ((EditText) findViewById(_editTextName)).getText().toString();
         String layout = ((Spinner)findViewById(_layoutDropdownId)).getSelectedItem().toString();
         String protocol = ((Spinner) findViewById(_protocolDropDownId)).getSelectedItem().toString();
 
-        if(name == null) {
+        if(name == null || name.equals(Constant.NO_SELECT)) {
             Toast.makeText(getApplicationContext(), "No name selected", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if(protocol == null) {
+        if(protocol == null || protocol.equals(Constant.NO_SELECT)) {
             Toast.makeText(getApplicationContext(), "No protocol selected", Toast.LENGTH_LONG).show();
             return;
         }
-        DeviceData device = null;
 
-        if(layout.equals(Constant.Layout.AC_SPINNER))
-            device = (new DeviceData(name, Constant.Layout.LAY_AC, getProtocol(protocol)));
-        else if (layout.equals(Constant.Layout.TV_SPINNER))
-            device = (new DeviceData(name, Constant.Layout.LAY_TV, getProtocol(protocol)));
-        else if (layout.equals(Constant.Layout.GEN_SPINNER))
-            device = (new DeviceData(name, Constant.Layout.LAY_GEN, getProtocol(protocol)));
-        else {
+        if(layout == null || layout.equals(Constant.NO_SELECT)) {
             Toast.makeText(getApplicationContext(), "No layout selected", Toast.LENGTH_LONG).show();
             return;
         }
+        if(_deviceDataRepository.doesExist(name)) {
+            Toast.makeText(getApplicationContext(), "Device name exists", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        DeviceData device = new DeviceData(name, Constant.getLayout(layout), Constant.getProtocol(protocol));
         _deviceDataRepository.insert(device);
         Intent intent = null;
+
 //      switch( device.getDeviceLayout() ) {
 //          case Constant.Layout.LAY_TV: {
 //               intent = new Intent(this, /* TV layout remote activity */);
@@ -172,7 +173,7 @@ public class AddRemote extends AppCompatActivity {
 //
          intent.putExtra(Constant.INT_LAUNCHER_KEY, Constant.INT_LAUNCHER_DEVICE_SELECT);
          intent.putExtra(Constant.INT_SERVICE_KEY,
-                 (NsdServiceInfo)getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY))
+                 (NsdServiceInfo)getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY));
          intent.putExtra(Constant.INT_SELECTED_DEVICE, device.getDeviceName());
          startActivity(intent);
     }
