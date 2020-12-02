@@ -23,11 +23,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class TvRemote extends AppCompatActivity {
+public class GenRemote extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tv_remote);
+        setContentView(R.layout.activity_gen_remote);
     }
 }
