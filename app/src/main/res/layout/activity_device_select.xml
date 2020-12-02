@@ -66,4 +66,17 @@
         android:scaleX="2"
         android:scaleY="2"
         />
+
+    <TextView
+        android:id="@+id/textView_DeviceSelection"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:text="Select Device :"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.154" />
 </androidx.constraintlayout.widget.ConstraintLayout>
