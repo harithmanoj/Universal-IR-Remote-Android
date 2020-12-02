@@ -59,7 +59,7 @@ public class DeviceInfoRepository {
     }
 
     boolean doesExist(String name) {
-        return (_deviceDataAccess.getDevice(name) == null);
+        return (_deviceDataAccess.getDevice(name) != null);
     }
 
 
