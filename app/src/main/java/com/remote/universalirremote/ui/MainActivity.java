@@ -20,6 +20,7 @@ package com.remote.universalirremote.ui;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.ColumnInfo;
 
 import android.content.Intent;
 import android.net.nsd.NsdServiceInfo;
@@ -274,9 +275,48 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),
                     _selectedService.getServiceName() + " resolved",
                     Toast.LENGTH_SHORT).show();
+            Intent intent = null;
+            if(getIntent().getAction() == null ){
+                Intent incomingIntent = getIntent();
 
-            Intent intent = new Intent(this, DeviceSelect.class );
-            intent.putExtra(Constant.INT_LAUNCHER_KEY,Constant.INT_LAUNCHER_MAIN);
+                boolean def = false;
+
+                switch (incomingIntent.getIntExtra(Constant.INT_LAUNCHER_KEY, -2)) {
+                    case Constant.INT_LAUNCHER_DEVICE_SELECT: {
+                        intent = new Intent(this, DeviceSelect.class);
+                    }
+                    case Constant.INT_LAUNCHER_NEW_DEVICE: {
+                        intent = new Intent(this, NewDevice.class);
+                    }
+                    case Constant.INT_LAUNCHER_AC_REMOTE: {
+                        intent = new Intent(this, AcRemote.class);
+                    }
+                    case Constant.INT_LAUNCHER_GEN_CONFIGURE: {
+                        intent = new Intent(this, GenRemoteConfigure.class);
+                    }
+                    case Constant.INT_LAUNCHER_GEN_TRANSMIT: {
+                        intent = new Intent(this, GenRemoteTransmit.class);
+                    }
+                    case Constant.INT_LAUNCHER_TV_CONFIGURE: {
+                        intent = new Intent(this, TvRemoteConfigure.class);
+                    }
+                    case Constant.INT_LAUNCHER_TV_TRANSMIT: {
+                        intent = new Intent(this, TvRemoteTransmit.class);
+                    }
+                    default: {
+                        def = true;
+                        intent = new Intent(this, DeviceSelect.class);
+                    }
+                }
+
+                if(!def)
+                    intent.putExtra(Constant.INT_SELECTED_DEVICE,
+                            incomingIntent.getStringExtra(Constant.INT_SELECTED_DEVICE));
+
+            } else {
+                intent = new Intent(this, DeviceSelect.class);
+            }
+            intent.putExtra(Constant.INT_LAUNCHER_KEY, Constant.INT_LAUNCHER_MAIN);
             intent.putExtra(Constant.INT_SERVICE_KEY, _selectedService);
             startActivity(intent);
         }
