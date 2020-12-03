@@ -23,50 +23,54 @@ import android.app.Application;
 
 import java.util.List;
 
-public class RawDataRepository {
+public class DeviceButtonConfigRepository {
 
-    private final RawDao _rawDataAccess;
+    private final DeviceButtonConfigDao _deviceButtonConfigAccess;
 
     private final DeviceInfoRepository _deviceDataRepository;
 
-    RawDataRepository(Application application) {
+    DeviceButtonConfigRepository(Application application) {
         UniversalRemoteDatabase db = UniversalRemoteDatabase.getDatabase(application);
-        _rawDataAccess = db.rawDataAccess();
+        _deviceButtonConfigAccess = db.deviceButtonConfigAccess();
         _deviceDataRepository = new DeviceInfoRepository(application);
     }
 
-    boolean insert(RawData data) {
+    boolean insert(DeviceButtonConfig data) {
         if(!_deviceDataRepository.doesExist(data.getDeviceName()))
             return false;
 
         UniversalRemoteDatabase.databaseWriteExecutor.execute(
-                () -> _rawDataAccess.insert(data)
+                () -> _deviceButtonConfigAccess.insert(data)
         );
         return true;
     }
 
-    void delete(RawData data) {
+    void delete(DeviceButtonConfig data) {
         UniversalRemoteDatabase.databaseWriteExecutor.execute(
-                () -> _rawDataAccess.delete(data)
+                () -> _deviceButtonConfigAccess.delete(data)
         );
     }
 
-    void update(RawData data) {
+    void update(DeviceButtonConfig data) {
         UniversalRemoteDatabase.databaseWriteExecutor.execute(
-                () -> _rawDataAccess.update(data)
+                () -> _deviceButtonConfigAccess.update(data)
         );
     }
 
-    List<RawData> getAllRawData() {
-        return _rawDataAccess.getAllRawData();
+    List<DeviceButtonConfig> getAllRawData() {
+        return _deviceButtonConfigAccess.getAllRawData();
     }
 
-    List<RawData> getAllRawData(String device) {
-        return _rawDataAccess.getAllRawData(device);
+    List<DeviceButtonConfig> getAllRawData(String device) {
+        return _deviceButtonConfigAccess.getAllRawData(device);
     }
 
     String getIrTimingData(String device, int button) {
-        return  _rawDataAccess.getIrTimingData(device, button);
+        return  _deviceButtonConfigAccess.getIrTimingData(device, button);
+    }
+
+    String getDeviceButtonName(String device, int button) {
+        return  _deviceButtonConfigAccess.getButtonName(device, button);
     }
 
 }

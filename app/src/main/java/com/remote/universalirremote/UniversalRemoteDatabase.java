@@ -33,13 +33,13 @@ import java.util.concurrent.Executors;
 //    Singleton class for encapsulating database for the system including per
 //    device data and per device button IR data.
 //
-@Database(entities = {DeviceData.class, RawData.class}, version = 2, exportSchema = true)
+@Database(entities = {DeviceData.class, DeviceButtonConfig.class}, version = 2, exportSchema = true)
 public abstract class UniversalRemoteDatabase extends RoomDatabase {
 
     // access object
     public abstract DeviceDao deviceDataAccess();
 
-    public abstract RawDao rawDataAccess();
+    public abstract DeviceButtonConfigDao deviceButtonConfigAccess();
 
     // singleton instance
     private static volatile UniversalRemoteDatabase INSTANCE;

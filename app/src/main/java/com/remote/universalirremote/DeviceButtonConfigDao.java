@@ -31,23 +31,26 @@ import androidx.room.Update;
 import java.util.List;
 
 @Dao
-public interface RawDao {
+public interface DeviceButtonConfigDao {
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    void insert(RawData data);
+    void insert(DeviceButtonConfig data);
 
     @Delete
-    void delete(RawData data);
+    void delete(DeviceButtonConfig data);
 
     @Update
-    void update(RawData data);
+    void update(DeviceButtonConfig data);
 
-    @Query("SELECT * FROM RawData WHERE deviceName = :device")
-    List<RawData> getAllRawData(String device);
+    @Query("SELECT * FROM DeviceButtonConfig WHERE deviceName = :device")
+    List<DeviceButtonConfig> getAllRawData(String device);
 
-    @Query("SELECT * FROM RawData")
-    List<RawData> getAllRawData();
+    @Query("SELECT * FROM DeviceButtonConfig")
+    List<DeviceButtonConfig> getAllRawData();
 
-    @Query("SELECT timingData FROM RawData WHERE ((deviceName = :device) AND ()deviceButtonId = :button))")
+    @Query("SELECT timingData FROM DeviceButtonConfig WHERE ((deviceName = :device) AND (deviceButtonId = :button))")
     String getIrTimingData(String device, int button);
+
+    @Query("SELECT deviceButtonName FROM DeviceButtonConfig WHERE ((deviceName = :device) AND (deviceButtonId = :button))")
+    String getButtonName(String device, int button);
 
 }

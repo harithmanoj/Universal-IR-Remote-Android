@@ -26,14 +26,14 @@ import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 @Entity(
-        tableName = "RawData",
+        tableName = "DeviceButtonConfig",
         foreignKeys = @ForeignKey(
                 entity = DeviceData.class,
                 parentColumns = "deviceNameId",
                 childColumns = "deviceName"),
         primaryKeys = { "deviceButtonId", "_deviceName" }
 )
-public class RawData {
+public class DeviceButtonConfig {
 
     @NonNull
     @ColumnInfo(name = "deviceButtonId")
@@ -47,10 +47,20 @@ public class RawData {
     @ColumnInfo(name = "deviceName")
     private String _deviceName;
 
-    public RawData(int button, String timing, String name) {
+    @NonNull
+    @ColumnInfo(name = "isEditableName")
+    private boolean _isEditableName;
+
+    @NonNull
+    @ColumnInfo(name = "deviceButtonName")
+    private String _deviceButtonName;
+
+    public DeviceButtonConfig(int button, String timing, String device, boolean isEditable, String name) {
         _buttonId = button;
         _irTimingData = timing;
-        _deviceName = name;
+        _deviceName = device;
+        _isEditableName = isEditable;
+        _deviceButtonName = name;
     }
 
     public int getButtonId(){
@@ -63,6 +73,14 @@ public class RawData {
 
     public String getDeviceName() {
         return _deviceName;
+    }
+
+    public boolean isButtonNameEditable() {
+        return _isEditableName;
+    }
+
+    public String getDeviceButtonName() {
+        return _deviceButtonName;
     }
 
 }
