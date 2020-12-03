@@ -30,12 +30,10 @@ import androidx.room.PrimaryKey;
         foreignKeys = @ForeignKey(
                 entity = DeviceData.class,
                 parentColumns = "deviceNameId",
-                childColumns = "deviceName")
+                childColumns = "deviceName"),
+        primaryKeys = { "deviceButtonId", "_deviceName" }
 )
 public class RawData {
-
-    @PrimaryKey(autoGenerate = true)
-    private int _rawDataId;
 
     @NonNull
     @ColumnInfo(name = "deviceButtonId")
@@ -53,10 +51,6 @@ public class RawData {
         _buttonId = button;
         _irTimingData = timing;
         _deviceName = name;
-    }
-
-    public int getPrimaryKey() {
-        return _rawDataId;
     }
 
     public int getButtonId(){
