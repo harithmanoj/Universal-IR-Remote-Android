@@ -16,7 +16,7 @@
 //        along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 
-package com.remote.universalirremote;
+package com.remote.universalirremote.ui;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,6 +34,8 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.remote.universalirremote.Constant;
+import com.remote.universalirremote.R;
 import com.remote.universalirremote.network.NetworkManager;
 
 import java.util.ArrayList;

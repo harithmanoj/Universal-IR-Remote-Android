@@ -30,7 +30,7 @@ public final class Constant {
     private Constant() {}
 
     // Key for the service info passed to DeviceSelect activity
-    public static final String INT_SERVICE_KEY = "com.remote.universalirremote.MainActivity.SERVICE";
+    public static final String INT_SERVICE_KEY = "com.remote.universalirremote.ui.MainActivity.SERVICE";
 
     // Key to identify which activity launched intent
     public static final String INT_LAUNCHER_KEY = "com.remote.universalirremote.LAUNCHER";
