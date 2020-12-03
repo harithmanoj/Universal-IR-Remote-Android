@@ -21,15 +21,53 @@ package com.remote.universalirremote;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
+import android.view.View;
 
-public class TvRemote extends AppCompatActivity {
+import com.remote.universalirremote.database.DeviceData;
+
+public abstract class TvRemote extends AppCompatActivity {
+
+    private DeviceData _selectedDevice;
+    private NsdServiceInfo _selectedService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tv_remote);
+
+        // set text with device and service names
+
     }
 
+    public static int BTN_TV_PWR = 0;
+    public static int BTN_TV_BACK = 1;
+    public static int BTN_TV_UP = 2;
+    public static int BTN_TV_DOWN = 3;
+    public static int BTN_TV_LEFT = 4;
+    public static int BTN_TV_RIGHT = 5;
+    public static int BTN_TV_OK = 6;
+    public static int BTN_TV_VOL_UP = 7;
+    public static int BTN_TV_VOL_DOWN = 8;
+    public static int BTN_TV_CHN_UP = 9;
+    public static int BTN_TV_CHN_DOWN = 10;
+    public static int BTN_TV_UNMUTE = 11;
+    public static int BTN_TV_MUTE = 12;
+    public static int BTN_TV_NUM_0 = 13;
+    public static int BTN_TV_NUM_1 = 14;
+    public static int BTN_TV_NUM_2 = 15;
+    public static int BTN_TV_NUM_3 = 16;
+    public static int BTN_TV_NUM_4 = 17;
+    public static int BTN_TV_NUM_5 = 18;
+    public static int BTN_TV_NUM_6 = 19;
+    public static int BTN_TV_NUM_7 = 20;
+    public static int BTN_TV_NUM_8 = 21;
+    public static int BTN_TV_NUM_9 = 22;
+    public static int BTN_TV_NUM_ADD = 23;
+
+    public abstract void handleButtonClicks(int btnId);
+
+    public abstract void clickConfigureOrOK(View view);
 
 }

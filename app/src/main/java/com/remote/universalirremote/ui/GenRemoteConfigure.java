@@ -15,31 +15,21 @@
 //        You should have received a copy of the GNU General Public License
 //        along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-//
 
-package com.remote.universalirremote;
+package com.remote.universalirremote.ui;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.net.nsd.NsdServiceInfo;
-import android.os.Bundle;
 import android.view.View;
 
-import com.remote.universalirremote.database.DeviceData;
+import com.remote.universalirremote.GenRemote;
 
-public abstract class GenRemote extends AppCompatActivity {
-
-    private DeviceData _selectedDevice;
-    private NsdServiceInfo _selectedService;
-
+public class GenRemoteConfigure extends GenRemote {
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gen_remote);
+    public void handleButtonClicks(int btnId) {
+
     }
 
+    @Override
+    public void clickConfigureOrOK(View view) {
 
-    public abstract void handleButtonClicks(int btnId);
-
-    public abstract void clickConfigureOrOK(View view);
+    }
 }

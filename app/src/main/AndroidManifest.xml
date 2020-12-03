@@ -35,7 +35,15 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
 
-        <activity android:name=".ui.AcRemote" />
+        <activity android:name=".ui.GenRemoteConfigure"> </activity>
+
+        <activity android:name=".ui.GenRemoteTransmit"></activity>
+
+        <activity android:name=".ui.TvRemoteConfigure"></activity>
+
+        <activity android:name=".ui.TvRemoteTransmit"></activity>
+
+        <activity android:name=".ui.AcRemote"> </activity>
 
         <activity android:name=".ui.NewDevice">
             <meta-data
