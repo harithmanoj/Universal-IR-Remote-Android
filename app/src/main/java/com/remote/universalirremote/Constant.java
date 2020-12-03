@@ -41,6 +41,18 @@ public final class Constant {
     // Value for INT_LAUNCHER_KEY when DeviceSelect launches an activity.
     public static final int INT_LAUNCHER_DEVICE_SELECT = 1;
 
+    public static final int INT_LAUNCHER_NEW_DEVICE = 2;
+
+    public static final int INT_LAUNCHER_AC_REMOTE = 3;
+
+    public static final int INT_LAUNCHER_TV_CONFIGURE = 4;
+
+    public static final int INT_LAUNCHER_TV_TRANSMIT = 5;
+
+    public static final int INT_LAUNCHER_GEN_CONFIGURE = 6;
+
+    public static final int INT_LAUNCHER_GEN_TRANSMIT = 7;
+
     public static final String INT_SELECTED_DEVICE = "com.remote.universalirremote.DEVICE.SELECTED";
 
     public static int getProtocol(String prt) {
