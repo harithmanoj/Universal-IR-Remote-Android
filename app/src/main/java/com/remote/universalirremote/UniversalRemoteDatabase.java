@@ -39,6 +39,8 @@ public abstract class UniversalRemoteDatabase extends RoomDatabase {
     // access object
     public abstract DeviceDao deviceDataAccess();
 
+    public abstract RawDao rawDataAccess();
+
     // singleton instance
     private static volatile UniversalRemoteDatabase INSTANCE;
 
