@@ -17,7 +17,7 @@
 //
 //
 
-package com.remote.universalirremote;
+package com.remote.universalirremote.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
@@ -33,6 +33,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.remote.universalirremote.Constant;
+import com.remote.universalirremote.R;
+import com.remote.universalirremote.database.DeviceData;
+import com.remote.universalirremote.database.DeviceInfoRepository;
 
 import java.util.List;
 

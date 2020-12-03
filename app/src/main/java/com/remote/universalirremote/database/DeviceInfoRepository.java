@@ -16,11 +16,9 @@
 //
 //
 
-package com.remote.universalirremote;
+package com.remote.universalirremote.database;
 
 import android.app.Application;
-
-import androidx.room.Query;
 
 import java.util.List;
 
@@ -31,51 +29,51 @@ import java.util.List;
 public class DeviceInfoRepository {
     private final DeviceDao _deviceDataAccess;
 
-    DeviceInfoRepository(Application application) {
+    public DeviceInfoRepository(Application application) {
         UniversalRemoteDatabase db = UniversalRemoteDatabase.getDatabase(application);
         _deviceDataAccess = db.deviceDataAccess();
     }
 
-    List<DeviceData> getAllDevices() {
+    public List<DeviceData> getAllDevices() {
         return _deviceDataAccess.getAllDevices();
     }
 
-    void insert(DeviceData device) {
+    public void insert(DeviceData device) {
         UniversalRemoteDatabase.databaseWriteExecutor.execute(
                 () -> _deviceDataAccess.insert(device)
         );
     }
 
-    void delete(DeviceData device) {
+    public void delete(DeviceData device) {
         UniversalRemoteDatabase.databaseWriteExecutor.execute(
                 () -> _deviceDataAccess.delete(device)
         );
     }
 
-    void update(DeviceData device) {
+    public void update(DeviceData device) {
         UniversalRemoteDatabase.databaseWriteExecutor.execute(
                 () -> _deviceDataAccess.update(device)
         );
     }
 
-    boolean doesExist(String name) {
+    public boolean doesExist(String name) {
         return (_deviceDataAccess.getDevice(name) != null);
     }
 
 
-    List<String> getNames() {
+    public List<String> getNames() {
         return _deviceDataAccess.getNames();
     }
 
-    DeviceData getDevice(String name) {
+    public DeviceData getDevice(String name) {
         return _deviceDataAccess.getDevice(name);
     }
 
-    int getLayout(String name) {
+    public int getLayout(String name) {
         return _deviceDataAccess.getLayout(name);
     }
 
-    int getProtocolUsed(String name) {
+    public int getProtocolUsed(String name) {
         return _deviceDataAccess.getProtocolUsed(name);
     }
 }

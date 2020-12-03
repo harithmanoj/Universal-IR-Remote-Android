@@ -17,7 +17,7 @@
 //
 //
 
-package com.remote.universalirremote;
+package com.remote.universalirremote.database;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;

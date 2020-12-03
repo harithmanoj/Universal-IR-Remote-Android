@@ -26,7 +26,7 @@
     android:backgroundTint="#000097A7"
     android:backgroundTintMode="add"
     android:gravity="center"
-    tools:context=".MainActivity">
+    tools:context=".ui.MainActivity">
 
     <Button
         android:id="@+id/btn_OK"

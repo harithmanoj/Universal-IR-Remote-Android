@@ -34,20 +34,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".GenRemote"></activity>
-        <activity android:name=".AcRemote" />
-        <activity android:name=".TvRemote" />
-        <activity android:name=".NewDevice">
+
+        <activity android:name=".ui.AcRemote" />
+
+        <activity android:name=".ui.NewDevice">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.remote.universalirremote.DeviceSelect" />
+                android:value="com.remote.universalirremote.ui.DeviceSelect" />
         </activity>
-        <activity android:name=".DeviceSelect">
+        <activity android:name=".ui.DeviceSelect">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.remote.universalirremote.MainActivity" />
+                android:value="com.remote.universalirremote.ui.MainActivity" />
         </activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

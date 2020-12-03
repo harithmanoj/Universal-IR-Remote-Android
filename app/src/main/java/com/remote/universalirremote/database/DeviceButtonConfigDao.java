@@ -18,7 +18,8 @@
 //
 //
 
-package com.remote.universalirremote;
+
+package com.remote.universalirremote.database;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -29,34 +30,27 @@ import androidx.room.Update;
 
 import java.util.List;
 
-//
-//    Class to manage SQL query for table DeviceData
-//
 @Dao
-public interface DeviceDao {
-
+public interface DeviceButtonConfigDao {
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    void insert(DeviceData data);
+    void insert(DeviceButtonConfig data);
 
     @Delete
-    void delete(DeviceData data);
+    void delete(DeviceButtonConfig data);
 
     @Update
-    void update(DeviceData data);
+    void update(DeviceButtonConfig data);
 
-    @Query("SELECT * FROM DeviceData")
-    List<DeviceData> getAllDevices();
+    @Query("SELECT * FROM DeviceButtonConfig WHERE deviceName = :device")
+    List<DeviceButtonConfig> getAllRawData(String device);
 
-    @Query("SELECT deviceNameId FROM DeviceData")
-    List<String> getNames();
+    @Query("SELECT * FROM DeviceButtonConfig")
+    List<DeviceButtonConfig> getAllRawData();
 
-    @Query("SELECT * FROM DeviceData WHERE deviceNameId = :name")
-    DeviceData getDevice(String name);
+    @Query("SELECT timingData FROM DeviceButtonConfig WHERE ((deviceName = :device) AND (deviceButtonId = :button))")
+    String getIrTimingData(String device, int button);
 
-    @Query("SELECT deviceLayout FROM DeviceData WHERE deviceNameId = :name")
-    int getLayout(String name);
-
-    @Query("SELECT protocolInfo FROM DeviceData WHERE deviceNameId = :name")
-    int getProtocolUsed(String name);
+    @Query("SELECT deviceButtonName FROM DeviceButtonConfig WHERE ((deviceName = :device) AND (deviceButtonId = :button))")
+    String getButtonName(String device, int button);
 
 }
