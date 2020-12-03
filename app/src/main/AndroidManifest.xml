@@ -34,9 +34,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".GenRemote"></activity>
+
         <activity android:name=".AcRemote" />
-        <activity android:name=".TvRemote" />
+
         <activity android:name=".NewDevice">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

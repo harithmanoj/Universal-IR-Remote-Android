@@ -34,6 +34,8 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.remote.universalirremote.network.NetworkManager;
+
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 

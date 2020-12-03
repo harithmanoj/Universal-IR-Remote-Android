@@ -15,9 +15,9 @@
 //        You should have received a copy of the GNU General Public License
 //        along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-//       
+//
 
-package com.remote.universalirremote;
+package com.remote.universalirremote.network;
 
 import android.content.Intent;
 import android.net.nsd.NsdServiceInfo;
