@@ -34,6 +34,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.remote.universalirremote.database.DeviceData;
+import com.remote.universalirremote.database.DeviceInfoRepository;
+
 //
 // Activity to add new device
 //

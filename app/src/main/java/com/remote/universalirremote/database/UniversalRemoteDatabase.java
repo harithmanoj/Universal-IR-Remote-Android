@@ -18,7 +18,7 @@
 //
 //
 
-package com.remote.universalirremote;
+package com.remote.universalirremote.database;
 
 import android.content.Context;
 

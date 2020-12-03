@@ -34,6 +34,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.remote.universalirremote.database.DeviceData;
+import com.remote.universalirremote.database.DeviceInfoRepository;
+
 import java.util.List;
 
 //

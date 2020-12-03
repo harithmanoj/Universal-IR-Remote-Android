@@ -17,7 +17,7 @@
 //
 
 
-package com.remote.universalirremote;
+package com.remote.universalirremote.database;
 
 import android.app.Application;
 
@@ -29,13 +29,13 @@ public class DeviceButtonConfigRepository {
 
     private final DeviceInfoRepository _deviceDataRepository;
 
-    DeviceButtonConfigRepository(Application application) {
+    public DeviceButtonConfigRepository(Application application) {
         UniversalRemoteDatabase db = UniversalRemoteDatabase.getDatabase(application);
         _deviceButtonConfigAccess = db.deviceButtonConfigAccess();
         _deviceDataRepository = new DeviceInfoRepository(application);
     }
 
-    boolean insert(DeviceButtonConfig data) {
+    public boolean insert(DeviceButtonConfig data) {
         if(!_deviceDataRepository.doesExist(data.getDeviceName()))
             return false;
 
@@ -45,31 +45,31 @@ public class DeviceButtonConfigRepository {
         return true;
     }
 
-    void delete(DeviceButtonConfig data) {
+    public void delete(DeviceButtonConfig data) {
         UniversalRemoteDatabase.databaseWriteExecutor.execute(
                 () -> _deviceButtonConfigAccess.delete(data)
         );
     }
 
-    void update(DeviceButtonConfig data) {
+    public void update(DeviceButtonConfig data) {
         UniversalRemoteDatabase.databaseWriteExecutor.execute(
                 () -> _deviceButtonConfigAccess.update(data)
         );
     }
 
-    List<DeviceButtonConfig> getAllRawData() {
+    public List<DeviceButtonConfig> getAllRawData() {
         return _deviceButtonConfigAccess.getAllRawData();
     }
 
-    List<DeviceButtonConfig> getAllRawData(String device) {
+    public List<DeviceButtonConfig> getAllRawData(String device) {
         return _deviceButtonConfigAccess.getAllRawData(device);
     }
 
-    String getIrTimingData(String device, int button) {
+    public String getIrTimingData(String device, int button) {
         return  _deviceButtonConfigAccess.getIrTimingData(device, button);
     }
 
-    String getDeviceButtonName(String device, int button) {
+    public String getDeviceButtonName(String device, int button) {
         return  _deviceButtonConfigAccess.getButtonName(device, button);
     }
 
