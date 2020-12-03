@@ -21,14 +21,24 @@ package com.remote.universalirremote;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
+import android.view.View;
+
+import com.remote.universalirremote.database.DeviceData;
 
 public abstract class TvRemote extends AppCompatActivity {
+
+    private DeviceData _selectedDevice;
+    private NsdServiceInfo _selectedService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tv_remote);
+
+        // set text with device and service names
+
     }
 
     public static int BTN_TV_PWR = 0;
@@ -58,6 +68,6 @@ public abstract class TvRemote extends AppCompatActivity {
 
     public abstract void handleButtonClicks(int btnId);
 
-
+    public abstract void clickConfigureOrOK(View view);
 
 }
