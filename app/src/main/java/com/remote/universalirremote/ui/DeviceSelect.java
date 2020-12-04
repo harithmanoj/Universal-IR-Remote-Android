@@ -19,6 +19,7 @@
 
 package com.remote.universalirremote.ui;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 
@@ -34,6 +35,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.remote.universalirremote.ApplicationWideSingleton;
 import com.remote.universalirremote.Constant;
 import com.remote.universalirremote.GenRemote;
 import com.remote.universalirremote.R;
@@ -92,13 +94,20 @@ public class DeviceSelect extends AppCompatActivity {
 
         if(_deviceDataRepository.doesExist(deviceName)) {
             Log.d(TAG, "selected device is " + deviceName);
-            _selectedDevice = _deviceDataRepository.getDevice(deviceName);
-            return true;
+            return setSelectedDevice(_deviceDataRepository.getDevice(deviceName));
         }
         else {
             _selectedDevice = null;
             return false;
         }
+    }
+
+    private boolean setSelectedDevice(DeviceData device) {
+        _selectedDevice = device;
+        if (device == null)
+            return false;
+        ApplicationWideSingleton.refreshSelectedDevice(device.getDeviceName());
+        return true;
     }
 
 
@@ -163,6 +172,20 @@ public class DeviceSelect extends AppCompatActivity {
                     }
                 });
 
+        String device = savedInstanceState.getString(Constant.INT_SELECTED_DEVICE);
+        NsdServiceInfo service = savedInstanceState.getParcelable(Constant.INT_SERVICE_KEY);
+
+        ApplicationWideSingleton.refreshSelectedDevice(device);
+        ApplicationWideSingleton.refreshSelectedService(service);
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+
+        outState.putString(Constant.INT_SELECTED_DEVICE, ApplicationWideSingleton.getSelectedDevice());
+        outState.putParcelable(Constant.INT_SERVICE_KEY, ApplicationWideSingleton.getSelectedService());
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -218,6 +241,9 @@ public class DeviceSelect extends AppCompatActivity {
 
             intent.putExtra(Constant.INT_SERVICE_KEY,
                     (NsdServiceInfo)getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY));
+            ApplicationWideSingleton.refreshSelectedService(
+                    getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY)
+            );
             intent.putExtra(Constant.INT_SELECTED_DEVICE, _selectedDevice.getDeviceName());
             startActivity(intent);
         }
@@ -229,6 +255,9 @@ public class DeviceSelect extends AppCompatActivity {
         intent.putExtra(Constant.INT_LAUNCHER_KEY, Constant.INT_LAUNCHER_DEVICE_SELECT);
         intent.putExtra(Constant.INT_SERVICE_KEY,
                 (NsdServiceInfo)getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY));
+        ApplicationWideSingleton.refreshSelectedService(
+                getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY)
+        );
         startActivity(intent);
   }
 }
