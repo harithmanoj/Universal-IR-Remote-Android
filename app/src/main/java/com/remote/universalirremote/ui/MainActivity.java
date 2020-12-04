@@ -216,6 +216,9 @@ public class MainActivity extends AppCompatActivity {
         }
         ProgressBar circle = (ProgressBar) findViewById(R.id.prg_resolveProgress);
         circle.setVisibility(View.GONE);
+        ApplicationWideSingleton.refreshSelectedService(_selectedService);
+        ApplicationWideSingleton.refreshSelectedDevice(getIntent()
+                .getStringExtra(Constant.INT_SELECTED_DEVICE));
         super.onResume();
     }
 
@@ -346,8 +349,6 @@ public class MainActivity extends AppCompatActivity {
 
                 if(!def) {
                     intent.putExtra(Constant.INT_SELECTED_DEVICE,
-                            incomingIntent.getStringExtra(Constant.INT_SELECTED_DEVICE));
-                    ApplicationWideSingleton.refreshSelectedDevice(
                             incomingIntent.getStringExtra(Constant.INT_SELECTED_DEVICE));
                 }
 

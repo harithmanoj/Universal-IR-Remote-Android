@@ -192,8 +192,14 @@ public class DeviceSelect extends AppCompatActivity {
     protected void onStart() {
 
         _selectedService = getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY);
-
+        ApplicationWideSingleton.refreshSelectedService(_selectedService);
+        ((TextView)findViewById(R.id.text_selectedBlaster)).setText(_selectedService.getServiceName());
         super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     // Menu item selected process
@@ -241,9 +247,6 @@ public class DeviceSelect extends AppCompatActivity {
 
             intent.putExtra(Constant.INT_SERVICE_KEY,
                     (NsdServiceInfo)getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY));
-            ApplicationWideSingleton.refreshSelectedService(
-                    getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY)
-            );
             intent.putExtra(Constant.INT_SELECTED_DEVICE, _selectedDevice.getDeviceName());
             startActivity(intent);
         }
@@ -255,9 +258,6 @@ public class DeviceSelect extends AppCompatActivity {
         intent.putExtra(Constant.INT_LAUNCHER_KEY, Constant.INT_LAUNCHER_DEVICE_SELECT);
         intent.putExtra(Constant.INT_SERVICE_KEY,
                 (NsdServiceInfo)getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY));
-        ApplicationWideSingleton.refreshSelectedService(
-                getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY)
-        );
         startActivity(intent);
   }
 }
