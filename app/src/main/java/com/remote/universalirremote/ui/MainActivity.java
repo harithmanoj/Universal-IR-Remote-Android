@@ -35,6 +35,7 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.remote.universalirremote.ApplicationWideSingleton;
 import com.remote.universalirremote.Constant;
 import com.remote.universalirremote.R;
 import com.remote.universalirremote.network.NetworkManager;
@@ -100,13 +101,17 @@ public class MainActivity extends AppCompatActivity {
             _selectedService = null;
             return false;
         }
-        NsdServiceInfo temp = _networkManager.getDiscoveredServices(name);
-        if (temp == null) {
+        return setSelectedService(_networkManager.getDiscoveredServices(name));
+    }
+
+    private boolean setSelectedService(NsdServiceInfo service ) {
+        if(service == null) {
             return false;
-        } else {
-            _selectedService = temp;
-            return true;
         }
+
+        _selectedService = service;
+        ApplicationWideSingleton.setSelectedService(service);
+        return true;
     }
 
     // Refresh UI list of discovered services.
@@ -134,6 +139,12 @@ public class MainActivity extends AppCompatActivity {
 		_discoveredServicesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, servicesList);
 		_discoveredServicesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ((Spinner)findViewById(R.id.spnr_blasterSelection)).setAdapter(_discoveredServicesAdapter);
+
+        String device = savedInstanceState.getString(Constant.INT_SELECTED_DEVICE);
+        NsdServiceInfo service = savedInstanceState.getParcelable(Constant.INT_SERVICE_KEY);
+
+        ApplicationWideSingleton.refreshSelectedDevice(device);
+        ApplicationWideSingleton.refreshSelectedService(service);
     }
 
     // Variables instantiated :     _discoveryThread
@@ -186,6 +197,13 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
     }
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+
+        outState.putString(Constant.INT_SELECTED_DEVICE, ApplicationWideSingleton.getSelectedDevice());
+        outState.putParcelable(Constant.INT_SERVICE_KEY, ApplicationWideSingleton.getSelectedService());
+        super.onSaveInstanceState(outState);
+    }
 
     @Override
     protected void onResume() {
@@ -272,9 +290,11 @@ public class MainActivity extends AppCompatActivity {
                         "cannot resolve " + _selectedService.getServiceName(),
                         Toast.LENGTH_LONG).show();
                 _networkManager._isResolved = false;
+                setSelectedService(Constant.NO_SELECT);
+                ((Spinner)findViewById(R.id.spnr_blasterSelection)).setSelection(0);
                 return;
             }
-            _selectedService = _networkManager.getChosenServiceInfo();
+            setSelectedService(_networkManager.getChosenServiceInfo());
             Toast.makeText(getApplicationContext(),
                     _selectedService.getServiceName() + " resolved",
                     Toast.LENGTH_SHORT).show();
@@ -320,9 +340,12 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
 
-                if(!def)
+                if(!def) {
                     intent.putExtra(Constant.INT_SELECTED_DEVICE,
                             incomingIntent.getStringExtra(Constant.INT_SELECTED_DEVICE));
+                    ApplicationWideSingleton.refreshSelectedDevice(
+                            incomingIntent.getStringExtra(Constant.INT_SELECTED_DEVICE));
+                }
 
             } else {
                 intent = new Intent(this, DeviceSelect.class);
