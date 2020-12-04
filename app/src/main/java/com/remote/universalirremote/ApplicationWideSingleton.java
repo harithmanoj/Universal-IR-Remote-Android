@@ -38,6 +38,10 @@ public class ApplicationWideSingleton {
     }
 
     public static synchronized boolean refreshSelectedService(NsdServiceInfo service) {
+        if(service == null) {
+            return false;
+        }
+
         if(!isSelectedServiceValid()) {
             _selectedService = service;
             return true;
@@ -62,6 +66,10 @@ public class ApplicationWideSingleton {
     }
 
     public static synchronized boolean refreshSelectedDevice(String device) {
+        if(device == null) {
+            return false;
+        }
+
         if(!isSelectedDeviceValid()) {
             _selectedDevice = device;
             return true;
