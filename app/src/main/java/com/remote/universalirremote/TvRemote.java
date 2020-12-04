@@ -25,20 +25,21 @@ import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
 import android.view.View;
 
+import com.remote.universalirremote.database.DeviceButtonConfigRepository;
+import com.remote.universalirremote.database.DeviceDao;
 import com.remote.universalirremote.database.DeviceData;
+import com.remote.universalirremote.database.DeviceInfoRepository;
 
 public abstract class TvRemote extends AppCompatActivity {
 
-    private DeviceData _selectedDevice;
-    private NsdServiceInfo _selectedService;
+    protected DeviceData _selectedDevice;
+    protected DeviceInfoRepository _deviceInfoRepo;
+    protected DeviceButtonConfigRepository _deviceButtonConfigRepo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tv_remote);
-
-        // set text with device and service names
-
     }
 
     public static int BTN_TV_PWR = 0;
@@ -65,6 +66,8 @@ public abstract class TvRemote extends AppCompatActivity {
     public static int BTN_TV_NUM_8 = 21;
     public static int BTN_TV_NUM_9 = 22;
     public static int BTN_TV_NUM_ADD = 23;
+
+
 
     public abstract void handleButtonClicks(int btnId);
 
