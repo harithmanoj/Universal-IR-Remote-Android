@@ -54,12 +54,14 @@ public class DeviceButtonConfig {
     @ColumnInfo(name = "deviceButtonName")
     private String _deviceButtonName;
 
-    public DeviceButtonConfig(int button, String timing, String device, boolean isEditable, String name) {
-        _buttonId = button;
-        _irTimingData = timing;
-        _deviceName = device;
-        _isEditableName = isEditable;
-        _deviceButtonName = name;
+    public DeviceButtonConfig(int _buttonId, String _irTimingData,
+                              String _deviceName, boolean _isEditableName,
+                              String _deviceButtonName) {
+        this._buttonId = _buttonId;
+        this._irTimingData = _irTimingData;
+        this._deviceName = _deviceName;
+        this._isEditableName = _isEditableName;
+        this._deviceButtonName = _deviceButtonName;
     }
 
     public int getButtonId(){
