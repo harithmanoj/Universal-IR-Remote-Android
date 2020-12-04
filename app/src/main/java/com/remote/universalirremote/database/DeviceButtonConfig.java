@@ -68,7 +68,7 @@ public class DeviceButtonConfig {
         return _buttonId;
     }
 
-    public String getTimingData() {
+    public String getIrTimingData() {
         return _irTimingData;
     }
 
@@ -76,7 +76,7 @@ public class DeviceButtonConfig {
         return _deviceName;
     }
 
-    public boolean isButtonNameEditable() {
+    public boolean isEditableName() {
         return _isEditableName;
     }
 
