@@ -20,11 +20,11 @@ public class RawGet {
     public static final String TAG = "RawGet";
 
     public static final String PROTOCOL_KEY = "response.protocol";
-    public static final String PROTOCOL_RAW = "response.raw";
+    public static final String RAW_KEY = "response.raw";
 
     public RawGet(NsdServiceInfo info) {
         _httpClient = new HttpClient(info);
-        _responseHandlerThread = new HandlerThread("transactionHandler");
+        _responseHandlerThread = new HandlerThread("GetHandlerThread");
         _responseHandlerThread.start();
         _responseHandler = new Handler(_responseHandlerThread.getLooper()) {
             @Override
@@ -41,11 +41,11 @@ public class RawGet {
                 Log.i(TAG, String.format("Protocol: %d", protocol));
 
                 if(protocol != -1) {
-                    msgBundle.putString(PROTOCOL_RAW, response.substring(response.indexOf(';')+1));
+                    msgBundle.putString(RAW_KEY, response.substring(response.indexOf(';')+1));
                     Log.i(TAG, String.format("Raw: %s", response.substring(response.indexOf(';')+1)));
                 }
                 else {
-                    msgBundle.putString(PROTOCOL_RAW, "0:");
+                    msgBundle.putString(RAW_KEY, "0:");
                 }
 
                 Message msgr = new Message();
