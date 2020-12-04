@@ -30,7 +30,7 @@ import androidx.room.ForeignKey;
                 entity = DeviceData.class,
                 parentColumns = "deviceNameId",
                 childColumns = "deviceName"),
-        primaryKeys = { "deviceButtonId", "_deviceName" }
+        primaryKeys = { "deviceButtonId", "deviceName" }
 )
 public class DeviceButtonConfig {
 
