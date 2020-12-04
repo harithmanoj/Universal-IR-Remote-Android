@@ -15,9 +15,9 @@ public class RawGet {
 
     private Handler _responseHandler;
     private HandlerThread _responseHandlerThread;
-    private Handler _getHandler;
+    private Handler _outerHandler;
 
-    public static final String TAG = "RawCommunication";
+    public static final String TAG = "RawGet";
 
     public static final String PROTOCOL_KEY = "response.protocol";
     public static final String PROTOCOL_RAW = "response.raw";
@@ -51,7 +51,7 @@ public class RawGet {
                 Message msgr = new Message();
                 msgr.setData(msgBundle);
 
-                _getHandler.sendMessage(msgr);
+                _outerHandler.sendMessage(msgr);
             }
         };
 
@@ -60,7 +60,7 @@ public class RawGet {
 
     public void connect(Handler handler)
     {
-        _getHandler = handler;
+        _outerHandler = handler;
     }
 
     public void getData()
