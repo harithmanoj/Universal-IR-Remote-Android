@@ -141,11 +141,13 @@ public class MainActivity extends AppCompatActivity {
 		_discoveredServicesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ((Spinner)findViewById(R.id.spnr_blasterSelection)).setAdapter(_discoveredServicesAdapter);
 
-        String device = savedInstanceState.getString(Constant.INT_SELECTED_DEVICE);
-        NsdServiceInfo service = savedInstanceState.getParcelable(Constant.INT_SERVICE_KEY);
+        if(savedInstanceState != null) {
+            String device = savedInstanceState.getString(Constant.INT_SELECTED_DEVICE);
+            NsdServiceInfo service = savedInstanceState.getParcelable(Constant.INT_SERVICE_KEY);
 
-        ApplicationWideSingleton.refreshSelectedDevice(device);
-        ApplicationWideSingleton.refreshSelectedService(service);
+            ApplicationWideSingleton.refreshSelectedDevice(device);
+            ApplicationWideSingleton.refreshSelectedService(service);
+        }
     }
 
     // Variables instantiated :     _discoveryThread

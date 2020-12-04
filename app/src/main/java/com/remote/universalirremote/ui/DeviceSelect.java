@@ -171,11 +171,13 @@ public class DeviceSelect extends AppCompatActivity {
                     }
                 });
 
-        String device = savedInstanceState.getString(Constant.INT_SELECTED_DEVICE);
-        NsdServiceInfo service = savedInstanceState.getParcelable(Constant.INT_SERVICE_KEY);
+        if(savedInstanceState != null) {
+            String device = savedInstanceState.getString(Constant.INT_SELECTED_DEVICE);
+            NsdServiceInfo service = savedInstanceState.getParcelable(Constant.INT_SERVICE_KEY);
 
-        ApplicationWideSingleton.refreshSelectedDevice(device);
-        ApplicationWideSingleton.refreshSelectedService(service);
+            ApplicationWideSingleton.refreshSelectedDevice(device);
+            ApplicationWideSingleton.refreshSelectedService(service);
+        }
 
     }
 

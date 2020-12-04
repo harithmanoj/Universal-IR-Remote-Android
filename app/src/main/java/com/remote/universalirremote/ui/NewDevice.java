@@ -122,9 +122,11 @@ public class NewDevice extends AppCompatActivity {
         protocolUI.setAdapter(protocolAdapter);
         protocolUI.setVisibility(View.INVISIBLE);
 
-        NsdServiceInfo service = savedInstanceState.getParcelable(Constant.INT_SERVICE_KEY);
+        if(savedInstanceState != null) {
+            NsdServiceInfo service = savedInstanceState.getParcelable(Constant.INT_SERVICE_KEY);
 
-        ApplicationWideSingleton.refreshSelectedService(service);
+            ApplicationWideSingleton.refreshSelectedService(service);
+        }
     }
 
     @Override
