@@ -160,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
                                     msgBundle.getString(NetworkManager.DISCOVERED_SERVICE_NAME));
                             _discoveredServicesAdapter.notifyDataSetChanged();
                         });
+                        break;
                     }
 
                     case NetworkManager.DISCOVER_LOST: { // remove service
@@ -168,10 +169,12 @@ public class MainActivity extends AppCompatActivity {
                                     msgBundle.getString(NetworkManager.DISCOVERED_SERVICE_NAME));
                             _discoveredServicesAdapter.notifyDataSetChanged();
                         });
+                        break;
                     }
 
                     case NetworkManager.DISCOVER_REFRESH: { // refresh UI
                         runOnUiThread(() -> refreshSpinner());
+                        break;
                     }
                 }
 
@@ -284,28 +287,36 @@ public class MainActivity extends AppCompatActivity {
                 switch (incomingIntent.getIntExtra(Constant.INT_LAUNCHER_KEY, -2)) {
                     case Constant.INT_LAUNCHER_DEVICE_SELECT: {
                         intent = new Intent(this, DeviceSelect.class);
+                        break;
                     }
                     case Constant.INT_LAUNCHER_NEW_DEVICE: {
                         intent = new Intent(this, NewDevice.class);
+                        break;
                     }
                     case Constant.INT_LAUNCHER_AC_REMOTE: {
                         intent = new Intent(this, AcRemote.class);
+                        break;
                     }
                     case Constant.INT_LAUNCHER_GEN_CONFIGURE: {
                         intent = new Intent(this, GenRemoteConfigure.class);
+                        break;
                     }
                     case Constant.INT_LAUNCHER_GEN_TRANSMIT: {
                         intent = new Intent(this, GenRemoteTransmit.class);
+                        break;
                     }
                     case Constant.INT_LAUNCHER_TV_CONFIGURE: {
                         intent = new Intent(this, TvRemoteConfigure.class);
+                        break;
                     }
                     case Constant.INT_LAUNCHER_TV_TRANSMIT: {
                         intent = new Intent(this, TvRemoteTransmit.class);
+                        break;
                     }
                     default: {
                         def = true;
                         intent = new Intent(this, DeviceSelect.class);
+                        break;
                     }
                 }
 

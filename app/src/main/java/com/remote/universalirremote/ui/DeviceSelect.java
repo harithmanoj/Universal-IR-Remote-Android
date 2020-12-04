@@ -35,6 +35,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.remote.universalirremote.Constant;
+import com.remote.universalirremote.GenRemote;
 import com.remote.universalirremote.R;
 import com.remote.universalirremote.database.DeviceData;
 import com.remote.universalirremote.database.DeviceInfoRepository;
@@ -81,6 +82,26 @@ public class DeviceSelect extends AppCompatActivity {
     // Selected device
     private DeviceData _selectedDevice = null;
 
+    private NsdServiceInfo _selectedService;
+
+    private boolean setSelectedDevice(String deviceName) {
+        if(deviceName.equals(Constant.NO_SELECT)) {
+            _selectedDevice = null;
+            return false;
+        }
+
+        if(_deviceDataRepository.doesExist(deviceName)) {
+            Log.d(TAG, "selected device is " + deviceName);
+            _selectedDevice = _deviceDataRepository.getDevice(deviceName);
+            return true;
+        }
+        else {
+            _selectedDevice = null;
+            return false;
+        }
+    }
+
+
     // onCreate instantiation.
     // Initialized variables: _deviceDataRepository
     //                        set back button
@@ -111,12 +132,9 @@ public class DeviceSelect extends AppCompatActivity {
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         String name = parent.getItemAtPosition(position).toString();
 
-                        if(name.equals(Constant.NO_SELECT))
-                            onNothingSelected(parent);
+                        if( setSelectedDevice(name) ) {
+                            Log.d(TAG, "selected device is " + name);
 
-                        Log.d(TAG, "selected device is " + name);
-                        if(_deviceDataRepository.doesExist(name)) {
-                            _selectedDevice = _deviceDataRepository.getDevice(name);
                             TextView info = findViewById(R.id.text_selectedDeviceInfo);
 
                             String layout = Constant.getLayout(_selectedDevice.getDeviceLayout());
@@ -140,9 +158,19 @@ public class DeviceSelect extends AppCompatActivity {
                     @Override
                     public void onNothingSelected(AdapterView<?> parent) {
                         _selectedDevice = null;
+                        TextView info = findViewById(R.id.text_selectedDeviceInfo);
+                        info.setText("Nothing Selected");
                     }
                 });
 
+    }
+
+    @Override
+    protected void onStart() {
+
+        _selectedService = getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY);
+
+        super.onStart();
     }
 
     // Menu item selected process
@@ -163,28 +191,35 @@ public class DeviceSelect extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),
                     "Select a device ", Toast.LENGTH_LONG).show();
         } else {
-//            Intent intent;
-//            switch( device.getDeviceLayout() ) {
-//                case Constant.Layout.LAY_TV: {
-//                    intent = new Intent(this, /* TV layout remote activity */);
-//                }
-//
-//                case Constant.Layout.LAY_AC: {
-//                    intent = new Intent(this, /* AC layout remote activity */);
-//                }
-//
-//                default: {
-//                    Toast.makeText(getApplicationContext(),
-//                            "invalid layout", Toast.LENGTH_LONG).show();
-//                    return;
-//                }
-//            }
-//
-//            intent.putExtra(Constant.INT_LAUNCHER_KEY, Constant.INT_LAUNCHER_DEVICE_SELECT);
-//            intent.putExtra(Constant.INT_SERVICE_KEY,
-//                    (NsdServiceInfo)getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY))
-//            intent.putExtra(Constant.INT_SELECTED_DEVICE, device.getDeviceName());
-//            startActivity(intent);
+            Intent intent;
+            switch( _selectedDevice.getDeviceLayout() ) {
+                case Constant.Layout.LAY_TV: {
+                    intent = new Intent(this, TvRemoteTransmit.class);
+                    break;
+                }
+
+                case Constant.Layout.LAY_AC: {
+                    intent = new Intent(this, AcRemote.class);
+                    break;
+                }
+                case Constant.Layout.LAY_GEN: {
+                    intent = new Intent(this, GenRemoteTransmit.class);
+                    break;
+                }
+
+                default: {
+                    Toast.makeText(getApplicationContext(),
+                            "invalid layout", Toast.LENGTH_LONG).show();
+                    return;
+                }
+            }
+
+            intent.putExtra(Constant.INT_LAUNCHER_KEY, Constant.INT_LAUNCHER_DEVICE_SELECT);
+
+            intent.putExtra(Constant.INT_SERVICE_KEY,
+                    (NsdServiceInfo)getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY));
+            intent.putExtra(Constant.INT_SELECTED_DEVICE, _selectedDevice.getDeviceName());
+            startActivity(intent);
         }
     }
 
