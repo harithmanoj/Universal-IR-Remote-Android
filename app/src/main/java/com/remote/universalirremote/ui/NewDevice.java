@@ -20,6 +20,7 @@
 
 package com.remote.universalirremote.ui;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 
@@ -32,8 +33,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.remote.universalirremote.ApplicationWideSingleton;
 import com.remote.universalirremote.Constant;
 import com.remote.universalirremote.R;
 import com.remote.universalirremote.database.DeviceData;
@@ -118,6 +121,28 @@ public class NewDevice extends AppCompatActivity {
         Spinner protocolUI = findViewById(_protocolDropDownId);
         protocolUI.setAdapter(protocolAdapter);
         protocolUI.setVisibility(View.INVISIBLE);
+
+        NsdServiceInfo service = savedInstanceState.getParcelable(Constant.INT_SERVICE_KEY);
+
+        ApplicationWideSingleton.refreshSelectedService(service);
+    }
+
+    @Override
+    protected void onResume() {
+
+        ApplicationWideSingleton.refreshSelectedService(
+                getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY)
+        );
+        ((TextView)findViewById(R.id.text_selectedBlaster_add_remote))
+                .setText(ApplicationWideSingleton.getSelectedService().getServiceName());
+        super.onResume();
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+
+        outState.putParcelable(Constant.INT_SERVICE_KEY, ApplicationWideSingleton.getSelectedService());
+        super.onSaveInstanceState(outState);
     }
 
     // Menu item selected process
@@ -158,27 +183,36 @@ public class NewDevice extends AppCompatActivity {
 
         DeviceData device = new DeviceData(name, Constant.getLayout(layout), Constant.getProtocol(protocol));
         _deviceDataRepository.insert(device);
+
+        ApplicationWideSingleton.setSelectedDevice(name);
+
         Intent intent = null;
 
-//      switch( device.getDeviceLayout() ) {
-//          case Constant.Layout.LAY_TV: {
-//               intent = new Intent(this, /* TV layout remote activity */);
-//          }
-//
-//          case Constant.Layout.LAY_AC: {
-//              intent = new Intent(this, /* AC layout remote activity */);
-//           }
-//
-//          default: {
-//               Toast.makeText(getApplicationContext(),
-//                       "invalid layout", Toast.LENGTH_LONG).show();
-//               return;
-//           }
-//       }
-//
+        switch( device.getDeviceLayout() ) {
+            case Constant.Layout.LAY_TV: {
+                intent = new Intent(this, TvRemoteConfigure.class);
+                break;
+            }
+
+            case Constant.Layout.LAY_AC: {
+                intent = new Intent(this, AcRemote.class);
+                break;
+            }
+            case Constant.Layout.LAY_GEN: {
+                intent = new Intent(this, GenRemoteConfigure.class);
+                break;
+            }
+
+            default: {
+                Toast.makeText(getApplicationContext(),
+                        "invalid layout", Toast.LENGTH_LONG).show();
+                return;
+            }
+        }
          intent.putExtra(Constant.INT_LAUNCHER_KEY, Constant.INT_LAUNCHER_DEVICE_SELECT);
          intent.putExtra(Constant.INT_SERVICE_KEY,
                  (NsdServiceInfo)getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY));
+
          intent.putExtra(Constant.INT_SELECTED_DEVICE, device.getDeviceName());
          startActivity(intent);
     }
