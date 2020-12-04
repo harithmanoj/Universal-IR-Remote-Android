@@ -12,10 +12,10 @@ import androidx.annotation.NonNull;
 
 public class RawGet {
     private HttpClient _httpClient;
+
     private Handler _responseHandler;
     private HandlerThread _responseHandlerThread;
     private Handler _getHandler;
-    private HandlerThread _getHandlerThread;
 
     public static final String TAG = "RawCommunication";
 
