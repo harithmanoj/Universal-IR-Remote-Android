@@ -94,23 +94,24 @@ public class MainActivity extends AppCompatActivity {
 
     // Set selected service ( take from _networkManger.getDiscoveredServices() with matching name).
     // Returns false if it doesn't exist or if parameters are null
-    private boolean setSelectedService(String name) {
+    private boolean setSelectedService(String name, boolean updateSingleton) {
         if ((name == null ) || (_networkManager == null) )
             return false;
         if (name.equals(Constant.NO_SELECT)) {
             _selectedService = null;
             return false;
         }
-        return setSelectedService(_networkManager.getDiscoveredServices(name));
+        return setSelectedService(_networkManager.getDiscoveredServices(name), updateSingleton);
     }
 
-    private boolean setSelectedService(NsdServiceInfo service ) {
+    private boolean setSelectedService(NsdServiceInfo service, boolean updateSingleton ) {
         if(service == null) {
             return false;
         }
 
         _selectedService = service;
-        ApplicationWideSingleton.setSelectedService(service);
+        if(updateSingleton)
+            ApplicationWideSingleton.setSelectedService(service);
         return true;
     }
 
@@ -200,8 +201,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
 
-        outState.putString(Constant.INT_SELECTED_DEVICE, ApplicationWideSingleton.getSelectedDevice());
-        outState.putParcelable(Constant.INT_SERVICE_KEY, ApplicationWideSingleton.getSelectedService());
+        if(ApplicationWideSingleton.isSelectedDeviceValid())
+            outState.putString(Constant.INT_SELECTED_DEVICE, ApplicationWideSingleton.getSelectedDevice());
+        if(ApplicationWideSingleton.isSelectedServiceValid())
+            outState.putParcelable(Constant.INT_SERVICE_KEY, ApplicationWideSingleton.getSelectedService());
         super.onSaveInstanceState(outState);
     }
 
@@ -247,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
 
         long pos = ((Spinner)findViewById(R.id.spnr_blasterSelection)).getSelectedItemPosition();
         String name = _discoveredServicesAdapter.getItem((int)pos);
-        if (!setSelectedService(name)) {
+        if (!setSelectedService(name, false)) {
             Toast.makeText(getApplicationContext(),
                     "service " + name + " not found",
                     Toast.LENGTH_SHORT).show();
@@ -259,6 +262,7 @@ public class MainActivity extends AppCompatActivity {
                 _discoveryHandler.sendMessage(msg);
             }
         }
+
         if (_selectedService == null) {
             Toast.makeText(getApplicationContext(),
                     "No service Selected", Toast.LENGTH_LONG).show();
@@ -290,11 +294,11 @@ public class MainActivity extends AppCompatActivity {
                         "cannot resolve " + _selectedService.getServiceName(),
                         Toast.LENGTH_LONG).show();
                 _networkManager._isResolved = false;
-                setSelectedService(Constant.NO_SELECT);
+                setSelectedService(Constant.NO_SELECT, false);
                 ((Spinner)findViewById(R.id.spnr_blasterSelection)).setSelection(0);
                 return;
             }
-            setSelectedService(_networkManager.getChosenServiceInfo());
+            setSelectedService(_networkManager.getChosenServiceInfo(), true);
             Toast.makeText(getApplicationContext(),
                     _selectedService.getServiceName() + " resolved",
                     Toast.LENGTH_SHORT).show();

@@ -37,7 +37,6 @@ import android.widget.Toast;
 
 import com.remote.universalirremote.ApplicationWideSingleton;
 import com.remote.universalirremote.Constant;
-import com.remote.universalirremote.GenRemote;
 import com.remote.universalirremote.R;
 import com.remote.universalirremote.database.DeviceData;
 import com.remote.universalirremote.database.DeviceInfoRepository;
@@ -183,7 +182,8 @@ public class DeviceSelect extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
 
-        outState.putString(Constant.INT_SELECTED_DEVICE, ApplicationWideSingleton.getSelectedDevice());
+        if(ApplicationWideSingleton.isSelectedDeviceValid())
+            outState.putString(Constant.INT_SELECTED_DEVICE, ApplicationWideSingleton.getSelectedDevice());
         outState.putParcelable(Constant.INT_SERVICE_KEY, ApplicationWideSingleton.getSelectedService());
         super.onSaveInstanceState(outState);
     }
