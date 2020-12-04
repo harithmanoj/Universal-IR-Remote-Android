@@ -313,4 +313,43 @@ public final class Constant {
         public static final int ELITESCREENS = 95;
         public static final int PANASONIC_AC32 = 96;
     }
+
+    public static class AcMode{
+        public static int kOff  = -1,
+            kAuto =  0,
+            kCool =  1,
+            kHeat =  2,
+            kDry  =  3,
+            kFan  =  4;
+    };
+
+    public static class AcFan{
+        public static int  kAuto =   0,
+            kMin =    1,
+            kLow =    2,
+            kMedium = 3,
+            kHigh =   4,
+            kMax =    5;
+    }
+
+    public static class AcSwingv{
+        public static int kOff =    -1,
+            kAuto =    0,
+            kHighest = 1,
+            kHigh =    2,
+            kMiddle =  3,
+            kLow =     4,
+            kLowest =  5;
+    }
+
+    public static class AcSwingh{
+        public static int  kOff =     -1,
+            kAuto =     0,  // a.k.a. On.
+            kLeftMax =  1,
+            kLeft =     2,
+            kMiddle =   3,
+            kRight =    4,
+            kRightMax = 5,
+            kWide =     6;
+    }
 }
