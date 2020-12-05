@@ -29,9 +29,12 @@ import java.util.List;
 public class DeviceInfoRepository {
     private final DeviceDao _deviceDataAccess;
 
-    public DeviceInfoRepository(Application application) {
+    private DeviceDataCallback _getterCallback;
+
+    public DeviceInfoRepository(Application application, DeviceDataCallback getter) {
         UniversalRemoteDatabase db = UniversalRemoteDatabase.getDatabase(application);
         _deviceDataAccess = db.deviceDataAccess();
+        _getterCallback = getter;
     }
 
     public List<DeviceData> getAllDevices() {
@@ -61,19 +64,44 @@ public class DeviceInfoRepository {
     }
 
 
-    public List<String> getNames() {
-        return _deviceDataAccess.getNames();
+    public boolean getNames() {
+        if(_getterCallback == null)
+            return false;
+
+        UniversalRemoteDatabase.databaseWriteExecutor.execute(
+                ()->_getterCallback.namesCallback(_deviceDataAccess.getNames())
+        );
+        return true;
     }
 
-    public DeviceData getDevice(String name) {
-        return _deviceDataAccess.getDevice(name);
+    public boolean getDevice(String name) {
+        if(_getterCallback == null)
+            return false;
+
+        UniversalRemoteDatabase.databaseWriteExecutor.execute(
+                ()->_getterCallback.deviceWithNameCallback(_deviceDataAccess.getDevice(name))
+        );
+        return true;
     }
 
-    public int getLayout(String name) {
-        return _deviceDataAccess.getLayout(name);
+    public boolean getLayout(String name) {
+
+        if(_getterCallback == null)
+            return false;
+
+        UniversalRemoteDatabase.databaseWriteExecutor.execute(
+                ()->_getterCallback.layoutCallback(_deviceDataAccess.getLayout(name))
+        );
+        return true;
     }
 
-    public int getProtocolUsed(String name) {
-        return _deviceDataAccess.getProtocolUsed(name);
+    public boolean getProtocolUsed(String name) {
+        if(_getterCallback == null)
+            return false;
+
+        UniversalRemoteDatabase.databaseWriteExecutor.execute(
+                ()->_getterCallback.protocolCallback(_deviceDataAccess.getProtocolUsed(name))
+        );
+        return true;
     }
 }
