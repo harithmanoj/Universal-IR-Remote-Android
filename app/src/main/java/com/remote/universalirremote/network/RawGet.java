@@ -22,8 +22,7 @@ public class RawGet {
     public static final String PROTOCOL_KEY = "response.protocol";
     public static final String RAW_KEY = "response.raw";
 
-    public RawGet(NsdServiceInfo info) {
-        _httpClient = new HttpClient(info);
+    public RawGet(NsdServiceInfo info, Handler handler) {
         _responseHandlerThread = new HandlerThread("GetHandlerThread");
         _responseHandlerThread.start();
         _responseHandler = new Handler(_responseHandlerThread.getLooper()) {
@@ -53,11 +52,8 @@ public class RawGet {
             }
         };
 
-        _httpClient.connect(_responseHandler);
-    }
+        _httpClient = new HttpClient(info, _responseHandler);
 
-    public void connect(Handler handler)
-    {
         _outerHandler = handler;
     }
 
