@@ -1,0 +1,103 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "65709e39c3355afe45f38c9541b8a236",
+    "entities": [
+      {
+        "tableName": "DeviceData",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`deviceNameId` TEXT NOT NULL, `protocolInfo` INTEGER NOT NULL, `deviceLayout` INTEGER NOT NULL, PRIMARY KEY(`deviceNameId`))",
+        "fields": [
+          {
+            "fieldPath": "_deviceName",
+            "columnName": "deviceNameId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "_protocolInfo",
+            "columnName": "protocolInfo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "_deviceLayout",
+            "columnName": "deviceLayout",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "deviceNameId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "DeviceButtonConfig",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`deviceButtonId` INTEGER NOT NULL, `timingData` TEXT NOT NULL, `deviceName` TEXT NOT NULL, `isEditableName` INTEGER NOT NULL, `deviceButtonName` TEXT NOT NULL, PRIMARY KEY(`deviceButtonId`, `deviceName`), FOREIGN KEY(`deviceName`) REFERENCES `DeviceData`(`deviceNameId`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "_buttonId",
+            "columnName": "deviceButtonId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "_irTimingData",
+            "columnName": "timingData",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "_deviceName",
+            "columnName": "deviceName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "_isEditableName",
+            "columnName": "isEditableName",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "_deviceButtonName",
+            "columnName": "deviceButtonName",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "deviceButtonId",
+            "deviceName"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "DeviceData",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "deviceName"
+            ],
+            "referencedColumns": [
+              "deviceNameId"
+            ]
+          }
+        ]
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '65709e39c3355afe45f38c9541b8a236')"
+    ]
+  }
+}

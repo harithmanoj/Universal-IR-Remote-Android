@@ -147,6 +147,7 @@ public class NetworkManager {
 				if(_discoveredServices.contains(serviceInfo))
 					return;
 
+				_discoveredServices.add(serviceInfo);
                 Bundle msgBundle = new Bundle();
                 msgBundle.putInt(DISCOVER_OP, DISCOVER_NEW);
                 msgBundle.putString(DISCOVERED_SERVICE_NAME, serviceInfo.getServiceName());
