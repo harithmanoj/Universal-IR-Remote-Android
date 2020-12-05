@@ -21,8 +21,7 @@ public class RawSend {
     public static final String RESPONSE_KEY = "response.data";
     public static final String CODE_KEY = "response.code";
 
-    public RawSend(NsdServiceInfo info) {
-        _httpClient = new HttpClient(info);
+    public RawSend(NsdServiceInfo info, Handler handler) {
         _responseHandlerThread = new HandlerThread("SendHandlerThread");
         _responseHandlerThread.start();
         _responseHandler = new Handler(_responseHandlerThread.getLooper()) {
@@ -42,10 +41,8 @@ public class RawSend {
             }
         };
 
-        _httpClient.connect(_responseHandler);
-    }
+        _httpClient = new HttpClient(info, _responseHandler);
 
-    public void connect(Handler handler) {
         _outerHandler = handler;
     }
 
