@@ -43,9 +43,7 @@ public class IRTest extends AppCompatActivity {
 
         NsdServiceInfo serviceInfo = (NsdServiceInfo)intent.getParcelableExtra(Constant.INT_SERVICE_KEY);
 
-        _irGet = new RawGet(serviceInfo);
 
-        _irSend = new RawSend(serviceInfo);
 
         _getHandlerThread = new HandlerThread("GetHandlerThread");
         _getHandlerThread.start();
@@ -58,7 +56,7 @@ public class IRTest extends AppCompatActivity {
                 Log.i(TAG, "handleMessage: " + _detectRaw + " | " + ((Integer)_detectProtocol).toString());
             }
         };
-        _irGet.connect(_getHandler);
+        _irGet = new RawGet(serviceInfo, _getHandler);
 
         _sendHandlerThread = new HandlerThread("SendHandlerThread");
         _sendHandlerThread.start();
@@ -69,7 +67,7 @@ public class IRTest extends AppCompatActivity {
                 Log.i(TAG, "handleMessage: " + resp);
             }
         };
-        _irSend.connect(_sendHandler);
+        _irSend = new RawSend(serviceInfo, _sendHandler);
 
         super.onStart();
     }
