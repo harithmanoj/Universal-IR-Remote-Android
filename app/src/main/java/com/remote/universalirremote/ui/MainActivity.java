@@ -145,7 +145,6 @@ public class MainActivity extends AppCompatActivity {
             String device = savedInstanceState.getString(Constant.INT_SELECTED_DEVICE);
             NsdServiceInfo service = savedInstanceState.getParcelable(Constant.INT_SERVICE_KEY);
 
-            ApplicationWideSingleton.refreshSelectedDevice(device);
             ApplicationWideSingleton.refreshSelectedService(service);
         }
     }
@@ -204,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
 
         if(ApplicationWideSingleton.isSelectedDeviceValid())
-            outState.putString(Constant.INT_SELECTED_DEVICE, ApplicationWideSingleton.getSelectedDevice());
+            outState.putString(Constant.INT_SELECTED_DEVICE, ApplicationWideSingleton.getSelectedDevice().getDeviceName());
         if(ApplicationWideSingleton.isSelectedServiceValid())
             outState.putParcelable(Constant.INT_SERVICE_KEY, ApplicationWideSingleton.getSelectedService());
         super.onSaveInstanceState(outState);
@@ -219,8 +218,6 @@ public class MainActivity extends AppCompatActivity {
         ProgressBar circle = (ProgressBar) findViewById(R.id.prg_resolveProgress);
         circle.setVisibility(View.GONE);
         ApplicationWideSingleton.refreshSelectedService(_selectedService);
-        ApplicationWideSingleton.refreshSelectedDevice(getIntent()
-                .getStringExtra(Constant.INT_SELECTED_DEVICE));
         super.onResume();
     }
 
