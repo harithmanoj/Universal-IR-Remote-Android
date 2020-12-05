@@ -27,21 +27,15 @@ public class DeviceButtonConfigRepository {
 
     private final DeviceButtonConfigDao _deviceButtonConfigAccess;
 
-    private final DeviceInfoRepository _deviceDataRepository;
-
     private DeviceButtonConfigCallback _getterCallback;
 
     public DeviceButtonConfigRepository(Application application, DeviceButtonConfigCallback callback) {
         UniversalRemoteDatabase db = UniversalRemoteDatabase.getDatabase(application);
         _deviceButtonConfigAccess = db.deviceButtonConfigAccess();
-        _deviceDataRepository = new DeviceInfoRepository(application);
         _getterCallback = callback;
     }
 
     public boolean insert(DeviceButtonConfig data) {
-        if(!_deviceDataRepository.doesExist(data.getDeviceName()))
-            return false;
-
         UniversalRemoteDatabase.databaseWriteExecutor.execute(
                 () -> _deviceButtonConfigAccess.insert(data)
         );
