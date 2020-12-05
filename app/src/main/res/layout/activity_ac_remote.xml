@@ -23,7 +23,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/ac"
-    tools:context=".ac_remote_">
+    tools:context=".ui.AcRemote">
 
     <TextView
         android:id="@+id/textViewSpeedMedium"
@@ -308,14 +308,13 @@
 
     <TextView
         android:id="@+id/textViewTemp"
-        android:layout_width="366dp"
-        android:layout_height="123dp"
+        android:layout_width="365dp"
+        android:layout_height="89dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.575"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.029" />
+        app:layout_constraintVertical_bias="0.07" />
 
     <TextView
         android:id="@+id/textViewVerticalSwing"
@@ -329,7 +328,7 @@
         app:layout_constraintVertical_bias="0.211" />
 
     <TextView
-        android:id="@+id/textViewHorivontalSwing"
+        android:id="@+id/textViewHorizontalSwing"
         android:layout_width="68dp"
         android:layout_height="30dp"
         app:layout_constraintBottom_toBottomOf="parent"

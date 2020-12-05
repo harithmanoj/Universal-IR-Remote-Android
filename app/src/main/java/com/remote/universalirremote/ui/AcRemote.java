@@ -32,4 +32,6 @@ public class AcRemote extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ac_remote);
     }
+
+
 }
