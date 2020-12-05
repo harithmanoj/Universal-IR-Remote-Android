@@ -20,7 +20,6 @@ package com.remote.universalirremote.ui;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.ColumnInfo;
 
 import android.content.Intent;
 import android.net.nsd.NsdServiceInfo;
@@ -361,7 +360,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             } else {
-                intent = new Intent(this, DeviceSelect.class);
+                intent = new Intent(this, IRTest.class);
             }
             intent.putExtra(Constant.INT_LAUNCHER_KEY, Constant.INT_LAUNCHER_MAIN);
             intent.putExtra(Constant.INT_SERVICE_KEY, _selectedService);
