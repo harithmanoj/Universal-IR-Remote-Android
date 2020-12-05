@@ -59,4 +59,6 @@ public interface DeviceDao {
     @Query("SELECT protocolInfo FROM DeviceData WHERE deviceNameId = :name")
     int getProtocolUsed(String name);
 
+    @Query("SELECT EXISTS(SELECT * FROM DeviceData WHERE deviceNameId = :name)")
+    boolean doesDeviceExist(String name);
 }

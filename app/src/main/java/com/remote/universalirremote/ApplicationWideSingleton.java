@@ -20,10 +20,12 @@ package com.remote.universalirremote;
 
 import android.net.nsd.NsdServiceInfo;
 
+import com.remote.universalirremote.database.DeviceData;
+
 public class ApplicationWideSingleton {
 
     private static NsdServiceInfo _selectedService;
-    private static String _selectedDevice;
+    private static DeviceData _selectedDevice;
 
     public static synchronized void setSelectedService(NsdServiceInfo service) {
         _selectedService = service;
@@ -53,19 +55,23 @@ public class ApplicationWideSingleton {
         return false;
     }
 
-    public static synchronized void setSelectedDevice(String device) {
+    public static synchronized void setSelectedDevice(DeviceData device) {
         _selectedDevice = device;
     }
 
-    public static synchronized String getSelectedDevice() {
+    public static synchronized DeviceData getSelectedDevice() {
         return _selectedDevice;
+    }
+
+    public static synchronized String getSelectedDeviceName() {
+        return _selectedDevice.getDeviceName();
     }
 
     public static synchronized boolean isSelectedDeviceValid() {
         return (_selectedDevice != null);
     }
 
-    public static synchronized boolean refreshSelectedDevice(String device) {
+    public static synchronized boolean refreshSelectedDevice(DeviceData device) {
         if(device == null) {
             return false;
         }

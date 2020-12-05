@@ -141,11 +141,12 @@ public class MainActivity extends AppCompatActivity {
 		_discoveredServicesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ((Spinner)findViewById(R.id.spnr_blasterSelection)).setAdapter(_discoveredServicesAdapter);
 
-        String device = savedInstanceState.getString(Constant.INT_SELECTED_DEVICE);
-        NsdServiceInfo service = savedInstanceState.getParcelable(Constant.INT_SERVICE_KEY);
+        if(savedInstanceState != null) {
+            String device = savedInstanceState.getString(Constant.INT_SELECTED_DEVICE);
+            NsdServiceInfo service = savedInstanceState.getParcelable(Constant.INT_SERVICE_KEY);
 
-        ApplicationWideSingleton.refreshSelectedDevice(device);
-        ApplicationWideSingleton.refreshSelectedService(service);
+            ApplicationWideSingleton.refreshSelectedService(service);
+        }
     }
 
     // Variables instantiated :     _discoveryThread
@@ -202,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
 
         if(ApplicationWideSingleton.isSelectedDeviceValid())
-            outState.putString(Constant.INT_SELECTED_DEVICE, ApplicationWideSingleton.getSelectedDevice());
+            outState.putString(Constant.INT_SELECTED_DEVICE, ApplicationWideSingleton.getSelectedDevice().getDeviceName());
         if(ApplicationWideSingleton.isSelectedServiceValid())
             outState.putParcelable(Constant.INT_SERVICE_KEY, ApplicationWideSingleton.getSelectedService());
         super.onSaveInstanceState(outState);
@@ -217,8 +218,6 @@ public class MainActivity extends AppCompatActivity {
         ProgressBar circle = (ProgressBar) findViewById(R.id.prg_resolveProgress);
         circle.setVisibility(View.GONE);
         ApplicationWideSingleton.refreshSelectedService(_selectedService);
-        ApplicationWideSingleton.refreshSelectedDevice(getIntent()
-                .getStringExtra(Constant.INT_SELECTED_DEVICE));
         super.onResume();
     }
 
@@ -254,15 +253,21 @@ public class MainActivity extends AppCompatActivity {
         long pos = ((Spinner)findViewById(R.id.spnr_blasterSelection)).getSelectedItemPosition();
         String name = _discoveredServicesAdapter.getItem((int)pos);
         if (!setSelectedService(name, false)) {
-            Toast.makeText(getApplicationContext(),
-                    "service " + name + " not found",
-                    Toast.LENGTH_SHORT).show();
-            if (_discoveryHandler != null) {
-                Bundle msgBundle = new Bundle();
-                msgBundle.putInt(NetworkManager.DISCOVER_OP, NetworkManager.DISCOVER_REFRESH);
-                Message msg = new Message();
-                msg.setData(msgBundle);
-                _discoveryHandler.sendMessage(msg);
+            if (_selectedService == null) {
+                Toast.makeText(getApplicationContext(),
+                        "No service Selected", Toast.LENGTH_LONG).show();
+            }
+            else {
+                Toast.makeText(getApplicationContext(),
+                        "service " + name + " not found",
+                        Toast.LENGTH_SHORT).show();
+                if (_discoveryHandler != null) {
+                    Bundle msgBundle = new Bundle();
+                    msgBundle.putInt(NetworkManager.DISCOVER_OP, NetworkManager.DISCOVER_REFRESH);
+                    Message msg = new Message();
+                    msg.setData(msgBundle);
+                    _discoveryHandler.sendMessage(msg);
+                }
             }
         }
 

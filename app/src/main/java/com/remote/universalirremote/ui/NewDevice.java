@@ -24,6 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
@@ -74,7 +75,7 @@ public class NewDevice extends AppCompatActivity {
     private static final int _editTextName = R.id.editTextName;
     private static final int _protocolDropDownId = R.id.spnr_protocolSelect;
 
-
+    private final Context _context = this;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,9 +123,11 @@ public class NewDevice extends AppCompatActivity {
         protocolUI.setAdapter(protocolAdapter);
         protocolUI.setVisibility(View.INVISIBLE);
 
-        NsdServiceInfo service = savedInstanceState.getParcelable(Constant.INT_SERVICE_KEY);
+        if(savedInstanceState != null) {
+            NsdServiceInfo service = savedInstanceState.getParcelable(Constant.INT_SERVICE_KEY);
 
-        ApplicationWideSingleton.refreshSelectedService(service);
+            ApplicationWideSingleton.refreshSelectedService(service);
+        }
     }
 
     @Override
@@ -176,45 +179,51 @@ public class NewDevice extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "No layout selected", Toast.LENGTH_LONG).show();
             return;
         }
-        if(_deviceDataRepository.doesExist(name)) {
-            Toast.makeText(getApplicationContext(), "Device name exists", Toast.LENGTH_LONG).show();
-            return;
-        }
 
-        DeviceData device = new DeviceData(name, Constant.getLayout(layout), Constant.getProtocol(protocol));
-        _deviceDataRepository.insert(device);
+        _deviceDataRepository.useDatabaseExecutor(
+                () -> {
+                    if(_deviceDataRepository.getDao().doesDeviceExist(name)) {
+                        Toast.makeText(getApplicationContext(), "Device name exists", Toast.LENGTH_LONG).show();
+                        return;
+                    }
 
-        ApplicationWideSingleton.setSelectedDevice(name);
+                    DeviceData device = new DeviceData(name, Constant.getLayout(layout), Constant.getProtocol(protocol));
+                    _deviceDataRepository.getDao().insert(device);
 
-        Intent intent = null;
+                    ApplicationWideSingleton.setSelectedDevice(device);
 
-        switch( device.getDeviceLayout() ) {
-            case Constant.Layout.LAY_TV: {
-                intent = new Intent(this, TvRemoteConfigure.class);
-                break;
-            }
+                    Intent intent = null;
 
-            case Constant.Layout.LAY_AC: {
-                intent = new Intent(this, AcRemote.class);
-                break;
-            }
-            case Constant.Layout.LAY_GEN: {
-                intent = new Intent(this, GenRemoteConfigure.class);
-                break;
-            }
+                    switch( device.getDeviceLayout() ) {
+                        case Constant.Layout.LAY_TV: {
+                            intent = new Intent(_context, TvRemoteConfigure.class);
+                            break;
+                        }
 
-            default: {
-                Toast.makeText(getApplicationContext(),
-                        "invalid layout", Toast.LENGTH_LONG).show();
-                return;
-            }
-        }
-         intent.putExtra(Constant.INT_LAUNCHER_KEY, Constant.INT_LAUNCHER_DEVICE_SELECT);
-         intent.putExtra(Constant.INT_SERVICE_KEY,
-                 (NsdServiceInfo)getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY));
+                        case Constant.Layout.LAY_AC: {
+                            intent = new Intent(_context, AcRemote.class);
+                            break;
+                        }
+                        case Constant.Layout.LAY_GEN: {
+                            intent = new Intent(_context, GenRemoteConfigure.class);
+                            break;
+                        }
 
-         intent.putExtra(Constant.INT_SELECTED_DEVICE, device.getDeviceName());
-         startActivity(intent);
+                        default: {
+                            Toast.makeText(getApplicationContext(),
+                                    "invalid layout", Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                    }
+                    intent.putExtra(Constant.INT_LAUNCHER_KEY, Constant.INT_LAUNCHER_DEVICE_SELECT);
+                    intent.putExtra(Constant.INT_SERVICE_KEY,
+                            (NsdServiceInfo)getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY));
+
+                    intent.putExtra(Constant.INT_SELECTED_DEVICE, device.getDeviceName());
+                    startActivity(intent);
+                }
+        );
+
     }
 
 
