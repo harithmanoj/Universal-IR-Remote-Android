@@ -256,15 +256,21 @@ public class MainActivity extends AppCompatActivity {
         long pos = ((Spinner)findViewById(R.id.spnr_blasterSelection)).getSelectedItemPosition();
         String name = _discoveredServicesAdapter.getItem((int)pos);
         if (!setSelectedService(name, false)) {
-            Toast.makeText(getApplicationContext(),
-                    "service " + name + " not found",
-                    Toast.LENGTH_SHORT).show();
-            if (_discoveryHandler != null) {
-                Bundle msgBundle = new Bundle();
-                msgBundle.putInt(NetworkManager.DISCOVER_OP, NetworkManager.DISCOVER_REFRESH);
-                Message msg = new Message();
-                msg.setData(msgBundle);
-                _discoveryHandler.sendMessage(msg);
+            if (_selectedService == null) {
+                Toast.makeText(getApplicationContext(),
+                        "No service Selected", Toast.LENGTH_LONG).show();
+            }
+            else {
+                Toast.makeText(getApplicationContext(),
+                        "service " + name + " not found",
+                        Toast.LENGTH_SHORT).show();
+                if (_discoveryHandler != null) {
+                    Bundle msgBundle = new Bundle();
+                    msgBundle.putInt(NetworkManager.DISCOVER_OP, NetworkManager.DISCOVER_REFRESH);
+                    Message msg = new Message();
+                    msg.setData(msgBundle);
+                    _discoveryHandler.sendMessage(msg);
+                }
             }
         }
 
