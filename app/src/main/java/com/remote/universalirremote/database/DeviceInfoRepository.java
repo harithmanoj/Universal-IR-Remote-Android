@@ -31,6 +31,14 @@ public class DeviceInfoRepository {
 
     private DeviceDataCallback _getterCallback;
 
+    public void useDatabaseExecutor(Runnable fn) {
+        UniversalRemoteDatabase.databaseWriteExecutor.execute(fn);
+    }
+
+    public DeviceDao getDao() {
+        return _deviceDataAccess;
+    }
+
     public DeviceInfoRepository(Application application, DeviceDataCallback getter) {
         UniversalRemoteDatabase db = UniversalRemoteDatabase.getDatabase(application);
         _deviceDataAccess = db.deviceDataAccess();

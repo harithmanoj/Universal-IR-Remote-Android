@@ -29,17 +29,28 @@ public class DeviceButtonConfigRepository {
 
     private DeviceButtonConfigCallback _getterCallback;
 
+    public void useDatabaseExecutor(Runnable fn) {
+        UniversalRemoteDatabase.databaseWriteExecutor.execute(fn);
+    }
+
+    public DeviceButtonConfigDao getDao() {
+        return _deviceButtonConfigAccess;
+    }
+
     public DeviceButtonConfigRepository(Application application, DeviceButtonConfigCallback callback) {
         UniversalRemoteDatabase db = UniversalRemoteDatabase.getDatabase(application);
         _deviceButtonConfigAccess = db.deviceButtonConfigAccess();
         _getterCallback = callback;
     }
 
-    public boolean insert(DeviceButtonConfig data) {
+    public void setDeviceButtonCallBack(DeviceButtonConfigCallback getter) {
+        _getterCallback = getter;
+    }
+
+    public void insert(DeviceButtonConfig data) {
         UniversalRemoteDatabase.databaseWriteExecutor.execute(
                 () -> _deviceButtonConfigAccess.insert(data)
         );
-        return true;
     }
 
     public void delete(DeviceButtonConfig data) {
