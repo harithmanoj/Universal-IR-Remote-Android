@@ -67,8 +67,13 @@ public class DeviceInfoRepository {
         );
     }
 
-    public boolean doesExist(String name) {
-        return (_deviceDataAccess.getDevice(name) != null);
+    public void doesExist(String name) {
+        if(_getterCallback == null)
+            return;
+
+        UniversalRemoteDatabase.databaseWriteExecutor.execute(
+                ()->_getterCallback.doesExistCallBack(_deviceDataAccess.doesDeviceExist(name))
+        );
     }
 
 
