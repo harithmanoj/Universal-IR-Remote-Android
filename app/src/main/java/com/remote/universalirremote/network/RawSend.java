@@ -28,8 +28,6 @@ public class RawSend {
         _responseHandler = new Handler(_responseHandlerThread.getLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
-                HttpClient.Request request = (HttpClient.Request) msg.getData().getParcelable(_httpClient.TRANSACTION_KEY);
-
                 String response = (String) msg.getData().getString(_httpClient.RESPONSE_KEY);
 
                 Log.i(TAG, String.format("Message was :%s", response));
