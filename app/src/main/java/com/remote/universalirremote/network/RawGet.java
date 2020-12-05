@@ -29,13 +29,11 @@ public class RawGet {
         _responseHandler = new Handler(_responseHandlerThread.getLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
-                HttpClient.Request request = (HttpClient.Request) msg.getData().getParcelable(_httpClient.TRANSACTION_KEY);
-
-                Bundle msgBundle = new Bundle();
-
                 String response = (String) msg.getData().getString(_httpClient.RESPONSE_KEY);
 
                 int protocol = Integer.parseInt(response.substring(0, response.indexOf(';')));
+
+                Bundle msgBundle = new Bundle();
                 msgBundle.putInt(PROTOCOL_KEY, protocol);
 
                 Log.i(TAG, String.format("Protocol: %d", protocol));
