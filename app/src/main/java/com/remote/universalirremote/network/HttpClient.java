@@ -58,7 +58,7 @@ public class HttpClient {
 
     private Handler _responseHandler;
 
-    public HttpClient(NsdServiceInfo info) {
+    public HttpClient(NsdServiceInfo info, Handler handler) {
         _serviceInfo = info;
         _serviceUrl = "http://" + _serviceInfo.getHost().getHostAddress();
         _transactionHandlerThread = new HandlerThread("transactionHandler");
@@ -129,11 +129,7 @@ public class HttpClient {
 
             }
         };
-
-    }
-
-    public void connect(Handler response) {
-        _responseHandler = response;
+        _responseHandler = handler;
     }
 
     public void transaction(Request request) {
