@@ -19,7 +19,7 @@
 
 package com.remote.universalirremote.network;
 
-import android.content.Intent;
+
 import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
 import android.os.Handler;
@@ -42,9 +42,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class HttpClient {
-    private final NsdServiceInfo _serviceInfo;
     private HttpURLConnection _httpConnection;
-    private String _serviceUrl;
+    private final String _serviceUrl;
 
     public static final String TAG = "HttpClient";
 
@@ -53,14 +52,13 @@ public class HttpClient {
     public static final String RESPONSE_CODE_KEY = "response.key.transaction";
     public static final String TRANSACTION_KEY = "transaction.request";
 
-    private HandlerThread _transactionHandlerThread;
-    private Handler _transactionHandler;
+    private final HandlerThread _transactionHandlerThread;
+    private final Handler _transactionHandler;
 
-    private Handler _responseHandler;
+    private final Handler _responseHandler;
 
     public HttpClient(NsdServiceInfo info, Handler handler) {
-        _serviceInfo = info;
-        _serviceUrl = "http://" + _serviceInfo.getHost().getHostAddress();
+        _serviceUrl = "http://" + info.getHost().getHostAddress();
         _transactionHandlerThread = new HandlerThread("transactionHandler");
         _transactionHandlerThread.start();
         _transactionHandler = new Handler(_transactionHandlerThread.getLooper()) {
@@ -150,7 +148,7 @@ public class HttpClient {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
-            dest.writeStringArray( new String[] {_requestMethod, _postData.toString() });
+            dest.writeStringArray( new String[] {_requestMethod, Arrays.toString(_postData)});
             dest.writeInt(_requestProperties.size());
             Property[] prop = new Property[_requestProperties.size()];
             prop = _requestProperties.toArray(prop);
@@ -172,9 +170,7 @@ public class HttpClient {
             public Request createFromParcel(Parcel source) {
                 String[] data = new String[2];
                 source.readStringArray(data);
-                int size = source.readInt();
-                Property[] prop = new Property[size];
-                prop = (Property[])source.readParcelableArray(Property.class.getClassLoader());
+                Property[] prop = (Property[])source.readParcelableArray(Property.class.getClassLoader());
                 int hasMeta = source.readInt();
                 if(hasMeta == 0) {
                     return new Request(
@@ -183,9 +179,7 @@ public class HttpClient {
                             prop
                     );
                 } else {
-                    int metaSize = source.readInt();
-                    Property[] meta = new Property[metaSize];
-                    meta = (Property[])source.readParcelableArray(Property.class.getClassLoader());
+                    Property[] meta = (Property[])source.readParcelableArray(Property.class.getClassLoader());
                     return new Request(
                             data[1].getBytes(),
                             data[0],
