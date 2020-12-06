@@ -155,6 +155,16 @@ public class HttpClient {
             Property[] prop = new Property[_requestProperties.size()];
             prop = _requestProperties.toArray(prop);
             dest.writeParcelableArray(prop,flags);
+            if (_hasMeta) {
+                dest.writeInt(1);
+                dest.writeInt(_requestMeta.size());
+                Property[] meta = new Property[_requestMeta.size()];
+                meta = _requestMeta.toArray(meta);
+                dest.writeParcelableArray(meta, flags);
+            } else {
+                dest.writeInt(0);
+            }
+
         }
 
         public static final Creator<Request> CREATOR = new Creator<Request>() {
@@ -165,12 +175,24 @@ public class HttpClient {
                 int size = source.readInt();
                 Property[] prop = new Property[size];
                 prop = (Property[])source.readParcelableArray(Property.class.getClassLoader());
-
-                return new Request(
-                        data[1].getBytes(),
-                        data[0],
-                        prop
-                );
+                int hasMeta = source.readInt();
+                if(hasMeta == 0) {
+                    return new Request(
+                            data[1].getBytes(),
+                            data[0],
+                            prop
+                    );
+                } else {
+                    int metaSize = source.readInt();
+                    Property[] meta = new Property[metaSize];
+                    meta = (Property[])source.readParcelableArray(Property.class.getClassLoader());
+                    return new Request(
+                            data[1].getBytes(),
+                            data[0],
+                            prop,
+                            meta
+                    );
+                }
             }
 
             @Override
@@ -219,6 +241,8 @@ public class HttpClient {
         public final byte[] _postData;
         public final String _requestMethod;
         public final ArrayList<Property> _requestProperties;
+        public final ArrayList<Property> _requestMeta;
+        public final boolean _hasMeta;
 
         public Request(byte[] data, String method, Property... properties) {
             _postData = data;
@@ -227,6 +251,24 @@ public class HttpClient {
             if(method.equals("POST"))
                 tempProperties.add(new Property("Content-Length", Integer.toString(data.length)));
             _requestProperties = tempProperties;
+            _hasMeta = false;
+            _requestMeta = null;
+        }
+
+        public Request(byte[] data, String method, Property[] properties, Property[] meta) {
+            _postData = data;
+            _requestMethod = method;
+            ArrayList<Property> tempProperties = new ArrayList<>(Arrays.asList(properties));
+            if(method.equals("POST"))
+                tempProperties.add(new Property("Content-Length", Integer.toString(data.length)));
+            _requestProperties = tempProperties;
+            if(meta != null) {
+                _hasMeta = true;
+                _requestMeta = new ArrayList<Property>(Arrays.asList(meta));
+            } else {
+                _hasMeta = false;
+                _requestMeta = null;
+            }
         }
 
     }
