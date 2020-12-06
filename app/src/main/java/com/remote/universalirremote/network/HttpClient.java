@@ -236,6 +236,9 @@ public class HttpClient {
                     return new Property[size];
                 }
             };
+
+            public String getName() { return _propertyName; }
+            public String getValue() { return _propertyValue; }
         }
 
         public final byte[] _postData;
@@ -243,6 +246,12 @@ public class HttpClient {
         public final ArrayList<Property> _requestProperties;
         public final ArrayList<Property> _requestMeta;
         public final boolean _hasMeta;
+
+        public byte[] getPostData() { return _postData; }
+        public String getMethod() { return _requestMethod; }
+        public ArrayList<Property> getProperties() { return _requestProperties; }
+        public ArrayList<Property> getMeta() { return _requestMeta; }
+        public boolean hasMeta() { return _hasMeta; }
 
         public Request(byte[] data, String method, Property... properties) {
             _postData = data;
