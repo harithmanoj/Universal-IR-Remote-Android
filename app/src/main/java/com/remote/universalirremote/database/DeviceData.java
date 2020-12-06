@@ -35,18 +35,18 @@ public class DeviceData {
     @PrimaryKey
     @ColumnInfo(name = "deviceNameId")
     @NonNull
-    private String _deviceName;
+    private final String _deviceName;
 
     // Type of protocol
     @ColumnInfo(name = "protocolInfo")
-    private int _protocolInfo;
+    private final int _protocolInfo;
 
     // Type of layout
     @ColumnInfo(name = "deviceLayout")
-    private int _deviceLayout;
+    private final int _deviceLayout;
 
     // Constructor
-    public DeviceData(@NonNull String _deviceName, @NonNull int _protocolInfo, @NonNull int _deviceLayout) {
+    public DeviceData(@NonNull String _deviceName, int _protocolInfo, int _deviceLayout) {
         this._deviceLayout = _deviceLayout;
         this._deviceName = _deviceName;
         this._protocolInfo = _protocolInfo;

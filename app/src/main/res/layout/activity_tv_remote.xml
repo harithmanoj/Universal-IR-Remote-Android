@@ -397,7 +397,7 @@
         android:id="@+id/btn_pause"
         android:layout_width="45dp"
         android:layout_height="40dp"
-        android:background="@drawable/Pause"
+        android:background="@drawable/pause"
         android:onClick="clickButton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -23,12 +23,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
-import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NavUtils;
 
 import com.remote.universalirremote.ApplicationWideSingleton;
 import com.remote.universalirremote.TvRemote;
@@ -42,25 +41,36 @@ public class TvRemoteTransmit extends TvRemote {
 
     private RawSend _sendRawIrTiming;
     private HandlerThread _sendResponseThread;
-    private Handler _sendResponse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         super.onCreate(savedInstanceState);
     }
-
+    // Menu item selected process
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
     @Override
     protected void onStart() {
         _sendResponseThread = new HandlerThread("RawTvRemoteSendResponse");
-        _sendResponse = new Handler(_sendResponseThread.getLooper()) {
+        Handler _sendResponse = new Handler(_sendResponseThread.getLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
                 if (msg.getData().getInt(RawSend.CODE_KEY) != HttpURLConnection.HTTP_OK) {
                     Toast.makeText(getApplicationContext(),
-                                    "button send fail "
-                                            + ((HttpClient.Request.Property)msg.getData()
-                                            .getParcelable(RawSend.POST_META_KEY)).getValue(),
-                                    Toast.LENGTH_LONG);
+                            "button send fail "
+                                    + ((HttpClient.Request.Property) msg.getData()
+                                    .getParcelable(RawSend.POST_META_KEY)).getValue(),
+                            Toast.LENGTH_LONG).show();
                 }
             }
         };
@@ -81,7 +91,7 @@ public class TvRemoteTransmit extends TvRemote {
         DeviceButtonConfig selectedButton = lookupButton(btnId);
         if(selectedButton == null) {
             Toast.makeText(getApplicationContext(),
-                    "not configured button", Toast.LENGTH_LONG);
+                    "not configured button", Toast.LENGTH_LONG).show();
             return;
         }
         _sendRawIrTiming.sendData(selectedButton.getIrTimingData(), selectedButton.getDeviceName());

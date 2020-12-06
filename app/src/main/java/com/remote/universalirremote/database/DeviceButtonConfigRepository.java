@@ -21,8 +21,6 @@ package com.remote.universalirremote.database;
 
 import android.app.Application;
 
-import java.util.List;
-
 public class DeviceButtonConfigRepository {
 
     private final DeviceButtonConfigDao _deviceButtonConfigAccess;

@@ -32,7 +32,7 @@ import java.util.List;
 
 @Dao
 public interface DeviceButtonConfigDao {
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert
     void insert(DeviceButtonConfig data);
 
     @Delete

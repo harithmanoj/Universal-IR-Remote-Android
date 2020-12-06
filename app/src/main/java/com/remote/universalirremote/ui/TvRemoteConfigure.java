@@ -23,41 +23,50 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
-import android.view.View;
-import android.widget.Toast;
+import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NavUtils;
 
 import com.remote.universalirremote.ApplicationWideSingleton;
 import com.remote.universalirremote.TvRemote;
 import com.remote.universalirremote.database.DeviceButtonConfig;
 import com.remote.universalirremote.network.RawGet;
-import com.remote.universalirremote.network.RawSend;
 
-import java.net.HttpURLConnection;
 import java.util.ArrayList;
 
 public class TvRemoteConfigure extends TvRemote {
 
     private RawGet _getRawIrTiming;
     private HandlerThread _getResponseHandlerThread;
-    private Handler _getResponseHandler;
     private ArrayList<DeviceButtonConfig> _addedButtons;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        _addedButtons = new ArrayList<>();
         super.onCreate(savedInstanceState);
     }
-
+    // Menu item selected process
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
     @Override
     protected void onStart() {
         _getResponseHandlerThread = new HandlerThread("RawTvRemoteGetResponse");
-        _getResponseHandler = new Handler(_getResponseHandlerThread.getLooper()) {
+        Handler _getResponseHandler = new Handler(_getResponseHandlerThread.getLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
                 int id = msg.getData().getInt(RawGet.BUTTON_ID_KEY);
-                for (int i = 0; i < _addedButtons.size(); ++i ) {
-                    if(_addedButtons.get(i).getButtonId() == id) {
+                for (int i = 0; i < _addedButtons.size(); ++i) {
+                    if (_addedButtons.get(i).getButtonId() == id) {
                         DeviceButtonConfig current = _addedButtons.get(i);
                         _addedButtons.remove(i);
                         _addedButtons.add(

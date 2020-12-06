@@ -58,13 +58,17 @@ public class HttpClient {
     private final Handler _responseHandler;
 
     public HttpClient(NsdServiceInfo info, Handler handler) {
-        _serviceUrl = "http://" + info.getHost().getHostAddress();
+        this(info.getHost().getHostAddress(), handler);
+    }
+
+    public HttpClient(String serverAddress, Handler handler) {
+        _serviceUrl = "http://" + serverAddress;
         _transactionHandlerThread = new HandlerThread("transactionHandler");
         _transactionHandlerThread.start();
         _transactionHandler = new Handler(_transactionHandlerThread.getLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
-                Request request = (Request) msg.getData().getParcelable(TRANSACTION_KEY);
+                Request request = msg.getData().getParcelable(TRANSACTION_KEY);
                 try {
                     try {
                         URL url = new URL(_serviceUrl);
@@ -267,7 +271,7 @@ public class HttpClient {
             _requestProperties = tempProperties;
             if(meta != null) {
                 _hasMeta = true;
-                _requestMeta = new ArrayList<Property>(Arrays.asList(meta));
+                _requestMeta = new ArrayList<>(Arrays.asList(meta));
             } else {
                 _hasMeta = false;
                 _requestMeta = null;
