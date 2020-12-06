@@ -23,8 +23,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
+import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NavUtils;
 
 import com.remote.universalirremote.ApplicationWideSingleton;
 import com.remote.universalirremote.TvRemote;
@@ -41,10 +43,21 @@ public class TvRemoteConfigure extends TvRemote {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         _addedButtons = new ArrayList<>();
         super.onCreate(savedInstanceState);
     }
-
+    // Menu item selected process
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
     @Override
     protected void onStart() {
         _getResponseHandlerThread = new HandlerThread("RawTvRemoteGetResponse");
