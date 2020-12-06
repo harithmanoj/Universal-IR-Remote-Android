@@ -80,10 +80,10 @@ public class WifiConfigure {
         ));
     }
 
-    public void sendAccessPointData(String ssid, String password)
+    public void sendAccessPointData(String ssid, String password, String hostname)
     {
         _httpScanClient.transaction(new HttpClient.Request(
-                (ssid + ":" + password).getBytes(), "POST",
+                (ssid + "$" + password + "$" + hostname).getBytes(), "POST",
                 new HttpClient.Request.Property("Content-Type", "application/xml"),
                 new HttpClient.Request.Property("charset", "utf-8"),
                 new HttpClient.Request.Property("Connection", "close")
