@@ -71,6 +71,7 @@ public class TvRemoteTransmit extends TvRemote {
     @Override
     protected void onResume() {
         renameOkOrConfig("Config");
+        _deviceButtonConfigRepo.getAllRawData(ApplicationWideSingleton.getSelectedDeviceName());
         super.onResume();
     }
 
