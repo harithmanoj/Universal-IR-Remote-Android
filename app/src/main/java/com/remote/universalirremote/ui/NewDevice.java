@@ -131,6 +131,12 @@ public class NewDevice extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        _deviceDataRepository = new DeviceInfoRepository(getApplication(), null);
+        super.onStart();
+    }
+
+    @Override
     protected void onResume() {
 
         ApplicationWideSingleton.refreshSelectedService(
