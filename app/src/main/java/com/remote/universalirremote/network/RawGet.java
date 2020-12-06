@@ -21,6 +21,7 @@ public class RawGet {
 
     public static final String PROTOCOL_KEY = "response.protocol";
     public static final String RAW_KEY = "response.raw";
+    public static final String BUTTON_ID_KEY = "request.btn.id";
 
     public RawGet(NsdServiceInfo info, Handler handler) {
         _responseHandlerThread = new HandlerThread("GetHandlerThread");
@@ -28,7 +29,7 @@ public class RawGet {
         _responseHandler = new Handler(_responseHandlerThread.getLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
-                String response = (String) msg.getData().getString(_httpClient.RESPONSE_KEY);
+                String response = (String) msg.getData().getString(HttpClient.RESPONSE_KEY);
 
                 int protocol = Integer.parseInt(response.substring(0, response.indexOf(';')));
 
@@ -45,6 +46,12 @@ public class RawGet {
                     msgBundle.putString(RAW_KEY, "0:");
                 }
 
+                msgBundle.putInt(BUTTON_ID_KEY, Integer.parseInt(
+                        ((HttpClient.Request)msg.getData()
+                                .getParcelable(HttpClient.TRANSACTION_KEY))
+                                ._requestProperties.get(0).getValue()
+                ));
+
                 Message msgr = new Message();
                 msgr.setData(msgBundle);
 
@@ -57,13 +64,18 @@ public class RawGet {
         _outerHandler = handler;
     }
 
-    public void getData()
+    public void getData(int btnId)
     {
         _httpClient.transaction(new HttpClient.Request(
                 null, "GET",
-                new HttpClient.Request.Property("Content-Type", "application/xml"),
-                new HttpClient.Request.Property("charset", "utf-8"),
-                new HttpClient.Request.Property("Connection", "close")));
+                new HttpClient.Request.Property[]{
+                        new HttpClient.Request.Property("Content-Type", "application/xml"),
+                        new HttpClient.Request.Property("charset", "utf-8"),
+                        new HttpClient.Request.Property("Connection", "close")
+                },
+                new HttpClient.Request.Property[]{
+                        new HttpClient.Request.Property("buttonId", ((Integer)btnId).toString())
+                }));
 
     }
 }
