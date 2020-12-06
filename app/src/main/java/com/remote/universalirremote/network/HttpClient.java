@@ -117,7 +117,7 @@ public class HttpClient {
                     _httpConnection.disconnect();
                     Log.i(TAG, "disconnected");
                     msgBundle.putInt(RESPONSE_CODE_KEY, responseCode);
-                    msgBundle.putString(TRANSACTION_KEY, request._requestMethod);
+                    msgBundle.putParcelable(TRANSACTION_KEY, request);
                     Message msgr = new Message();
                     msgr.setData(msgBundle);
                     _responseHandler.sendMessage(msgr);

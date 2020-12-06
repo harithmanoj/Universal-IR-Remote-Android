@@ -20,6 +20,7 @@ public class RawSend {
 
     public static final String RESPONSE_KEY = "response.data";
     public static final String CODE_KEY = "response.code";
+    public static final String TRANSACTION_KEY = "transaction.key";
 
     public RawSend(NsdServiceInfo info, Handler handler) {
         _responseHandlerThread = new HandlerThread("SendHandlerThread");
@@ -34,6 +35,11 @@ public class RawSend {
                 Bundle msgBundle = new Bundle();
                 msgBundle.putString(RESPONSE_KEY, response);
                 msgBundle.putInt(CODE_KEY, msg.getData().getInt(_httpClient.RESPONSE_CODE_KEY));
+                msgBundle.putString(TRANSACTION_KEY,
+                        new String((
+                                (HttpClient.Request)msg.getData()
+                                        .getParcelable(HttpClient.TRANSACTION_KEY))
+                                ._postData));
                 Message msgr = new Message();
                 msgr.setData(msgBundle);
 
