@@ -22,6 +22,8 @@ package com.remote.universalirremote;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.media.AudioPlaybackConfiguration;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
 import android.view.View;
@@ -33,13 +35,14 @@ import com.remote.universalirremote.database.DeviceDao;
 import com.remote.universalirremote.database.DeviceData;
 import com.remote.universalirremote.database.DeviceInfoRepository;
 import com.remote.universalirremote.database.UniversalRemoteDatabase;
+import com.remote.universalirremote.ui.TvRemoteConfigure;
+import com.remote.universalirremote.ui.TvRemoteTransmit;
 
 import java.util.List;
 import java.util.Map;
 
 public abstract class TvRemote extends AppCompatActivity {
 
-    protected DeviceData _selectedDevice;
     protected DeviceInfoRepository _deviceInfoRepo;
     protected DeviceButtonConfigRepository _deviceButtonConfigRepo;
     protected List<DeviceButtonConfig> _buttonConfigList;
@@ -71,6 +74,25 @@ public abstract class TvRemote extends AppCompatActivity {
                     }
                 });
         _deviceInfoRepo = new DeviceInfoRepository(getApplication(), null);
+
+        Intent intent = getIntent();
+        if(intent != null) {
+
+            String device = intent.getStringExtra(Constant.INT_SELECTED_DEVICE);
+            NsdServiceInfo service = intent.getParcelableExtra(Constant.INT_SERVICE_KEY);
+
+            if(service != null )
+                ApplicationWideSingleton.refreshSelectedService(service);
+            if(device != null)
+                _deviceButtonConfigRepo.useDatabaseExecutor(
+                        () -> {
+                            ApplicationWideSingleton.refreshSelectedDevice(
+                                    _deviceInfoRepo.getDao().getDevice(device));
+                            _deviceButtonConfigRepo.getAllRawData(device);
+                        }
+                );
+        }
+
         if(savedInstanceState != null) {
             String device = savedInstanceState.getString(Constant.INT_SELECTED_DEVICE);
             NsdServiceInfo service = savedInstanceState.getParcelable(Constant.INT_SERVICE_KEY);
@@ -78,7 +100,8 @@ public abstract class TvRemote extends AppCompatActivity {
             ApplicationWideSingleton.refreshSelectedService(service);
             _deviceButtonConfigRepo.useDatabaseExecutor(
                     () -> {
-                        _selectedDevice = _deviceInfoRepo.getDao().getDevice(device);
+                        ApplicationWideSingleton.refreshSelectedDevice(
+                                _deviceInfoRepo.getDao().getDevice(device));
                         _deviceButtonConfigRepo.getAllRawData(device);
                     }
             );
@@ -95,6 +118,28 @@ public abstract class TvRemote extends AppCompatActivity {
         super.onSaveInstanceState(outState);
     }
 
+    @Override
+    protected void onStart() {
+
+        Intent intent = getIntent();
+        if(intent != null) {
+
+            String device = intent.getStringExtra(Constant.INT_SELECTED_DEVICE);
+            NsdServiceInfo service = intent.getParcelableExtra(Constant.INT_SERVICE_KEY);
+
+            if(service != null )
+                ApplicationWideSingleton.refreshSelectedService(service);
+            if(device != null)
+                _deviceButtonConfigRepo.useDatabaseExecutor(
+                        () -> {
+                            ApplicationWideSingleton.refreshSelectedDevice(
+                                    _deviceInfoRepo.getDao().getDevice(device));
+                            _deviceButtonConfigRepo.getAllRawData(device);
+                        }
+                );
+        }
+        super.onStart();
+    }
 
     public static int BTN_TV_PWR = 0;
     public static int BTN_TV_BACK = 1;
@@ -127,7 +172,20 @@ public abstract class TvRemote extends AppCompatActivity {
 
     public abstract void handleButtonClicks(int btnId);
 
-    public abstract void clickConfigureOrOK(View view);
+    public abstract void startTransitOrConfigActivity(Intent configIntent, Intent transmitIntent);
+
+    public void clickConfigureOrOK(View view) {
+        Intent config = new Intent(this, TvRemoteConfigure.class);
+        Intent transmit = new Intent(this, TvRemoteTransmit.class);
+
+        config.putExtra(Constant.INT_SERVICE_KEY, ApplicationWideSingleton.getSelectedService());
+        config.putExtra(Constant.INT_SELECTED_DEVICE, ApplicationWideSingleton.getSelectedDeviceName());
+
+        transmit.putExtra(Constant.INT_SERVICE_KEY, ApplicationWideSingleton.getSelectedService());
+        transmit.putExtra(Constant.INT_SELECTED_DEVICE, ApplicationWideSingleton.getSelectedDeviceName());
+
+        startTransitOrConfigActivity(config, transmit);
+    }
 
     public void clickButton(View view) {
         int id = -10;
