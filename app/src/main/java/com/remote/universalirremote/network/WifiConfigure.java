@@ -14,6 +14,8 @@ public class WifiConfigure {
 
     public static final String SCAN_KEY = "response.scan_key";
 
+    private String[] scanResults;
+
     private HttpClient _httpScanClient;
     private HttpClient _httpConfigClient;
 
@@ -37,12 +39,12 @@ public class WifiConfigure {
 
                 Log.i(TAG, " Received message: " + response);
 
-                String[] ssids = response.split("$");
+                scanResults = response.split("$");
 
                 Bundle bundle = new Bundle();
-                bundle.putStringArray(SCAN_KEY, ssids);
+                bundle.putStringArray(SCAN_KEY, scanResults);
 
-                for(String s:ssids)
+                for(String s : scanResults)
                     Log.i(TAG, "ssid detected : "+s);
 
                 Message msgresp = new Message();
