@@ -38,7 +38,7 @@
         app:layout_constraintVertical_bias="0.206" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/btn_fastBack"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:background="@drawable/backward"
@@ -345,7 +345,7 @@
         app:layout_constraintVertical_bias="0.036" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btn_fastForward"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:background="@drawable/forward"
@@ -357,7 +357,7 @@
         app:layout_constraintVertical_bias="0.308" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/btn_home"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:background="@drawable/home"
@@ -368,7 +368,7 @@
         app:layout_constraintVertical_bias="0.01" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/btn_pause"
         android:layout_width="45dp"
         android:layout_height="40dp"
         android:background="@drawable/Pause"
