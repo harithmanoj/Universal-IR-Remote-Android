@@ -27,6 +27,7 @@ import android.media.AudioPlaybackConfiguration;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import com.remote.universalirremote.database.DeviceButtonConfig;
 import com.remote.universalirremote.database.DeviceButtonConfigCallback;
@@ -46,6 +47,10 @@ public abstract class TvRemote extends AppCompatActivity {
     protected DeviceInfoRepository _deviceInfoRepo;
     protected DeviceButtonConfigRepository _deviceButtonConfigRepo;
     protected List<DeviceButtonConfig> _buttonConfigList;
+
+    protected void renameOkOrConfig(String name) {
+        ((TextView)findViewById(R.id.btn_okConfig)).setText(name);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

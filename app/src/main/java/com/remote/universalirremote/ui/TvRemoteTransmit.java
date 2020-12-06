@@ -25,6 +25,7 @@ import android.os.HandlerThread;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -44,7 +45,6 @@ public class TvRemoteTransmit extends TvRemote {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
     }
 
@@ -66,6 +66,12 @@ public class TvRemoteTransmit extends TvRemote {
         _sendRawIrTiming = new RawSend(ApplicationWideSingleton.getSelectedService(),
                 _sendResponse);
         super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        renameOkOrConfig("Config");
+        super.onResume();
     }
 
     @Override
