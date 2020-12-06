@@ -20,7 +20,8 @@ public class RawSend {
 
     public static final String RESPONSE_KEY = "response.data";
     public static final String CODE_KEY = "response.code";
-    public static final String TRANSACTION_KEY = "transaction.key";
+    public static final String POST_MSG_KEY = "post.msg.key";
+    public static final String POST_META_KEY = "post.meta.key";
 
     public RawSend(NsdServiceInfo info, Handler handler) {
         _responseHandlerThread = new HandlerThread("SendHandlerThread");
@@ -35,11 +36,14 @@ public class RawSend {
                 Bundle msgBundle = new Bundle();
                 msgBundle.putString(RESPONSE_KEY, response);
                 msgBundle.putInt(CODE_KEY, msg.getData().getInt(_httpClient.RESPONSE_CODE_KEY));
-                msgBundle.putString(TRANSACTION_KEY,
+                msgBundle.putString(POST_MSG_KEY,
                         new String((
                                 (HttpClient.Request)msg.getData()
                                         .getParcelable(HttpClient.TRANSACTION_KEY))
                                 ._postData));
+                msgBundle.putParcelable(POST_META_KEY,((HttpClient.Request)msg.getData()
+                        .getParcelable(HttpClient.TRANSACTION_KEY))._requestMeta.get(0)
+                        );
                 Message msgr = new Message();
                 msgr.setData(msgBundle);
 
@@ -52,12 +56,17 @@ public class RawSend {
         _outerHandler = handler;
     }
 
-    public void sendData(String msg) {
+    public void sendData(String msg, String name) {
         _httpClient.transaction(new HttpClient.Request(
                 msg.getBytes(), "POST",
-                new HttpClient.Request.Property("Content-Type", "application/xml"),
-                new HttpClient.Request.Property("charset", "utf-8"),
-                new HttpClient.Request.Property("Connection", "close")));
+                new HttpClient.Request.Property[]{
+                        new HttpClient.Request.Property("Content-Type", "application/xml"),
+                        new HttpClient.Request.Property("charset", "utf-8"),
+                        new HttpClient.Request.Property("Connection", "close")
+                },
+                new HttpClient.Request.Property[]{
+                        new HttpClient.Request.Property("buttonName", name)
+                }));
 
     }
 }
