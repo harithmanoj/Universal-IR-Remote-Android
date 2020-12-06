@@ -11,11 +11,10 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 public class RawGet {
-    private HttpClient _httpClient;
+    private final HttpClient _httpClient;
 
-    private Handler _responseHandler;
-    private HandlerThread _responseHandlerThread;
-    private Handler _outerHandler;
+    private final HandlerThread _responseHandlerThread;
+    private final Handler _outerHandler;
 
     public static final String TAG = "RawGet";
 
@@ -26,10 +25,11 @@ public class RawGet {
     public RawGet(NsdServiceInfo info, Handler handler) {
         _responseHandlerThread = new HandlerThread("GetHandlerThread");
         _responseHandlerThread.start();
-        _responseHandler = new Handler(_responseHandlerThread.getLooper()) {
+        _outerHandler = handler;
+        Handler _responseHandler = new Handler(_responseHandlerThread.getLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
-                String response = (String) msg.getData().getString(HttpClient.RESPONSE_KEY);
+                String response = msg.getData().getString(HttpClient.RESPONSE_KEY);
 
                 int protocol = Integer.parseInt(response.substring(0, response.indexOf(';')));
 
@@ -38,16 +38,15 @@ public class RawGet {
 
                 Log.i(TAG, String.format("Protocol: %d", protocol));
 
-                if(protocol != -1) {
-                    msgBundle.putString(RAW_KEY, response.substring(response.indexOf(';')+1));
-                    Log.i(TAG, String.format("Raw: %s", response.substring(response.indexOf(';')+1)));
-                }
-                else {
+                if (protocol != -1) {
+                    msgBundle.putString(RAW_KEY, response.substring(response.indexOf(';') + 1));
+                    Log.i(TAG, String.format("Raw: %s", response.substring(response.indexOf(';') + 1)));
+                } else {
                     msgBundle.putString(RAW_KEY, "0:");
                 }
 
                 msgBundle.putInt(BUTTON_ID_KEY, Integer.parseInt(
-                        ((HttpClient.Request)msg.getData()
+                        ((HttpClient.Request) msg.getData()
                                 .getParcelable(HttpClient.TRANSACTION_KEY))
                                 ._requestProperties.get(0).getValue()
                 ));
@@ -61,7 +60,6 @@ public class RawGet {
 
         _httpClient = new HttpClient(info, _responseHandler);
 
-        _outerHandler = handler;
     }
 
     public void getData(int btnId)

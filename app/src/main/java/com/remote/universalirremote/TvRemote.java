@@ -23,7 +23,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.media.AudioPlaybackConfiguration;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
 import android.view.View;
@@ -32,16 +31,11 @@ import android.widget.TextView;
 import com.remote.universalirremote.database.DeviceButtonConfig;
 import com.remote.universalirremote.database.DeviceButtonConfigCallback;
 import com.remote.universalirremote.database.DeviceButtonConfigRepository;
-import com.remote.universalirremote.database.DeviceDao;
-import com.remote.universalirremote.database.DeviceData;
 import com.remote.universalirremote.database.DeviceInfoRepository;
-import com.remote.universalirremote.database.UniversalRemoteDatabase;
 import com.remote.universalirremote.ui.TvRemoteConfigure;
 import com.remote.universalirremote.ui.TvRemoteTransmit;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public abstract class TvRemote extends AppCompatActivity {
 
@@ -235,7 +229,7 @@ public abstract class TvRemote extends AppCompatActivity {
     }
 
     public void clickButton(View view) {
-        int id = -10;
+        int id;
         if(view.getId() == R.id.btn_power) {
             id = (BTN_TV_PWR);
         } else if ( view.getId() == R.id.btn_Back) {

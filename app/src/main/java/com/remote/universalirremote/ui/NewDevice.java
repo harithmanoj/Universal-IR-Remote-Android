@@ -98,11 +98,11 @@ public class NewDevice extends AppCompatActivity {
                 );
                 if(layout == Constant.Layout.LAY_AC) {
 
-                    ((Spinner) findViewById(_protocolDropDownId)).setVisibility(View.VISIBLE);
+                    findViewById(_protocolDropDownId).setVisibility(View.VISIBLE);
 
                 } else {
 
-                    ((Spinner) findViewById(_protocolDropDownId)).setVisibility(View.INVISIBLE);
+                    findViewById(_protocolDropDownId).setVisibility(View.INVISIBLE);
                     ((Spinner)findViewById(_protocolDropDownId)).setSelection(Constant.Protocols.RAW);
 
                 }
@@ -110,7 +110,7 @@ public class NewDevice extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                ((Spinner) findViewById(_protocolDropDownId)).setVisibility(View.INVISIBLE);
+                findViewById(_protocolDropDownId).setVisibility(View.INVISIBLE);
                 ((Spinner)findViewById(_protocolDropDownId)).setSelection(Constant.Protocols.RAW);
             }
         });
@@ -192,7 +192,7 @@ public class NewDevice extends AppCompatActivity {
 
                     ApplicationWideSingleton.setSelectedDevice(device);
 
-                    Intent intent = null;
+                    Intent intent;
 
                     switch( device.getDeviceLayout() ) {
                         case Constant.Layout.LAY_TV: {

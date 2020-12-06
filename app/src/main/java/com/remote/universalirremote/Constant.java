@@ -82,14 +82,16 @@ public final class Constant {
     }
 
     public static int getLayout(String lay) {
-        if(lay.equals(Layout.AC_SPINNER)) {
-            return Layout.LAY_AC;
-        } else if(lay.equals(Layout.GEN_SPINNER)) {
-            return Layout.LAY_GEN;
-        } else if(lay.equals(Layout.TV_SPINNER)) {
-            return Layout.LAY_TV;
-        } else
-            return -1;
+        switch (lay) {
+            case Layout.AC_SPINNER:
+                return Layout.LAY_AC;
+            case Layout.GEN_SPINNER:
+                return Layout.LAY_GEN;
+            case Layout.TV_SPINNER:
+                return Layout.LAY_TV;
+            default:
+                return -1;
+        }
     }
 
     public static final class Layout {

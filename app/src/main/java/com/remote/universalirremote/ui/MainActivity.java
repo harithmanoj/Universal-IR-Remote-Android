@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
         ((Spinner)findViewById(R.id.spnr_blasterSelection)).setAdapter(_discoveredServicesAdapter);
 
         if(savedInstanceState != null) {
-            String device = savedInstanceState.getString(Constant.INT_SELECTED_DEVICE);
+
             NsdServiceInfo service = savedInstanceState.getParcelable(Constant.INT_SERVICE_KEY);
 
             ApplicationWideSingleton.refreshSelectedService(service);
@@ -215,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
         if (_networkManager != null) {
             _networkManager.discoverServices();
         }
-        ProgressBar circle = (ProgressBar) findViewById(R.id.prg_resolveProgress);
+        ProgressBar circle = findViewById(R.id.prg_resolveProgress);
         circle.setVisibility(View.GONE);
         ApplicationWideSingleton.refreshSelectedService(_selectedService);
         super.onResume();
@@ -278,7 +278,7 @@ public class MainActivity extends AppCompatActivity {
             _networkManager.stopDiscover();
             _networkManager.resolveServices(_selectedService);
 
-            ProgressBar circle = (ProgressBar) findViewById(R.id.prg_resolveProgress);
+            ProgressBar circle = findViewById(R.id.prg_resolveProgress);
             circle.setVisibility(View.VISIBLE);
             Toast.makeText(getApplicationContext(),
                     "resolving " + _selectedService.getServiceName(),
@@ -310,7 +310,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),
                     _selectedService.getServiceName() + " resolved",
                     Toast.LENGTH_SHORT).show();
-            Intent intent = null;
+            Intent intent;
             if(getIntent().getAction() == null ){
                 Intent incomingIntent = getIntent();
 

@@ -10,11 +10,10 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 public class RawSend {
-    private HttpClient _httpClient;
+    private final HttpClient _httpClient;
 
-    private Handler _responseHandler;
-    private HandlerThread _responseHandlerThread;
-    private Handler _outerHandler;
+    private final HandlerThread _responseHandlerThread;
+    private final Handler _outerHandler;
 
     public static final String TAG = "RawSend";
 
@@ -26,24 +25,24 @@ public class RawSend {
     public RawSend(NsdServiceInfo info, Handler handler) {
         _responseHandlerThread = new HandlerThread("SendHandlerThread");
         _responseHandlerThread.start();
-        _responseHandler = new Handler(_responseHandlerThread.getLooper()) {
+        Handler _responseHandler = new Handler(_responseHandlerThread.getLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
-                String response = (String) msg.getData().getString(_httpClient.RESPONSE_KEY);
+                String response = msg.getData().getString(HttpClient.RESPONSE_KEY);
 
                 Log.i(TAG, String.format("Message was :%s", response));
 
                 Bundle msgBundle = new Bundle();
                 msgBundle.putString(RESPONSE_KEY, response);
-                msgBundle.putInt(CODE_KEY, msg.getData().getInt(_httpClient.RESPONSE_CODE_KEY));
+                msgBundle.putInt(CODE_KEY, msg.getData().getInt(HttpClient.RESPONSE_CODE_KEY));
                 msgBundle.putString(POST_MSG_KEY,
                         new String((
-                                (HttpClient.Request)msg.getData()
+                                (HttpClient.Request) msg.getData()
                                         .getParcelable(HttpClient.TRANSACTION_KEY))
                                 ._postData));
-                msgBundle.putParcelable(POST_META_KEY,((HttpClient.Request)msg.getData()
+                msgBundle.putParcelable(POST_META_KEY, ((HttpClient.Request) msg.getData()
                         .getParcelable(HttpClient.TRANSACTION_KEY))._requestMeta.get(0)
-                        );
+                );
                 Message msgr = new Message();
                 msgr.setData(msgBundle);
 
