@@ -66,6 +66,10 @@ public abstract class TvRemote extends AppCompatActivity {
     public static int BTN_TV_NUM_8 = 21;
     public static int BTN_TV_NUM_9 = 22;
     public static int BTN_TV_NUM_ADD = 23;
+    public static int BTN_TV_HOME = 24;
+    public static int BTN_TV_FAST_FORWARD = 25;
+    public static int BTN_TV_FAST_BACKWARD = 26;
+    public static int BTN_TV_PAUSE = 27;
 
 
 
