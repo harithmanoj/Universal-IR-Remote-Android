@@ -33,6 +33,7 @@ import androidx.annotation.NonNull;
 import com.remote.universalirremote.ApplicationWideSingleton;
 import com.remote.universalirremote.TvRemote;
 import com.remote.universalirremote.database.DeviceButtonConfig;
+import com.remote.universalirremote.network.HttpClient;
 import com.remote.universalirremote.network.RawSend;
 
 import java.net.HttpURLConnection;
@@ -55,10 +56,10 @@ public class TvRemoteTransmit extends TvRemote {
             @Override
             public void handleMessage(@NonNull Message msg) {
                 if (msg.getData().getInt(RawSend.CODE_KEY) != HttpURLConnection.HTTP_OK) {
-                    for(DeviceButtonConfig i : _buttonConfigList)
-                        if(i.getIrTimingData().equals(msg.getData().getString(RawSend.TRANSACTION_KEY)))
-                            Toast.makeText(getApplicationContext(),
-                                    "button send fail " + i.getDeviceButtonName(),
+                    Toast.makeText(getApplicationContext(),
+                                    "button send fail "
+                                            + ((HttpClient.Request.Property)msg.getData()
+                                            .getParcelable(RawSend.POST_META_KEY)).getValue(),
                                     Toast.LENGTH_LONG);
                 }
             }
@@ -83,7 +84,7 @@ public class TvRemoteTransmit extends TvRemote {
                     "not configured button", Toast.LENGTH_LONG);
             return;
         }
-        _sendRawIrTiming.sendData(selectedButton.getIrTimingData());
+        _sendRawIrTiming.sendData(selectedButton.getIrTimingData(), selectedButton.getDeviceName());
     }
 
     @Override
