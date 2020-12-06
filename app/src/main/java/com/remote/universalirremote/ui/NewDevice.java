@@ -189,7 +189,9 @@ public class NewDevice extends AppCompatActivity {
         _deviceDataRepository.useDatabaseExecutor(
                 () -> {
                     if(_deviceDataRepository.getDao().doesDeviceExist(name)) {
-                        Toast.makeText(getApplicationContext(), "Device name exists", Toast.LENGTH_LONG).show();
+                        runOnUiThread(
+                                () -> Toast.makeText(getApplicationContext(),
+                                        "Device name exists", Toast.LENGTH_LONG).show());
                         return;
                     }
 
