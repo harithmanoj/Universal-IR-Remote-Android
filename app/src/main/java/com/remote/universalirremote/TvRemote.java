@@ -125,10 +125,72 @@ public abstract class TvRemote extends AppCompatActivity {
     public static int BTN_TV_FAST_BACKWARD = 26;
     public static int BTN_TV_PAUSE = 27;
 
-
-
     public abstract void handleButtonClicks(int btnId);
 
     public abstract void clickConfigureOrOK(View view);
 
+    public void clickButton(View view) {
+        int id = -10;
+        if(view.getId() == R.id.btn_power) {
+            id = (BTN_TV_PWR);
+        } else if ( view.getId() == R.id.btn_Back) {
+            id = (BTN_TV_BACK);
+        } else if (view.getId() == R.id.btn_ArrowUp) {
+            id = (BTN_TV_UP);
+        } else if (view.getId() == R.id.btn_ArrowDown) {
+            id = (BTN_TV_DOWN);
+        } else if (view.getId() == R.id.btn_ArrowLeft) {
+            id = (BTN_TV_LEFT);
+        } else if (view.getId() == R.id.btn_ArrowRight) {
+            id = (BTN_TV_RIGHT);
+        } else if (view.getId() == R.id.btn_Ok) {
+            id = (BTN_TV_OK);
+        } else if (view.getId() == R.id.btn_VolumeUp) {
+            id = (BTN_TV_VOL_UP);
+        } else if (view.getId() == R.id.btn_VolumeDown) {
+            id = (BTN_TV_VOL_DOWN);
+        } else if (view.getId() == R.id.btn_ChannelUp) {
+            id = BTN_TV_CHN_UP;
+        } else if (view.getId() == R.id.btn_ChannelDown) {
+            id = BTN_TV_CHN_DOWN;
+        } else if (view.getId() == R.id.btn_Mute) {
+            id = BTN_TV_MUTE;
+        } else if (view.getId() == R.id.btn_UnMute) {
+            id = BTN_TV_UNMUTE;
+        } else if (view.getId() == R.id.btn_Num0) {
+            id = BTN_TV_NUM_0;
+        } else if (view.getId() == R.id.btn_Num1) {
+            id = BTN_TV_NUM_1;
+        } else if (view.getId() == R.id.btn_Num2) {
+            id = BTN_TV_NUM_2;
+        } else if (view.getId() == R.id.btn_Num3) {
+            id = BTN_TV_NUM_3;
+        } else if (view.getId() == R.id.btn_Num4) {
+            id = BTN_TV_NUM_4;
+        } else if (view.getId() == R.id.btn_Num5) {
+            id = BTN_TV_NUM_5;
+        } else if (view.getId() == R.id.btn_Num6) {
+            id = BTN_TV_NUM_6;
+        } else if (view.getId() == R.id.btn_Num7) {
+            id = BTN_TV_NUM_7;
+        } else if (view.getId() == R.id.btn_Num8) {
+            id = BTN_TV_NUM_8;
+        } else if (view.getId() == R.id.btn_Num9) {
+            id = BTN_TV_NUM_9;
+        } else if (view.getId() == R.id.btn_AddNum) {
+            id = BTN_TV_NUM_ADD;
+        } else if (view.getId() == R.id.btn_home) {
+            id = BTN_TV_HOME;
+        } else if (view.getId() == R.id.btn_fastForward) {
+            id = BTN_TV_FAST_FORWARD;
+        } else if (view.getId() == R.id.btn_fastBack) {
+            id = BTN_TV_FAST_BACKWARD;
+        } else if (view.getId() == R.id.btn_pause) {
+            id = BTN_TV_PAUSE;
+        } else {
+            return;
+        }
+
+        handleButtonClicks(id);
+    }
 }
