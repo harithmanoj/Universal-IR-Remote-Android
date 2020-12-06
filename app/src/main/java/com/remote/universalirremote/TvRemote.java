@@ -141,34 +141,44 @@ public abstract class TvRemote extends AppCompatActivity {
         super.onStart();
     }
 
-    public static int BTN_TV_PWR = 0;
-    public static int BTN_TV_BACK = 1;
-    public static int BTN_TV_UP = 2;
-    public static int BTN_TV_DOWN = 3;
-    public static int BTN_TV_LEFT = 4;
-    public static int BTN_TV_RIGHT = 5;
-    public static int BTN_TV_OK = 6;
-    public static int BTN_TV_VOL_UP = 7;
-    public static int BTN_TV_VOL_DOWN = 8;
-    public static int BTN_TV_CHN_UP = 9;
-    public static int BTN_TV_CHN_DOWN = 10;
-    public static int BTN_TV_UNMUTE = 11;
-    public static int BTN_TV_MUTE = 12;
-    public static int BTN_TV_NUM_0 = 13;
-    public static int BTN_TV_NUM_1 = 14;
-    public static int BTN_TV_NUM_2 = 15;
-    public static int BTN_TV_NUM_3 = 16;
-    public static int BTN_TV_NUM_4 = 17;
-    public static int BTN_TV_NUM_5 = 18;
-    public static int BTN_TV_NUM_6 = 19;
-    public static int BTN_TV_NUM_7 = 20;
-    public static int BTN_TV_NUM_8 = 21;
-    public static int BTN_TV_NUM_9 = 22;
-    public static int BTN_TV_NUM_ADD = 23;
-    public static int BTN_TV_HOME = 24;
-    public static int BTN_TV_FAST_FORWARD = 25;
-    public static int BTN_TV_FAST_BACKWARD = 26;
-    public static int BTN_TV_PAUSE = 27;
+    protected DeviceButtonConfig lookupButton(int btnId) {
+
+        for(DeviceButtonConfig i : _buttonConfigList) {
+            if(i.getButtonId() == btnId)
+                return i;
+        }
+
+        return null;
+    }
+
+    public static final int BTN_TV_PWR = 0;
+    public static final int BTN_TV_BACK = 1;
+    public static final int BTN_TV_UP = 2;
+    public static final int BTN_TV_DOWN = 3;
+    public static final int BTN_TV_LEFT = 4;
+    public static final int BTN_TV_RIGHT = 5;
+    public static final int BTN_TV_OK = 6;
+    public static final int BTN_TV_VOL_UP = 7;
+    public static final int BTN_TV_VOL_DOWN = 8;
+    public static final int BTN_TV_CHN_UP = 9;
+    public static final int BTN_TV_CHN_DOWN = 10;
+    public static final int BTN_TV_UNMUTE = 11;
+    public static final int BTN_TV_MUTE = 12;
+    public static final int BTN_TV_NUM_0 = 13;
+    public static final int BTN_TV_NUM_1 = 14;
+    public static final int BTN_TV_NUM_2 = 15;
+    public static final int BTN_TV_NUM_3 = 16;
+    public static final int BTN_TV_NUM_4 = 17;
+    public static final int BTN_TV_NUM_5 = 18;
+    public static final int BTN_TV_NUM_6 = 19;
+    public static final int BTN_TV_NUM_7 = 20;
+    public static final int BTN_TV_NUM_8 = 21;
+    public static final int BTN_TV_NUM_9 = 22;
+    public static final int BTN_TV_NUM_ADD = 23;
+    public static final int BTN_TV_HOME = 24;
+    public static final int BTN_TV_FAST_FORWARD = 25;
+    public static final int BTN_TV_FAST_BACKWARD = 26;
+    public static final int BTN_TV_PAUSE = 27;
 
     public abstract void handleButtonClicks(int btnId);
 
