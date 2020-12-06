@@ -22,14 +22,14 @@ import java.util.List;
 
 public interface DeviceDataCallback {
 
-    public void doesExistCallBack(boolean exist);
+    void doesExistCallBack(boolean exist);
 
-    public void namesCallback(List<String> names);
+    void namesCallback(List<String> names);
 
-    public void deviceWithNameCallback(DeviceData device);
+    void deviceWithNameCallback(DeviceData device);
 
-    public void layoutCallback(int layout);
+    void layoutCallback(int layout);
 
-    public void protocolCallback(int protocol);
+    void protocolCallback(int protocol);
 
 }

@@ -19,7 +19,7 @@
 
 package com.remote.universalirremote.network;
 
-import android.content.Intent;
+
 import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
 import android.os.Handler;
@@ -43,7 +43,7 @@ import java.util.Arrays;
 
 public class HttpClient {
     private HttpURLConnection _httpConnection;
-    private String _serviceUrl;
+    private final String _serviceUrl;
 
     public static final String TAG = "HttpClient";
 
@@ -52,10 +52,10 @@ public class HttpClient {
     public static final String RESPONSE_CODE_KEY = "response.key.transaction";
     public static final String TRANSACTION_KEY = "transaction.request";
 
-    private HandlerThread _transactionHandlerThread;
-    private Handler _transactionHandler;
+    private final HandlerThread _transactionHandlerThread;
+    private final Handler _transactionHandler;
 
-    private Handler _responseHandler;
+    private final Handler _responseHandler;
 
     public HttpClient(NsdServiceInfo info, Handler handler) {
         this(info.getHost().getHostAddress(), handler);
@@ -68,7 +68,7 @@ public class HttpClient {
         _transactionHandler = new Handler(_transactionHandlerThread.getLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
-                Request request = (Request) msg.getData().getParcelable(TRANSACTION_KEY);
+                Request request = msg.getData().getParcelable(TRANSACTION_KEY);
                 try {
                     try {
                         URL url = new URL(_serviceUrl);
@@ -119,7 +119,7 @@ public class HttpClient {
                     _httpConnection.disconnect();
                     Log.i(TAG, "disconnected");
                     msgBundle.putInt(RESPONSE_CODE_KEY, responseCode);
-                    msgBundle.putString(TRANSACTION_KEY, request._requestMethod);
+                    msgBundle.putParcelable(TRANSACTION_KEY, request);
                     Message msgr = new Message();
                     msgr.setData(msgBundle);
                     _responseHandler.sendMessage(msgr);
@@ -152,11 +152,21 @@ public class HttpClient {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
-            dest.writeStringArray( new String[] {_requestMethod, _postData.toString() });
+            dest.writeStringArray( new String[] {_requestMethod, Arrays.toString(_postData)});
             dest.writeInt(_requestProperties.size());
             Property[] prop = new Property[_requestProperties.size()];
             prop = _requestProperties.toArray(prop);
             dest.writeParcelableArray(prop,flags);
+            if (_hasMeta) {
+                dest.writeInt(1);
+                dest.writeInt(_requestMeta.size());
+                Property[] meta = new Property[_requestMeta.size()];
+                meta = _requestMeta.toArray(meta);
+                dest.writeParcelableArray(meta, flags);
+            } else {
+                dest.writeInt(0);
+            }
+
         }
 
         public static final Creator<Request> CREATOR = new Creator<Request>() {
@@ -164,15 +174,23 @@ public class HttpClient {
             public Request createFromParcel(Parcel source) {
                 String[] data = new String[2];
                 source.readStringArray(data);
-                int size = source.readInt();
-                Property[] prop = new Property[size];
-                prop = (Property[])source.readParcelableArray(Property.class.getClassLoader());
-
-                return new Request(
-                        data[1].getBytes(),
-                        data[0],
-                        prop
-                );
+                Property[] prop = (Property[])source.readParcelableArray(Property.class.getClassLoader());
+                int hasMeta = source.readInt();
+                if(hasMeta == 0) {
+                    return new Request(
+                            data[1].getBytes(),
+                            data[0],
+                            prop
+                    );
+                } else {
+                    Property[] meta = (Property[])source.readParcelableArray(Property.class.getClassLoader());
+                    return new Request(
+                            data[1].getBytes(),
+                            data[0],
+                            prop,
+                            meta
+                    );
+                }
             }
 
             @Override
@@ -216,11 +234,22 @@ public class HttpClient {
                     return new Property[size];
                 }
             };
+
+            public String getName() { return _propertyName; }
+            public String getValue() { return _propertyValue; }
         }
 
         public final byte[] _postData;
         public final String _requestMethod;
         public final ArrayList<Property> _requestProperties;
+        public final ArrayList<Property> _requestMeta;
+        public final boolean _hasMeta;
+
+        public byte[] getPostData() { return _postData; }
+        public String getMethod() { return _requestMethod; }
+        public ArrayList<Property> getProperties() { return _requestProperties; }
+        public ArrayList<Property> getMeta() { return _requestMeta; }
+        public boolean hasMeta() { return _hasMeta; }
 
         public Request(byte[] data, String method, Property... properties) {
             _postData = data;
@@ -229,6 +258,24 @@ public class HttpClient {
             if(method.equals("POST"))
                 tempProperties.add(new Property("Content-Length", Integer.toString(data.length)));
             _requestProperties = tempProperties;
+            _hasMeta = false;
+            _requestMeta = null;
+        }
+
+        public Request(byte[] data, String method, Property[] properties, Property[] meta) {
+            _postData = data;
+            _requestMethod = method;
+            ArrayList<Property> tempProperties = new ArrayList<>(Arrays.asList(properties));
+            if(method.equals("POST"))
+                tempProperties.add(new Property("Content-Length", Integer.toString(data.length)));
+            _requestProperties = tempProperties;
+            if(meta != null) {
+                _hasMeta = true;
+                _requestMeta = new ArrayList<>(Arrays.asList(meta));
+            } else {
+                _hasMeta = false;
+                _requestMeta = null;
+            }
         }
 
     }

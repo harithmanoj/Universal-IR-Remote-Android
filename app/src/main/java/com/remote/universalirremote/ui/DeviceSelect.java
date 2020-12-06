@@ -85,8 +85,6 @@ public class DeviceSelect extends AppCompatActivity {
     // Selected device
     private DeviceData _selectedDevice = null;
 
-    private NsdServiceInfo _selectedService;
-
     private final Context _context = this;
     private boolean setSelectedDevice(String deviceName) {
         if(deviceName.equals(Constant.NO_SELECT)) {
@@ -143,7 +141,7 @@ public class DeviceSelect extends AppCompatActivity {
                                 _context, R.layout.support_simple_spinner_dropdown_item,
                                 names);
                         deviceListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        Spinner devicesUiList = (Spinner) findViewById(R.id.spnr_DeviceSelection);
+                        Spinner devicesUiList = findViewById(R.id.spnr_DeviceSelection);
                         devicesUiList.setAdapter(deviceListAdapter);
 
                         devicesUiList.setOnItemSelectedListener
@@ -208,11 +206,8 @@ public class DeviceSelect extends AppCompatActivity {
             String device = savedInstanceState.getString(Constant.INT_SELECTED_DEVICE);
             NsdServiceInfo service = savedInstanceState.getParcelable(Constant.INT_SERVICE_KEY);
             _deviceDataRepository.useDatabaseExecutor(
-                    ()-> {
-                        ApplicationWideSingleton.refreshSelectedDevice(
-                                _deviceDataRepository.getDao().getDevice(device)
-                        );
-                    }
+                    ()-> ApplicationWideSingleton.refreshSelectedDevice(
+                            _deviceDataRepository.getDao().getDevice(device))
             );
             ApplicationWideSingleton.refreshSelectedService(service);
         }
@@ -230,7 +225,7 @@ public class DeviceSelect extends AppCompatActivity {
     @Override
     protected void onStart() {
 
-        _selectedService = getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY);
+        NsdServiceInfo _selectedService = getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY);
         ApplicationWideSingleton.refreshSelectedService(_selectedService);
         ((TextView)findViewById(R.id.text_selectedBlaster)).setText(_selectedService.getServiceName());
         super.onStart();

@@ -23,12 +23,12 @@ import java.util.List;
 
 public interface DeviceButtonConfigCallback {
 
-    public void allRawDataCallback( List<DeviceButtonConfig> allRawData );
+    void allRawDataCallback(List<DeviceButtonConfig> allRawData);
 
-    public void allRawDataForDeviceCallback( List<DeviceButtonConfig> allDeviceRawData );
+    void allRawDataForDeviceCallback(List<DeviceButtonConfig> allDeviceRawData);
 
-    public void irTimingDataCallback(String irTiming);
+    void irTimingDataCallback(String irTiming);
 
-    public void deviceButtonNameCallback(String buttonName);
+    void deviceButtonNameCallback(String buttonName);
 
 }
