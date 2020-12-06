@@ -42,7 +42,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class HttpClient {
-    private final NsdServiceInfo _serviceInfo;
     private HttpURLConnection _httpConnection;
     private String _serviceUrl;
 
@@ -59,8 +58,11 @@ public class HttpClient {
     private Handler _responseHandler;
 
     public HttpClient(NsdServiceInfo info, Handler handler) {
-        _serviceInfo = info;
-        _serviceUrl = "http://" + _serviceInfo.getHost().getHostAddress();
+        this(info.getHost().getHostAddress(), handler);
+    }
+
+    public HttpClient(String serverAddress, Handler handler) {
+        _serviceUrl = "http://" + serverAddress;
         _transactionHandlerThread = new HandlerThread("transactionHandler");
         _transactionHandlerThread.start();
         _transactionHandler = new Handler(_transactionHandlerThread.getLooper()) {
