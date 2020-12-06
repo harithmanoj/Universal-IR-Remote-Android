@@ -39,6 +39,7 @@ import com.remote.universalirremote.database.UniversalRemoteDatabase;
 import com.remote.universalirremote.ui.TvRemoteConfigure;
 import com.remote.universalirremote.ui.TvRemoteTransmit;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -155,6 +156,37 @@ public abstract class TvRemote extends AppCompatActivity {
 
         return null;
     }
+
+    public static final String[] _btnNames =  {
+            "BTN_TV_PWR",
+            "BTN_TV_BACK",
+            "BTN_TV_UP",
+            "BTN_TV_DOWN",
+            "BTN_TV_LEFT",
+            "BTN_TV_RIGHT",
+            "BTN_TV_OK",
+            "BTN_TV_VOL_UP",
+            "BTN_TV_VOL_DOWN",
+            "BTN_TV_CHN_UP",
+            "BTN_TV_CHN_DOWN",
+            "BTN_TV_UNMUTE",
+            "BTN_TV_MUTE",
+            "BTN_TV_NUM_0",
+            "BTN_TV_NUM_1",
+            "BTN_TV_NUM_2",
+            "BTN_TV_NUM_3",
+            "BTN_TV_NUM_4",
+            "BTN_TV_NUM_5",
+            "BTN_TV_NUM_6",
+            "BTN_TV_NUM_7",
+            "BTN_TV_NUM_8",
+            "BTN_TV_NUM_9",
+            "BTN_TV_NUM_ADD",
+            "BTN_TV_HOME",
+            "BTN_TV_FAST_FORWARD",
+            "BTN_TV_FAST_BACKWARD",
+            "BTN_TV_PAUSE"
+    };
 
     public static final int BTN_TV_PWR = 0;
     public static final int BTN_TV_BACK = 1;
