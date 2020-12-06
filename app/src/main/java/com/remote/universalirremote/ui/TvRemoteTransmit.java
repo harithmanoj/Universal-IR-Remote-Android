@@ -70,7 +70,13 @@ public class TvRemoteTransmit extends TvRemote {
 
     @Override
     public void handleButtonClicks(int btnId) {
-        
+        DeviceButtonConfig selectedButton = lookupButton(btnId);
+        if(selectedButton == null) {
+            Toast.makeText(getApplicationContext(),
+                    "not configured button", Toast.LENGTH_LONG);
+            return;
+        }
+        _sendRawIrTiming.sendData(selectedButton.getIrTimingData());
     }
 
     @Override
