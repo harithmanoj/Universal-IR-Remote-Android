@@ -43,7 +43,7 @@ public class DeviceButtonConfig {
     private String _irTimingData;
 
     @NonNull
-    @ColumnInfo(name = "deviceName")
+    @ColumnInfo(name = "deviceName", index = true)
     private String _deviceName;
 
     @NonNull

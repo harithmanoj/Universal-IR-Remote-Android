@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "65709e39c3355afe45f38c9541b8a236",
+    "identityHash": "3fe8b7ef906d9c120686762deffa41df",
     "entities": [
       {
         "tableName": "DeviceData",
@@ -78,7 +78,16 @@
           ],
           "autoGenerate": false
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_DeviceButtonConfig_deviceName",
+            "unique": false,
+            "columnNames": [
+              "deviceName"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_DeviceButtonConfig_deviceName` ON `${TABLE_NAME}` (`deviceName`)"
+          }
+        ],
         "foreignKeys": [
           {
             "table": "DeviceData",
@@ -97,7 +106,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '65709e39c3355afe45f38c9541b8a236')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3fe8b7ef906d9c120686762deffa41df')"
     ]
   }
 }
