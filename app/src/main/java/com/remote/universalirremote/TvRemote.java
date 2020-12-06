@@ -19,28 +19,82 @@
 
 package com.remote.universalirremote;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
 import android.view.View;
 
+import com.remote.universalirremote.database.DeviceButtonConfig;
+import com.remote.universalirremote.database.DeviceButtonConfigCallback;
 import com.remote.universalirremote.database.DeviceButtonConfigRepository;
 import com.remote.universalirremote.database.DeviceDao;
 import com.remote.universalirremote.database.DeviceData;
 import com.remote.universalirremote.database.DeviceInfoRepository;
+import com.remote.universalirremote.database.UniversalRemoteDatabase;
+
+import java.util.List;
+import java.util.Map;
 
 public abstract class TvRemote extends AppCompatActivity {
 
     protected DeviceData _selectedDevice;
     protected DeviceInfoRepository _deviceInfoRepo;
     protected DeviceButtonConfigRepository _deviceButtonConfigRepo;
+    protected List<DeviceButtonConfig> _buttonConfigList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tv_remote);
+        _deviceButtonConfigRepo = new DeviceButtonConfigRepository(getApplication(),
+                new DeviceButtonConfigCallback() {
+                    @Override
+                    public void allRawDataCallback(List<DeviceButtonConfig> allRawData) {
+
+                    }
+
+                    @Override
+                    public void allRawDataForDeviceCallback(List<DeviceButtonConfig> allDeviceRawData) {
+                        _buttonConfigList = allDeviceRawData;
+                    }
+
+                    @Override
+                    public void irTimingDataCallback(String irTiming) {
+
+                    }
+
+                    @Override
+                    public void deviceButtonNameCallback(String buttonName) {
+
+                    }
+                });
+        _deviceInfoRepo = new DeviceInfoRepository(getApplication(), null);
+        if(savedInstanceState != null) {
+            String device = savedInstanceState.getString(Constant.INT_SELECTED_DEVICE);
+            NsdServiceInfo service = savedInstanceState.getParcelable(Constant.INT_SERVICE_KEY);
+
+            ApplicationWideSingleton.refreshSelectedService(service);
+            _deviceButtonConfigRepo.useDatabaseExecutor(
+                    () -> {
+                        _selectedDevice = _deviceInfoRepo.getDao().getDevice(device);
+                        _deviceButtonConfigRepo.getAllRawData(device);
+                    }
+            );
+        }
     }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+
+        if(ApplicationWideSingleton.isSelectedDeviceValid())
+            outState.putString(Constant.INT_SELECTED_DEVICE, ApplicationWideSingleton.getSelectedDevice().getDeviceName());
+        if(ApplicationWideSingleton.isSelectedServiceValid())
+            outState.putParcelable(Constant.INT_SERVICE_KEY, ApplicationWideSingleton.getSelectedService());
+        super.onSaveInstanceState(outState);
+    }
+
 
     public static int BTN_TV_PWR = 0;
     public static int BTN_TV_BACK = 1;
