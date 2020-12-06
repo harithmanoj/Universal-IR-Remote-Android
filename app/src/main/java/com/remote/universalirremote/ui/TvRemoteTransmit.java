@@ -18,18 +18,78 @@
 
 package com.remote.universalirremote.ui;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Message;
+import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
+import com.remote.universalirremote.ApplicationWideSingleton;
 import com.remote.universalirremote.TvRemote;
+import com.remote.universalirremote.database.DeviceButtonConfig;
+import com.remote.universalirremote.network.HttpClient;
+import com.remote.universalirremote.network.RawSend;
+
+import java.net.HttpURLConnection;
 
 public class TvRemoteTransmit extends TvRemote {
+
+    private RawSend _sendRawIrTiming;
+    private HandlerThread _sendResponseThread;
+    private Handler _sendResponse;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onStart() {
+        _sendResponseThread = new HandlerThread("RawTvRemoteSendResponse");
+        _sendResponse = new Handler(_sendResponseThread.getLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                if (msg.getData().getInt(RawSend.CODE_KEY) != HttpURLConnection.HTTP_OK) {
+                    Toast.makeText(getApplicationContext(),
+                                    "button send fail "
+                                            + ((HttpClient.Request.Property)msg.getData()
+                                            .getParcelable(RawSend.POST_META_KEY)).getValue(),
+                                    Toast.LENGTH_LONG);
+                }
+            }
+        };
+        _sendRawIrTiming = new RawSend(ApplicationWideSingleton.getSelectedService(),
+                _sendResponse);
+        super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        renameOkOrConfig("Config");
+        _deviceButtonConfigRepo.getAllRawData(ApplicationWideSingleton.getSelectedDeviceName());
+        super.onResume();
+    }
+
     @Override
     public void handleButtonClicks(int btnId) {
-
+        DeviceButtonConfig selectedButton = lookupButton(btnId);
+        if(selectedButton == null) {
+            Toast.makeText(getApplicationContext(),
+                    "not configured button", Toast.LENGTH_LONG);
+            return;
+        }
+        _sendRawIrTiming.sendData(selectedButton.getIrTimingData(), selectedButton.getDeviceName());
     }
 
     @Override
-    public void clickConfigureOrOK(View view) {
-
+    public void startTransitOrConfigActivity(Intent configIntent, Intent transmitIntent) {
+        startActivity(configIntent);
     }
+
 }
