@@ -216,8 +216,9 @@ public class NewDevice extends AppCompatActivity {
                         }
 
                         default: {
-                            Toast.makeText(getApplicationContext(),
-                                    "invalid layout", Toast.LENGTH_LONG).show();
+                            runOnUiThread(
+                                    () -> Toast.makeText(getApplicationContext(),
+                                    "invalid layout", Toast.LENGTH_LONG).show());
                             return;
                         }
                     }
