@@ -18,18 +18,64 @@
 
 package com.remote.universalirremote.ui;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Message;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
+import com.remote.universalirremote.ApplicationWideSingleton;
 import com.remote.universalirremote.TvRemote;
+import com.remote.universalirremote.database.DeviceButtonConfig;
+import com.remote.universalirremote.network.RawSend;
+
+import java.net.HttpURLConnection;
 
 public class TvRemoteTransmit extends TvRemote {
+
+    private RawSend _sendRawIrTiming;
+    private HandlerThread _sendResponseThread;
+    private Handler _sendResponse;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onStart() {
+        _sendResponseThread = new HandlerThread("RawTvRemoteSendResponse");
+        _sendResponse = new Handler(_sendResponseThread.getLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                if (msg.getData().getInt(RawSend.CODE_KEY) != HttpURLConnection.HTTP_OK) {
+                    for(DeviceButtonConfig i : _buttonConfigList)
+                        if(i.getIrTimingData().equals(msg.getData().getString(RawSend.TRANSACTION_KEY)))
+                            Toast.makeText(getApplicationContext(),
+                                    "button send fail " + i.getDeviceButtonName(),
+                                    Toast.LENGTH_LONG);
+                }
+            }
+        };
+        _sendRawIrTiming = new RawSend(ApplicationWideSingleton.getSelectedService(),
+                _sendResponse);
+        super.onStart();
+    }
+
     @Override
     public void handleButtonClicks(int btnId) {
-
+        
     }
 
     @Override
-    public void clickConfigureOrOK(View view) {
-
+    public void startTransitOrConfigActivity(Intent configIntent, Intent transmitIntent) {
+        startActivity(configIntent);
     }
+
 }
