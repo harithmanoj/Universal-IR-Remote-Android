@@ -18,6 +18,7 @@
 
 package com.remote.universalirremote.ui;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -48,7 +49,7 @@ public class TvRemoteConfigure extends TvRemote {
     private Context _context;
 
     private boolean _hasCompletedSave;
-    private Object _waitOnWriteCompletion;
+    private final Object _waitOnWriteCompletion = new Object();
 
     public static final String USE_MOD = "handler.mode";
     public static final int STORE_ALL = 3;
@@ -153,6 +154,13 @@ public class TvRemoteConfigure extends TvRemote {
         Message msg = new Message();
         msg.setData(msgBundle);
         _getResponseHandler.sendMessage(msg);
+        ProgressDialog dialog = new ProgressDialog(this); // this = YourActivity
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setTitle("Writing");
+        dialog.setMessage("Writing configuration to database, please wait");
+        dialog.setIndeterminate(true);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
         synchronized (_waitOnWriteCompletion) {
             try {
                 while (!_hasCompletedSave)
@@ -162,6 +170,7 @@ public class TvRemoteConfigure extends TvRemote {
                 ex.printStackTrace();
             }
         }
+        dialog.dismiss();
         startActivity(transmitIntent);
     }
 
