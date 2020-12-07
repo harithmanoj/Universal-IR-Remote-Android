@@ -112,7 +112,10 @@ public class TvRemoteConfigure extends TvRemote {
                 } else if (mode == STORE_ALL) {
                     synchronized (_waitOnWriteCompletion) {
                         for ( DeviceButtonConfig i : _configuredButtons ) {
-                            _deviceButtonConfigRepo.getDao().insert(i);
+                            if(_deviceButtonConfigRepo.getDao().doesExist(i.getDeviceName(),i.getButtonId()))
+                                _deviceButtonConfigRepo.getDao().update(i);
+                            else
+                                _deviceButtonConfigRepo.getDao().insert(i);
                         }
                         _configuredButtons.clear();
                         _hasCompletedSave = true;
@@ -135,6 +138,7 @@ public class TvRemoteConfigure extends TvRemote {
 
     @Override
     public void handleButtonClicks(int btnId) {
+
         _addedButtons.add(
                 new DeviceButtonConfig(
                         btnId,
