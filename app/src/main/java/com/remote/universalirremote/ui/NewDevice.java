@@ -196,9 +196,10 @@ public class NewDevice extends AppCompatActivity {
                         return;
                     }
                     DeviceData device = new DeviceData(name, Constant.getProtocol(protocol), Constant.getLayout(layout));
+                    ApplicationWideSingleton.setSelectedDevice(device);
+
                     _deviceDataRepository.getDao().insert(device);
 
-                    ApplicationWideSingleton.setSelectedDevice(device);
 
                     Intent intent;
 

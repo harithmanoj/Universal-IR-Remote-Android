@@ -25,6 +25,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -42,6 +43,8 @@ public abstract class TvRemote extends AppCompatActivity {
     protected DeviceInfoRepository _deviceInfoRepo;
     protected DeviceButtonConfigRepository _deviceButtonConfigRepo;
     protected List<DeviceButtonConfig> _buttonConfigList;
+
+    public static final String TAG = "TvRemote";
 
     protected void renameOkOrConfig(String name) {
         ((TextView)findViewById(R.id.btn_okConfig)).setText(name);
@@ -77,7 +80,7 @@ public abstract class TvRemote extends AppCompatActivity {
 
         Intent intent = getIntent();
         if(intent != null) {
-
+            Log.d(TAG, "intent called now saving");
             String device = intent.getStringExtra(Constant.INT_SELECTED_DEVICE);
             NsdServiceInfo service = intent.getParcelableExtra(Constant.INT_SERVICE_KEY);
 
@@ -88,6 +91,7 @@ public abstract class TvRemote extends AppCompatActivity {
                         () -> {
                             ApplicationWideSingleton.refreshSelectedDevice(
                                     _deviceInfoRepo.getDao().getDevice(device));
+                            Log.d(TAG, "refreshing device");
                             _deviceButtonConfigRepo.getAllRawData(device);
                         }
                 );
@@ -123,6 +127,7 @@ public abstract class TvRemote extends AppCompatActivity {
 
         Intent intent = getIntent();
         if(intent != null) {
+            Log.d(TAG, "intent called now saving");
 
             String device = intent.getStringExtra(Constant.INT_SELECTED_DEVICE);
             NsdServiceInfo service = intent.getParcelableExtra(Constant.INT_SERVICE_KEY);
@@ -134,6 +139,7 @@ public abstract class TvRemote extends AppCompatActivity {
                         () -> {
                             ApplicationWideSingleton.refreshSelectedDevice(
                                     _deviceInfoRepo.getDao().getDevice(device));
+                            Log.d(TAG, "refreshing device");
                             _deviceButtonConfigRepo.getAllRawData(device);
                         }
                 );
