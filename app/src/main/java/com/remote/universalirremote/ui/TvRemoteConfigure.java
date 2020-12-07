@@ -113,9 +113,8 @@ public class TvRemoteConfigure extends TvRemote {
                     synchronized (_waitOnWriteCompletion) {
                         for ( DeviceButtonConfig i : _configuredButtons ) {
                             _deviceButtonConfigRepo.getDao().insert(i);
-                            _configuredButtons.remove(i);
                         }
-
+                        _configuredButtons.clear();
                         _hasCompletedSave = true;
                         _waitOnWriteCompletion.notifyAll();
                     }
