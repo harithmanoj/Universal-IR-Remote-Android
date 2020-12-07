@@ -167,12 +167,12 @@ public class DeviceSelect extends AppCompatActivity {
 
                                                                 runOnUiThread(
                                                                         () -> info.setText(
-                                                                                new StringBuilder().append("Device : ")
-                                                                                        .append(_selectedDevice.getDeviceName())
-                                                                                        .append(" type ").append(layout).append("\n")
-                                                                                        .append("protocol used : ")
-                                                                                        .append(Constant.getProtocol(
-                                                                                                _selectedDevice.getProtocolInfo())).toString()
+                                                                                "Device : " +
+                                                                                        _selectedDevice.getDeviceName() +
+                                                                                        " type " + layout + "\n" +
+                                                                                        "protocol used : " +
+                                                                                        Constant.getProtocol(
+                                                                                                _selectedDevice.getProtocolInfo())
                                                                         ));
                                                             });
                                                 }

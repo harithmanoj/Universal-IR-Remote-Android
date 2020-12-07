@@ -19,7 +19,6 @@
 package com.remote.universalirremote.ui;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -46,7 +45,6 @@ public class TvRemoteConfigure extends TvRemote {
     private ArrayList<DeviceButtonConfig> _addedButtons;
     private ArrayList<DeviceButtonConfig> _configuredButtons;
     private Handler _getResponseHandler;
-    private Context _context;
 
     private boolean _hasCompletedSave;
     private final Object _waitOnWriteCompletion = new Object();
@@ -59,7 +57,6 @@ public class TvRemoteConfigure extends TvRemote {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         _addedButtons = new ArrayList<>();
         _configuredButtons = new ArrayList<>();
-        _context = this;
         super.onCreate(savedInstanceState);
     }
     // Menu item selected process

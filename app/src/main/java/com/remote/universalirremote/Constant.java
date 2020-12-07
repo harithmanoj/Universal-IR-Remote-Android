@@ -19,8 +19,6 @@
 package com.remote.universalirremote;
 
 
-import java.util.ArrayList;
-
 // Class to encapsulate application wide constants used eg: activity launcher key
 //
 public final class Constant {

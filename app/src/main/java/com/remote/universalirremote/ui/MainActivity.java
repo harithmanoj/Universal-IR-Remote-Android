@@ -20,7 +20,6 @@ package com.remote.universalirremote.ui;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.ColumnInfo;
 
 import android.content.Intent;
 import android.net.nsd.NsdServiceInfo;
