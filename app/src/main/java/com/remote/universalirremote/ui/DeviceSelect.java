@@ -41,6 +41,7 @@ import com.remote.universalirremote.Constant;
 import com.remote.universalirremote.R;
 import com.remote.universalirremote.database.DeviceData;
 import com.remote.universalirremote.database.DeviceDataCallback;
+import com.remote.universalirremote.database.DeviceDataParcelable;
 import com.remote.universalirremote.database.DeviceInfoRepository;
 
 import java.util.List;
@@ -281,7 +282,7 @@ public class DeviceSelect extends AppCompatActivity {
 
             intent.putExtra(Constant.INT_SERVICE_KEY,
                     (NsdServiceInfo)getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY));
-            intent.putExtra(Constant.INT_SELECTED_DEVICE, _selectedDevice.getDeviceName());
+            intent.putExtra(Constant.INT_SELECTED_DEVICE, new DeviceDataParcelable(_selectedDevice));
             startActivity(intent);
         }
     }
