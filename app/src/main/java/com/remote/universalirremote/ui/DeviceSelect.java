@@ -101,7 +101,7 @@ public class DeviceSelect extends AppCompatActivity {
                     else {
                         _selectedDevice = null;
                     }
-        }
+                }
         );
         return true;
     }
@@ -226,9 +226,12 @@ public class DeviceSelect extends AppCompatActivity {
     @Override
     protected void onStart() {
 
-        NsdServiceInfo _selectedService = getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY);
-        ApplicationWideSingleton.refreshSelectedService(_selectedService);
-        ((TextView)findViewById(R.id.text_selectedBlaster)).setText(_selectedService.getServiceName());
+        NsdServiceInfo selectedService = getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY);
+        if(selectedService == null)
+            selectedService = ApplicationWideSingleton.getSelectedService();
+        else
+            ApplicationWideSingleton.refreshSelectedService(selectedService);
+        ((TextView)findViewById(R.id.text_selectedBlaster)).setText(selectedService.getServiceName());
         super.onStart();
     }
 
@@ -294,5 +297,5 @@ public class DeviceSelect extends AppCompatActivity {
         intent.putExtra(Constant.INT_SERVICE_KEY,
                 (NsdServiceInfo)getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY));
         startActivity(intent);
-  }
+    }
 }
