@@ -21,28 +21,34 @@ package com.remote.universalirremote.database;
 
 import android.app.Application;
 
-import java.util.List;
-
 public class DeviceButtonConfigRepository {
 
     private final DeviceButtonConfigDao _deviceButtonConfigAccess;
 
-    private final DeviceInfoRepository _deviceDataRepository;
+    private DeviceButtonConfigCallback _getterCallback;
 
-    public DeviceButtonConfigRepository(Application application) {
-        UniversalRemoteDatabase db = UniversalRemoteDatabase.getDatabase(application);
-        _deviceButtonConfigAccess = db.deviceButtonConfigAccess();
-        _deviceDataRepository = new DeviceInfoRepository(application);
+    public void useDatabaseExecutor(Runnable fn) {
+        UniversalRemoteDatabase.databaseWriteExecutor.execute(fn);
     }
 
-    public boolean insert(DeviceButtonConfig data) {
-        if(!_deviceDataRepository.doesExist(data.getDeviceName()))
-            return false;
+    public DeviceButtonConfigDao getDao() {
+        return _deviceButtonConfigAccess;
+    }
 
+    public DeviceButtonConfigRepository(Application application, DeviceButtonConfigCallback callback) {
+        UniversalRemoteDatabase db = UniversalRemoteDatabase.getDatabase(application);
+        _deviceButtonConfigAccess = db.deviceButtonConfigAccess();
+        _getterCallback = callback;
+    }
+
+    public void setDeviceButtonCallBack(DeviceButtonConfigCallback getter) {
+        _getterCallback = getter;
+    }
+
+    public void insert(DeviceButtonConfig data) {
         UniversalRemoteDatabase.databaseWriteExecutor.execute(
                 () -> _deviceButtonConfigAccess.insert(data)
         );
-        return true;
     }
 
     public void delete(DeviceButtonConfig data) {
@@ -57,20 +63,53 @@ public class DeviceButtonConfigRepository {
         );
     }
 
-    public List<DeviceButtonConfig> getAllRawData() {
-        return _deviceButtonConfigAccess.getAllRawData();
+    public boolean getAllRawData() {
+        if(_getterCallback == null)
+            return false;
+
+        UniversalRemoteDatabase.databaseWriteExecutor.execute(
+                () -> _getterCallback.allRawDataCallback(
+                        _deviceButtonConfigAccess.getAllRawData())
+        );
+
+        return true;
     }
 
-    public List<DeviceButtonConfig> getAllRawData(String device) {
-        return _deviceButtonConfigAccess.getAllRawData(device);
+    public boolean getAllRawData(String device) {
+
+        if(_getterCallback == null)
+            return false;
+
+        UniversalRemoteDatabase.databaseWriteExecutor.execute(
+                () -> _getterCallback.allRawDataForDeviceCallback(
+                        _deviceButtonConfigAccess.getAllRawData(device))
+        );
+
+        return true;
     }
 
-    public String getIrTimingData(String device, int button) {
-        return  _deviceButtonConfigAccess.getIrTimingData(device, button);
+    public boolean getIrTimingData(String device, int button) {
+        if(_getterCallback == null)
+            return false;
+
+        UniversalRemoteDatabase.databaseWriteExecutor.execute(
+                () -> _getterCallback.irTimingDataCallback(
+                        _deviceButtonConfigAccess.getIrTimingData(device, button))
+        );
+
+        return true;
     }
 
-    public String getDeviceButtonName(String device, int button) {
-        return  _deviceButtonConfigAccess.getButtonName(device, button);
+    public boolean getDeviceButtonName(String device, int button) {
+        if(_getterCallback == null)
+            return false;
+
+        UniversalRemoteDatabase.databaseWriteExecutor.execute(
+                () -> _getterCallback.deviceButtonNameCallback(
+                        _deviceButtonConfigAccess.getButtonName(device, button))
+        );
+
+        return true;
     }
 
 }

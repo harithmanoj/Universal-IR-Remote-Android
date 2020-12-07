@@ -24,9 +24,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -74,7 +76,7 @@ public class NewDevice extends AppCompatActivity {
     private static final int _editTextName = R.id.editTextName;
     private static final int _protocolDropDownId = R.id.spnr_protocolSelect;
 
-
+    private final Context _context = this;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,11 +99,11 @@ public class NewDevice extends AppCompatActivity {
                 );
                 if(layout == Constant.Layout.LAY_AC) {
 
-                    ((Spinner) findViewById(_protocolDropDownId)).setVisibility(View.VISIBLE);
+                    findViewById(_protocolDropDownId).setVisibility(View.VISIBLE);
 
                 } else {
 
-                    ((Spinner) findViewById(_protocolDropDownId)).setVisibility(View.INVISIBLE);
+                    findViewById(_protocolDropDownId).setVisibility(View.INVISIBLE);
                     ((Spinner)findViewById(_protocolDropDownId)).setSelection(Constant.Protocols.RAW);
 
                 }
@@ -109,7 +111,7 @@ public class NewDevice extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                ((Spinner) findViewById(_protocolDropDownId)).setVisibility(View.INVISIBLE);
+                findViewById(_protocolDropDownId).setVisibility(View.INVISIBLE);
                 ((Spinner)findViewById(_protocolDropDownId)).setSelection(Constant.Protocols.RAW);
             }
         });
@@ -127,6 +129,12 @@ public class NewDevice extends AppCompatActivity {
 
             ApplicationWideSingleton.refreshSelectedService(service);
         }
+    }
+
+    @Override
+    protected void onStart() {
+        _deviceDataRepository = new DeviceInfoRepository(getApplication(), null);
+        super.onStart();
     }
 
     @Override
@@ -178,45 +186,53 @@ public class NewDevice extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "No layout selected", Toast.LENGTH_LONG).show();
             return;
         }
-        if(_deviceDataRepository.doesExist(name)) {
-            Toast.makeText(getApplicationContext(), "Device name exists", Toast.LENGTH_LONG).show();
-            return;
-        }
 
-        DeviceData device = new DeviceData(name, Constant.getLayout(layout), Constant.getProtocol(protocol));
-        _deviceDataRepository.insert(device);
+        _deviceDataRepository.useDatabaseExecutor(
+                () -> {
+                    if(_deviceDataRepository.getDao().doesDeviceExist(name)) {
+                        runOnUiThread(
+                                () -> Toast.makeText(getApplicationContext(),
+                                        "Device name exists", Toast.LENGTH_LONG).show());
+                        return;
+                    }
+                    DeviceData device = new DeviceData(name, Constant.getProtocol(protocol), Constant.getLayout(layout));
+                    _deviceDataRepository.getDao().insert(device);
 
-        ApplicationWideSingleton.setSelectedDevice(name);
+                    ApplicationWideSingleton.setSelectedDevice(device);
 
-        Intent intent = null;
+                    Intent intent;
 
-        switch( device.getDeviceLayout() ) {
-            case Constant.Layout.LAY_TV: {
-                intent = new Intent(this, TvRemoteConfigure.class);
-                break;
-            }
+                    switch( device.getDeviceLayout() ) {
+                        case Constant.Layout.LAY_TV: {
+                            intent = new Intent(_context, TvRemoteConfigure.class);
+                            break;
+                        }
 
-            case Constant.Layout.LAY_AC: {
-                intent = new Intent(this, AcRemote.class);
-                break;
-            }
-            case Constant.Layout.LAY_GEN: {
-                intent = new Intent(this, GenRemoteConfigure.class);
-                break;
-            }
+                        case Constant.Layout.LAY_AC: {
+                            intent = new Intent(_context, AcRemote.class);
+                            break;
+                        }
+                        case Constant.Layout.LAY_GEN: {
+                            intent = new Intent(_context, GenRemoteConfigure.class);
+                            break;
+                        }
 
-            default: {
-                Toast.makeText(getApplicationContext(),
-                        "invalid layout", Toast.LENGTH_LONG).show();
-                return;
-            }
-        }
-         intent.putExtra(Constant.INT_LAUNCHER_KEY, Constant.INT_LAUNCHER_DEVICE_SELECT);
-         intent.putExtra(Constant.INT_SERVICE_KEY,
-                 (NsdServiceInfo)getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY));
+                        default: {
+                            runOnUiThread(
+                                    () -> Toast.makeText(getApplicationContext(),
+                                    "invalid layout", Toast.LENGTH_LONG).show());
+                            return;
+                        }
+                    }
+                    intent.putExtra(Constant.INT_LAUNCHER_KEY, Constant.INT_LAUNCHER_DEVICE_SELECT);
+                    intent.putExtra(Constant.INT_SERVICE_KEY,
+                            (NsdServiceInfo)getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY));
 
-         intent.putExtra(Constant.INT_SELECTED_DEVICE, device.getDeviceName());
-         startActivity(intent);
+                    intent.putExtra(Constant.INT_SELECTED_DEVICE, device.getDeviceName());
+                    startActivity(intent);
+                }
+        );
+
     }
 
 

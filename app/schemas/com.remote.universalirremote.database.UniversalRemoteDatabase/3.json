@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 2,
-    "identityHash": "3fe8b7ef906d9c120686762deffa41df",
+    "version": 3,
+    "identityHash": "1b449cd523e3706cbfd4a24cd425ed1c",
     "entities": [
       {
         "tableName": "DeviceData",
@@ -38,7 +38,7 @@
       },
       {
         "tableName": "DeviceButtonConfig",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`deviceButtonId` INTEGER NOT NULL, `timingData` TEXT NOT NULL, `deviceName` TEXT NOT NULL, `isEditableName` INTEGER NOT NULL, `deviceButtonName` TEXT NOT NULL, PRIMARY KEY(`deviceButtonId`, `deviceName`), FOREIGN KEY(`deviceName`) REFERENCES `DeviceData`(`deviceNameId`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`deviceButtonId` INTEGER NOT NULL, `timingData` TEXT, `deviceName` TEXT NOT NULL, `isEditableName` INTEGER NOT NULL, `deviceButtonName` TEXT NOT NULL, PRIMARY KEY(`deviceButtonId`, `deviceName`), FOREIGN KEY(`deviceName`) REFERENCES `DeviceData`(`deviceNameId`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "_buttonId",
@@ -50,7 +50,7 @@
             "fieldPath": "_irTimingData",
             "columnName": "timingData",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "_deviceName",
@@ -106,7 +106,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3fe8b7ef906d9c120686762deffa41df')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1b449cd523e3706cbfd4a24cd425ed1c')"
     ]
   }
 }

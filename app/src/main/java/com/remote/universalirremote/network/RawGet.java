@@ -1,3 +1,20 @@
+//
+//
+//        Copyright (C) 2020  Contributors (in contributors file)
+//
+//        This program is free software: you can redistribute it and/or modify
+//        it under the terms of the GNU General Public License as published by
+//        the Free Software Foundation, either version 3 of the License, or
+//        (at your option) any later version.
+//
+//        This program is distributed in the hope that it will be useful,
+//        but WITHOUT ANY WARRANTY; without even the implied warranty of
+//        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//        GNU General Public License for more details.
+//
+//        You should have received a copy of the GNU General Public License
+//        along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
 package com.remote.universalirremote.network;
 
 import android.net.nsd.NsdServiceInfo;
@@ -11,24 +28,25 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 public class RawGet {
-    private HttpClient _httpClient;
+    private final HttpClient _httpClient;
 
-    private Handler _responseHandler;
-    private HandlerThread _responseHandlerThread;
-    private Handler _outerHandler;
+    private final HandlerThread _responseHandlerThread;
+    private final Handler _outerHandler;
 
     public static final String TAG = "RawGet";
 
     public static final String PROTOCOL_KEY = "response.protocol";
     public static final String RAW_KEY = "response.raw";
+    public static final String BUTTON_ID_KEY = "request.btn.id";
 
     public RawGet(NsdServiceInfo info, Handler handler) {
         _responseHandlerThread = new HandlerThread("GetHandlerThread");
         _responseHandlerThread.start();
-        _responseHandler = new Handler(_responseHandlerThread.getLooper()) {
+        _outerHandler = handler;
+        Handler _responseHandler = new Handler(_responseHandlerThread.getLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
-                String response = (String) msg.getData().getString(_httpClient.RESPONSE_KEY);
+                String response = msg.getData().getString(HttpClient.RESPONSE_KEY);
 
                 int protocol = Integer.parseInt(response.substring(0, response.indexOf(';')));
 
@@ -37,13 +55,18 @@ public class RawGet {
 
                 Log.i(TAG, String.format("Protocol: %d", protocol));
 
-                if(protocol != -1) {
-                    msgBundle.putString(RAW_KEY, response.substring(response.indexOf(';')+1));
-                    Log.i(TAG, String.format("Raw: %s", response.substring(response.indexOf(';')+1)));
-                }
-                else {
+                if (protocol != -1) {
+                    msgBundle.putString(RAW_KEY, response.substring(response.indexOf(';') + 1));
+                    Log.i(TAG, String.format("Raw: %s", response.substring(response.indexOf(';') + 1)));
+                } else {
                     msgBundle.putString(RAW_KEY, "0:");
                 }
+
+                msgBundle.putInt(BUTTON_ID_KEY, Integer.parseInt(
+                        ((HttpClient.Request) msg.getData()
+                                .getParcelable(HttpClient.TRANSACTION_KEY))
+                                ._requestMeta.get(0).getValue()
+                ));
 
                 Message msgr = new Message();
                 msgr.setData(msgBundle);
@@ -54,16 +77,19 @@ public class RawGet {
 
         _httpClient = new HttpClient(info, _responseHandler);
 
-        _outerHandler = handler;
     }
 
-    public void getData()
+    public void getData(int btnId)
     {
         _httpClient.transaction(new HttpClient.Request(
                 null, "GET",
-                new HttpClient.Request.Property("Content-Type", "application/xml"),
-                new HttpClient.Request.Property("charset", "utf-8"),
-                new HttpClient.Request.Property("Connection", "close")));
-
+                new HttpClient.Request.Property[]{
+                        new HttpClient.Request.Property("Content-Type", "application/xml"),
+                        new HttpClient.Request.Property("charset", "utf-8"),
+                        new HttpClient.Request.Property("Connection", "close")
+                },
+                new HttpClient.Request.Property[]{
+                        new HttpClient.Request.Property("buttonId", ((Integer)btnId).toString())
+                }));
     }
 }
