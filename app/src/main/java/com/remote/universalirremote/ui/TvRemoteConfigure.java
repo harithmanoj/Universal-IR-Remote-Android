@@ -18,12 +18,16 @@
 
 package com.remote.universalirremote.ui;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NavUtils;
@@ -40,11 +44,22 @@ public class TvRemoteConfigure extends TvRemote {
     private RawGet _getRawIrTiming;
     private HandlerThread _getResponseHandlerThread;
     private ArrayList<DeviceButtonConfig> _addedButtons;
+    private ArrayList<DeviceButtonConfig> _configuredButtons;
+    private Handler _getResponseHandler;
+    private Context _context;
+
+    private boolean _hasCompletedSave;
+    private final Object _waitOnWriteCompletion = new Object();
+
+    public static final String USE_MOD = "handler.mode";
+    public static final int STORE_ALL = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         _addedButtons = new ArrayList<>();
+        _configuredButtons = new ArrayList<>();
+        _context = this;
         super.onCreate(savedInstanceState);
     }
     // Menu item selected process
@@ -62,24 +77,46 @@ public class TvRemoteConfigure extends TvRemote {
     protected void onStart() {
         _getResponseHandlerThread = new HandlerThread("RawTvRemoteGetResponse");
         _getResponseHandlerThread.start();
-        Handler _getResponseHandler = new Handler(_getResponseHandlerThread.getLooper()) {
+        _hasCompletedSave = false;
+        _getResponseHandler = new Handler(_getResponseHandlerThread.getLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
-                int id = msg.getData().getInt(RawGet.BUTTON_ID_KEY);
-                for (int i = 0; i < _addedButtons.size(); ++i) {
-                    if (_addedButtons.get(i).getButtonId() == id) {
-                        DeviceButtonConfig current = _addedButtons.get(i);
-                        _addedButtons.remove(i);
-                        _addedButtons.add(
-                                new DeviceButtonConfig(
-                                        id,
-                                        msg.getData().getString(RawGet.RAW_KEY),
-                                        current.getDeviceName(),
-                                        current.isEditableName(),
-                                        current.getDeviceButtonName()
-                                )
-                        );
-                        break;
+                int mode = msg.getData().getInt(USE_MOD);
+                if(mode == 0) {
+
+                    int id = msg.getData().getInt(RawGet.BUTTON_ID_KEY);
+                    for (int i = 0; i < _addedButtons.size(); ++i) {
+                        if (_addedButtons.get(i).getButtonId() == id) {
+                            DeviceButtonConfig current = _addedButtons.get(i);
+                            _addedButtons.remove(i);
+                            _configuredButtons.add(
+                                    new DeviceButtonConfig(
+                                            id,
+                                            msg.getData().getString(RawGet.RAW_KEY),
+                                            current.getDeviceName(),
+                                            current.isEditableName(),
+                                            current.getDeviceButtonName()
+                                    )
+                            );
+
+                            runOnUiThread(
+                                    () -> Toast.makeText(
+                                            getApplicationContext(),
+                                            "button " + current.getDeviceButtonName() + " configured",
+                                            Toast.LENGTH_LONG).show()
+                            );
+
+                            break;
+                        }
+                    }
+                } else if (mode == STORE_ALL) {
+                    synchronized (_waitOnWriteCompletion) {
+                        for ( DeviceButtonConfig i : _configuredButtons ) {
+                            _deviceButtonConfigRepo.getDao().insert(i);
+                        }
+                        _configuredButtons.clear();
+                        _hasCompletedSave = true;
+                        _waitOnWriteCompletion.notifyAll();
                     }
                 }
             }
@@ -94,17 +131,6 @@ public class TvRemoteConfigure extends TvRemote {
         renameOkOrConfig("OK");
         _deviceButtonConfigRepo.getAllRawData(ApplicationWideSingleton.getSelectedDeviceName());
         super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        for (DeviceButtonConfig i : _addedButtons)
-            if(i.getIrTimingData() != null)
-            {
-                _deviceButtonConfigRepo.insert(i);
-                _addedButtons.remove(i);
-            }
-        super.onPause();
     }
 
     @Override
@@ -123,6 +149,28 @@ public class TvRemoteConfigure extends TvRemote {
 
     @Override
     public void startTransitOrConfigActivity(Intent configIntent, Intent transmitIntent) {
+        Bundle msgBundle = new Bundle();
+        msgBundle.putInt(USE_MOD, STORE_ALL);
+        Message msg = new Message();
+        msg.setData(msgBundle);
+        _getResponseHandler.sendMessage(msg);
+        ProgressDialog dialog = new ProgressDialog(this); // this = YourActivity
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setTitle("Writing");
+        dialog.setMessage("Writing configuration to database, please wait");
+        dialog.setIndeterminate(true);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+        synchronized (_waitOnWriteCompletion) {
+            try {
+                while (!_hasCompletedSave)
+                    _waitOnWriteCompletion.wait();
+            } catch (InterruptedException ex) {
+                Log.d(TAG, "interrupted ", ex);
+                ex.printStackTrace();
+            }
+        }
+        dialog.dismiss();
         startActivity(transmitIntent);
     }
 
