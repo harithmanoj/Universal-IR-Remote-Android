@@ -30,6 +30,10 @@ public class DeviceDataParcelable extends DeviceData implements Parcelable {
         super(_deviceName, _protocolInfo, _deviceLayout);
     }
 
+    public DeviceDataParcelable(DeviceData data) {
+        super(data.getDeviceName(), data.getProtocolInfo(), data.getDeviceLayout());
+    }
+
     public static final Creator<DeviceDataParcelable> CREATOR = new Creator<DeviceDataParcelable>() {
         @Override
         public DeviceDataParcelable createFromParcel(Parcel in) {
