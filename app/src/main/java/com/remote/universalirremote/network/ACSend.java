@@ -42,6 +42,8 @@ public class ACSend {
     public static final String POST_MSG_KEY = "post.msg.key";
     public static final String POST_META_KEY = "post.meta.key";
 
+    public static final String AC_URI = "/ac";
+
     public ACSend(NsdServiceInfo info, Handler handler) {
         _responseHandlerThread = new HandlerThread("SendHandlerThread");
         _responseHandlerThread.start();
@@ -70,7 +72,7 @@ public class ACSend {
             }
         };
 
-        _httpClient = new HttpClient(info, _responseHandler);
+        _httpClient = new HttpClient(info.getHost().getHostAddress() + AC_URI, _responseHandler);
 
         _outerHandler = handler;
     }
