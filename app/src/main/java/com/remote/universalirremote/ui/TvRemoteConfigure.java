@@ -110,13 +110,14 @@ public class TvRemoteConfigure extends TvRemote {
                         }
                     }
                 } else if (mode == STORE_ALL) {
-                    for ( DeviceButtonConfig i : _configuredButtons ) {
-                        _deviceButtonConfigRepo.getDao().insert(i);
-                        _configuredButtons.remove(i);
-                        synchronized (_waitOnWriteCompletion) {
-                            _hasCompletedSave = true;
-                            _waitOnWriteCompletion.notifyAll();
+                    synchronized (_waitOnWriteCompletion) {
+                        for ( DeviceButtonConfig i : _configuredButtons ) {
+                            _deviceButtonConfigRepo.getDao().insert(i);
+                            _configuredButtons.remove(i);
                         }
+
+                        _hasCompletedSave = true;
+                        _waitOnWriteCompletion.notifyAll();
                     }
                 }
             }
