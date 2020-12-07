@@ -61,6 +61,7 @@ public class TvRemoteConfigure extends TvRemote {
     @Override
     protected void onStart() {
         _getResponseHandlerThread = new HandlerThread("RawTvRemoteGetResponse");
+        _getResponseHandlerThread.start();
         Handler _getResponseHandler = new Handler(_getResponseHandlerThread.getLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
