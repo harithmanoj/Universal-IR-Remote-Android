@@ -135,56 +135,59 @@ public class DeviceSelect extends AppCompatActivity {
                     public void namesCallback(List<String> names) {
 
                         names.add(0, Constant.NO_SELECT);
+                        runOnUiThread(
+                                () -> {
+                                    ArrayAdapter<String> deviceListAdapter = new ArrayAdapter<>(
+                                            _context, R.layout.support_simple_spinner_dropdown_item,
+                                            names);
+                                    deviceListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                    Spinner devicesUiList = findViewById(R.id.spnr_DeviceSelection);
+                                    devicesUiList.setAdapter(deviceListAdapter);
 
-                        ArrayAdapter<String> deviceListAdapter = new ArrayAdapter<>(
-                                _context, R.layout.support_simple_spinner_dropdown_item,
-                                names);
-                        deviceListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        Spinner devicesUiList = findViewById(R.id.spnr_DeviceSelection);
-                        devicesUiList.setAdapter(deviceListAdapter);
+                                    devicesUiList.setOnItemSelectedListener
+                                            (new AdapterView.OnItemSelectedListener() {
+                                                @Override
+                                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                                    String name = parent.getItemAtPosition(position).toString();
 
-                        devicesUiList.setOnItemSelectedListener
-                                (new AdapterView.OnItemSelectedListener() {
-                                    @Override
-                                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                        String name = parent.getItemAtPosition(position).toString();
+                                                    if(name.equals(Constant.NO_SELECT)) {
+                                                        onNothingSelected(parent);
+                                                        return;
+                                                    }
 
-                                        if(name.equals(Constant.NO_SELECT)) {
-                                            onNothingSelected(parent);
-                                            return;
-                                        }
+                                                    _deviceDataRepository.useDatabaseExecutor(
+                                                            () -> {
+                                                                setSelectedDevice(name);
 
-                                        _deviceDataRepository.useDatabaseExecutor(
-                                                () -> {
-                                                    setSelectedDevice(name);
+                                                                Log.d(TAG, "selected device is " + name);
 
-                                                    Log.d(TAG, "selected device is " + name);
+                                                                TextView info = findViewById(R.id.text_selectedDeviceInfo);
 
+                                                                String layout = Constant.getLayout(_selectedDevice.getDeviceLayout());
+
+                                                                runOnUiThread(
+                                                                        () -> info.setText(
+                                                                                new StringBuilder().append("Device : ")
+                                                                                        .append(_selectedDevice.getDeviceName())
+                                                                                        .append(" type ").append(layout).append("\n")
+                                                                                        .append("protocol used : ")
+                                                                                        .append(Constant.getProtocol(
+                                                                                                _selectedDevice.getProtocolInfo())).toString()
+                                                                        ));
+                                                            });
+                                                }
+
+                                                @Override
+                                                public void onNothingSelected(AdapterView<?> parent) {
+                                                    _selectedDevice = null;
                                                     TextView info = findViewById(R.id.text_selectedDeviceInfo);
-
-                                                    String layout = Constant.getLayout(_selectedDevice.getDeviceLayout());
-
                                                     runOnUiThread(
-                                                            () -> info.setText(
-                                                            new StringBuilder().append("Device : ")
-                                                                    .append(_selectedDevice.getDeviceName())
-                                                                    .append(" type ").append(layout).append("\n")
-                                                                    .append("protocol used : ")
-                                                                    .append(Constant.getProtocol(
-                                                                            _selectedDevice.getProtocolInfo())).toString()
-                                                    ));
-                                                });
-                                    }
-
-                                    @Override
-                                    public void onNothingSelected(AdapterView<?> parent) {
-                                        _selectedDevice = null;
-                                        TextView info = findViewById(R.id.text_selectedDeviceInfo);
-                                        runOnUiThread(
-                                                () -> info.setText("Nothing Selected")
-                                        );
-                                    }
-                                });
+                                                            () -> info.setText("Nothing Selected")
+                                                    );
+                                                }
+                                            });
+                                }
+                        );
                     }
 
                     @Override
@@ -201,6 +204,7 @@ public class DeviceSelect extends AppCompatActivity {
                     public void protocolCallback(int protocol) {
 
                     }
+
                 });
 
         _deviceDataRepository.getNames();
