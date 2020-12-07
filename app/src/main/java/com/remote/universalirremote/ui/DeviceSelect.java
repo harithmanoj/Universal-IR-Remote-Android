@@ -92,17 +92,15 @@ public class DeviceSelect extends AppCompatActivity {
             _selectedDevice = null;
             return false;
         }
-        _deviceDataRepository.useDatabaseExecutor(
-                () -> {
-                    if(_deviceDataRepository.getDao().doesDeviceExist(deviceName)) {
-                        Log.d(TAG, "selected device is " + deviceName);
-                        setSelectedDevice(_deviceDataRepository.getDao().getDevice(deviceName));
-                    }
-                    else {
-                        _selectedDevice = null;
-                    }
-                }
-        );
+
+        if(_deviceDataRepository.getDao().doesDeviceExist(deviceName)) {
+            Log.d(TAG, "selected device is " + deviceName);
+            setSelectedDevice(_deviceDataRepository.getDao().getDevice(deviceName));
+        }
+        else {
+            _selectedDevice = null;
+        }
+
         return true;
     }
 
@@ -156,31 +154,35 @@ public class DeviceSelect extends AppCompatActivity {
                                             return;
                                         }
 
+                                        _deviceDataRepository.useDatabaseExecutor(
+                                                () -> {
+                                                    setSelectedDevice(name);
 
-                                        setSelectedDevice(name);
+                                                    Log.d(TAG, "selected device is " + name);
 
-                                        Log.d(TAG, "selected device is " + name);
+                                                    TextView info = findViewById(R.id.text_selectedDeviceInfo);
 
-                                        TextView info = findViewById(R.id.text_selectedDeviceInfo);
+                                                    String layout = Constant.getLayout(_selectedDevice.getDeviceLayout());
 
-                                        String layout = Constant.getLayout(_selectedDevice.getDeviceLayout());
-
-                                        info.setText(
-                                                new StringBuilder().append("Device : ")
-                                                        .append(_selectedDevice.getDeviceName())
-                                                        .append(" type ").append(layout).append("\n")
-                                                        .append("protocol used : ")
-                                                        .append(Constant.getProtocol(
-                                                                _selectedDevice.getProtocolInfo())).toString()
-                                        );
-
+                                                    runOnUiThread(
+                                                            () -> info.setText(
+                                                            new StringBuilder().append("Device : ")
+                                                                    .append(_selectedDevice.getDeviceName())
+                                                                    .append(" type ").append(layout).append("\n")
+                                                                    .append("protocol used : ")
+                                                                    .append(Constant.getProtocol(
+                                                                            _selectedDevice.getProtocolInfo())).toString()
+                                                    ));
+                                                });
                                     }
 
                                     @Override
                                     public void onNothingSelected(AdapterView<?> parent) {
                                         _selectedDevice = null;
                                         TextView info = findViewById(R.id.text_selectedDeviceInfo);
-                                        info.setText("Nothing Selected");
+                                        runOnUiThread(
+                                                () -> info.setText("Nothing Selected")
+                                        );
                                     }
                                 });
                     }
