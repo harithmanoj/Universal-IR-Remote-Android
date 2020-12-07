@@ -58,7 +58,11 @@ public class HttpClient {
     private final Handler _responseHandler;
 
     public HttpClient(NsdServiceInfo info, Handler handler) {
-        _serviceUrl = "http://" + info.getHost().getHostAddress();
+        this(info.getHost().getHostAddress(), handler);
+    }
+
+    public HttpClient(String serverAddress, Handler handler) {
+        _serviceUrl = "http://" + serverAddress;
         _transactionHandlerThread = new HandlerThread("transactionHandler");
         _transactionHandlerThread.start();
         _transactionHandler = new Handler(_transactionHandlerThread.getLooper()) {

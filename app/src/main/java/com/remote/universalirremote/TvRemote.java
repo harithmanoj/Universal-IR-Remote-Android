@@ -32,6 +32,7 @@ import android.widget.TextView;
 import com.remote.universalirremote.database.DeviceButtonConfig;
 import com.remote.universalirremote.database.DeviceButtonConfigCallback;
 import com.remote.universalirremote.database.DeviceButtonConfigRepository;
+import com.remote.universalirremote.database.DeviceDataParcelable;
 import com.remote.universalirremote.database.DeviceInfoRepository;
 import com.remote.universalirremote.ui.TvRemoteConfigure;
 import com.remote.universalirremote.ui.TvRemoteTransmit;
@@ -81,32 +82,31 @@ public abstract class TvRemote extends AppCompatActivity {
         Intent intent = getIntent();
         if(intent != null) {
             Log.d(TAG, "intent called now saving");
-            String device = intent.getStringExtra(Constant.INT_SELECTED_DEVICE);
+            DeviceDataParcelable device = intent.getParcelableExtra(Constant.INT_SELECTED_DEVICE);
             NsdServiceInfo service = intent.getParcelableExtra(Constant.INT_SERVICE_KEY);
 
             if(service != null )
                 ApplicationWideSingleton.refreshSelectedService(service);
-            if(device != null)
+            if(device != null) {
+                ApplicationWideSingleton.refreshSelectedDevice(device);
+                Log.d(TAG, "refreshing device");
+
                 _deviceButtonConfigRepo.useDatabaseExecutor(
                         () -> {
-                            ApplicationWideSingleton.refreshSelectedDevice(
-                                    _deviceInfoRepo.getDao().getDevice(device));
-                            Log.d(TAG, "refreshing device");
-                            _deviceButtonConfigRepo.getAllRawData(device);
+                            _deviceButtonConfigRepo.getAllRawData(device.getDeviceName());
                         }
                 );
+            }
         }
 
         if(savedInstanceState != null) {
-            String device = savedInstanceState.getString(Constant.INT_SELECTED_DEVICE);
+            DeviceDataParcelable device = savedInstanceState.getParcelable(Constant.INT_SELECTED_DEVICE);
             NsdServiceInfo service = savedInstanceState.getParcelable(Constant.INT_SERVICE_KEY);
-
+            ApplicationWideSingleton.refreshSelectedDevice(device);
             ApplicationWideSingleton.refreshSelectedService(service);
             _deviceButtonConfigRepo.useDatabaseExecutor(
                     () -> {
-                        ApplicationWideSingleton.refreshSelectedDevice(
-                                _deviceInfoRepo.getDao().getDevice(device));
-                        _deviceButtonConfigRepo.getAllRawData(device);
+                        _deviceButtonConfigRepo.getAllRawData(device.getDeviceName());
                     }
             );
         }
@@ -116,7 +116,8 @@ public abstract class TvRemote extends AppCompatActivity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
 
         if(ApplicationWideSingleton.isSelectedDeviceValid())
-            outState.putString(Constant.INT_SELECTED_DEVICE, ApplicationWideSingleton.getSelectedDevice().getDeviceName());
+            outState.putParcelable(Constant.INT_SELECTED_DEVICE,
+                    new DeviceDataParcelable(ApplicationWideSingleton.getSelectedDevice()));
         if(ApplicationWideSingleton.isSelectedServiceValid())
             outState.putParcelable(Constant.INT_SERVICE_KEY, ApplicationWideSingleton.getSelectedService());
         super.onSaveInstanceState(outState);
@@ -129,20 +130,20 @@ public abstract class TvRemote extends AppCompatActivity {
         if(intent != null) {
             Log.d(TAG, "intent called now saving");
 
-            String device = intent.getStringExtra(Constant.INT_SELECTED_DEVICE);
+            DeviceDataParcelable device = intent.getParcelableExtra(Constant.INT_SELECTED_DEVICE);
             NsdServiceInfo service = intent.getParcelableExtra(Constant.INT_SERVICE_KEY);
 
             if(service != null )
                 ApplicationWideSingleton.refreshSelectedService(service);
-            if(device != null)
+            if(device != null) {
+                ApplicationWideSingleton.refreshSelectedDevice(device);
+                Log.d(TAG, "refreshing device");
                 _deviceButtonConfigRepo.useDatabaseExecutor(
                         () -> {
-                            ApplicationWideSingleton.refreshSelectedDevice(
-                                    _deviceInfoRepo.getDao().getDevice(device));
-                            Log.d(TAG, "refreshing device");
-                            _deviceButtonConfigRepo.getAllRawData(device);
+                            _deviceButtonConfigRepo.getAllRawData(device.getDeviceName());
                         }
                 );
+            }
         }
         super.onStart();
     }
@@ -226,10 +227,12 @@ public abstract class TvRemote extends AppCompatActivity {
         Intent transmit = new Intent(this, TvRemoteTransmit.class);
 
         config.putExtra(Constant.INT_SERVICE_KEY, ApplicationWideSingleton.getSelectedService());
-        config.putExtra(Constant.INT_SELECTED_DEVICE, ApplicationWideSingleton.getSelectedDeviceName());
+        config.putExtra(Constant.INT_SELECTED_DEVICE,
+                new DeviceDataParcelable(ApplicationWideSingleton.getSelectedDevice()));
 
         transmit.putExtra(Constant.INT_SERVICE_KEY, ApplicationWideSingleton.getSelectedService());
-        transmit.putExtra(Constant.INT_SELECTED_DEVICE, ApplicationWideSingleton.getSelectedDeviceName());
+        transmit.putExtra(Constant.INT_SELECTED_DEVICE,
+                new DeviceDataParcelable(ApplicationWideSingleton.getSelectedDevice()));
 
         startTransitOrConfigActivity(config, transmit);
     }
