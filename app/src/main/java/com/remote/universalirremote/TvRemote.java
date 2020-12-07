@@ -76,6 +76,11 @@ public abstract class TvRemote extends AppCompatActivity {
                     public void deviceButtonNameCallback(String buttonName) {
 
                     }
+
+                    @Override
+                    public void doesEntryExist(boolean doesExist) {
+
+                    }
                 });
         _deviceInfoRepo = new DeviceInfoRepository(getApplication(), null);
 
