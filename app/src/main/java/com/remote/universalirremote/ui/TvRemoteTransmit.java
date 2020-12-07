@@ -62,6 +62,7 @@ public class TvRemoteTransmit extends TvRemote {
     @Override
     protected void onStart() {
         _sendResponseThread = new HandlerThread("RawTvRemoteSendResponse");
+        _sendResponseThread.start();
         Handler _sendResponse = new Handler(_sendResponseThread.getLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {

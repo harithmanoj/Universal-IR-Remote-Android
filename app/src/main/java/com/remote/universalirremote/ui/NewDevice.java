@@ -28,6 +28,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -131,6 +132,12 @@ public class NewDevice extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        _deviceDataRepository = new DeviceInfoRepository(getApplication(), null);
+        super.onStart();
+    }
+
+    @Override
     protected void onResume() {
 
         ApplicationWideSingleton.refreshSelectedService(
@@ -183,11 +190,12 @@ public class NewDevice extends AppCompatActivity {
         _deviceDataRepository.useDatabaseExecutor(
                 () -> {
                     if(_deviceDataRepository.getDao().doesDeviceExist(name)) {
-                        Toast.makeText(getApplicationContext(), "Device name exists", Toast.LENGTH_LONG).show();
+                        runOnUiThread(
+                                () -> Toast.makeText(getApplicationContext(),
+                                        "Device name exists", Toast.LENGTH_LONG).show());
                         return;
                     }
-
-                    DeviceData device = new DeviceData(name, Constant.getLayout(layout), Constant.getProtocol(protocol));
+                    DeviceData device = new DeviceData(name, Constant.getProtocol(protocol), Constant.getLayout(layout));
                     _deviceDataRepository.getDao().insert(device);
 
                     ApplicationWideSingleton.setSelectedDevice(device);
@@ -210,8 +218,9 @@ public class NewDevice extends AppCompatActivity {
                         }
 
                         default: {
-                            Toast.makeText(getApplicationContext(),
-                                    "invalid layout", Toast.LENGTH_LONG).show();
+                            runOnUiThread(
+                                    () -> Toast.makeText(getApplicationContext(),
+                                    "invalid layout", Toast.LENGTH_LONG).show());
                             return;
                         }
                     }

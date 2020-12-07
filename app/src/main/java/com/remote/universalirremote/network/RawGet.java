@@ -65,7 +65,7 @@ public class RawGet {
                 msgBundle.putInt(BUTTON_ID_KEY, Integer.parseInt(
                         ((HttpClient.Request) msg.getData()
                                 .getParcelable(HttpClient.TRANSACTION_KEY))
-                                ._requestProperties.get(0).getValue()
+                                ._requestMeta.get(0).getValue()
                 ));
 
                 Message msgr = new Message();
@@ -91,6 +91,5 @@ public class RawGet {
                 new HttpClient.Request.Property[]{
                         new HttpClient.Request.Property("buttonId", ((Integer)btnId).toString())
                 }));
-
     }
 }
