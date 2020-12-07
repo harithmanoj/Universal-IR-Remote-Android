@@ -35,6 +35,8 @@ public class IRTest extends AppCompatActivity {
 
     public static final String TAG = "IRTest";
 
+    private boolean power = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,6 +103,7 @@ public class IRTest extends AppCompatActivity {
     }
 
     public void onAC(View view) {
-        _acSend.sendData(Constant.Protocols.LG, 1, true, Constant.AcMode.kCool, 25, true, Constant.AcFan.kAuto, Constant.AcSwingv.kAuto, Constant.AcSwingh.kAuto, true, true, true, true, false, true, true, -1, -1, "test");
+        _acSend.sendData(Constant.Protocols.LG, 1, power, Constant.AcMode.kCool, 25, true, Constant.AcFan.kAuto, Constant.AcSwingv.kAuto, Constant.AcSwingh.kAuto, true, true, true, true, false, true, true, -1, -1, "test");
+        power = !power;
     }
 }
