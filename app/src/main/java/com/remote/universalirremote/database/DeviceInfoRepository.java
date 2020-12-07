@@ -29,7 +29,7 @@ import java.util.List;
 public class DeviceInfoRepository {
     private final DeviceDao _deviceDataAccess;
 
-    private DeviceDataCallback _getterCallback;
+    private final DeviceDataCallback _getterCallback;
 
     public void useDatabaseExecutor(Runnable fn) {
         UniversalRemoteDatabase.databaseWriteExecutor.execute(fn);

@@ -34,29 +34,26 @@ import androidx.room.ForeignKey;
 )
 public class DeviceButtonConfig {
 
-    @NonNull
     @ColumnInfo(name = "deviceButtonId")
-    private int _buttonId;
+    private final int _buttonId;
 
-    @NonNull
     @ColumnInfo(name = "timingData")
-    private String _irTimingData;
+    private final String _irTimingData;
 
     @NonNull
-    @ColumnInfo(name = "deviceName")
-    private String _deviceName;
+    @ColumnInfo(name = "deviceName", index = true)
+    private final String _deviceName;
 
-    @NonNull
     @ColumnInfo(name = "isEditableName")
-    private boolean _isEditableName;
+    private final boolean _isEditableName;
 
     @NonNull
     @ColumnInfo(name = "deviceButtonName")
-    private String _deviceButtonName;
+    private final String _deviceButtonName;
 
     public DeviceButtonConfig(int _buttonId, String _irTimingData,
-                              String _deviceName, boolean _isEditableName,
-                              String _deviceButtonName) {
+                              @NonNull String _deviceName, boolean _isEditableName,
+                              @NonNull String _deviceButtonName) {
         this._buttonId = _buttonId;
         this._irTimingData = _irTimingData;
         this._deviceName = _deviceName;

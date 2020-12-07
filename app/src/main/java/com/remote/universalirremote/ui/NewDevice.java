@@ -28,6 +28,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -98,11 +99,11 @@ public class NewDevice extends AppCompatActivity {
                 );
                 if(layout == Constant.Layout.LAY_AC) {
 
-                    ((Spinner) findViewById(_protocolDropDownId)).setVisibility(View.VISIBLE);
+                    findViewById(_protocolDropDownId).setVisibility(View.VISIBLE);
 
                 } else {
 
-                    ((Spinner) findViewById(_protocolDropDownId)).setVisibility(View.INVISIBLE);
+                    findViewById(_protocolDropDownId).setVisibility(View.INVISIBLE);
                     ((Spinner)findViewById(_protocolDropDownId)).setSelection(Constant.Protocols.RAW);
 
                 }
@@ -110,7 +111,7 @@ public class NewDevice extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                ((Spinner) findViewById(_protocolDropDownId)).setVisibility(View.INVISIBLE);
+                findViewById(_protocolDropDownId).setVisibility(View.INVISIBLE);
                 ((Spinner)findViewById(_protocolDropDownId)).setSelection(Constant.Protocols.RAW);
             }
         });
@@ -128,6 +129,12 @@ public class NewDevice extends AppCompatActivity {
 
             ApplicationWideSingleton.refreshSelectedService(service);
         }
+    }
+
+    @Override
+    protected void onStart() {
+        _deviceDataRepository = new DeviceInfoRepository(getApplication(), null);
+        super.onStart();
     }
 
     @Override
@@ -183,16 +190,17 @@ public class NewDevice extends AppCompatActivity {
         _deviceDataRepository.useDatabaseExecutor(
                 () -> {
                     if(_deviceDataRepository.getDao().doesDeviceExist(name)) {
-                        Toast.makeText(getApplicationContext(), "Device name exists", Toast.LENGTH_LONG).show();
+                        runOnUiThread(
+                                () -> Toast.makeText(getApplicationContext(),
+                                        "Device name exists", Toast.LENGTH_LONG).show());
                         return;
                     }
-
-                    DeviceData device = new DeviceData(name, Constant.getLayout(layout), Constant.getProtocol(protocol));
+                    DeviceData device = new DeviceData(name, Constant.getProtocol(protocol), Constant.getLayout(layout));
                     _deviceDataRepository.getDao().insert(device);
 
                     ApplicationWideSingleton.setSelectedDevice(device);
 
-                    Intent intent = null;
+                    Intent intent;
 
                     switch( device.getDeviceLayout() ) {
                         case Constant.Layout.LAY_TV: {
@@ -210,8 +218,9 @@ public class NewDevice extends AppCompatActivity {
                         }
 
                         default: {
-                            Toast.makeText(getApplicationContext(),
-                                    "invalid layout", Toast.LENGTH_LONG).show();
+                            runOnUiThread(
+                                    () -> Toast.makeText(getApplicationContext(),
+                                    "invalid layout", Toast.LENGTH_LONG).show());
                             return;
                         }
                     }

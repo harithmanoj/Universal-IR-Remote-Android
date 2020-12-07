@@ -35,7 +35,7 @@ import java.util.List;
 @Dao
 public interface DeviceDao {
 
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert
     void insert(DeviceData data);
 
     @Delete
