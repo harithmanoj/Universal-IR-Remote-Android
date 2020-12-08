@@ -55,12 +55,8 @@ public class RawGet {
 
                 Log.i(TAG, String.format("Protocol: %d", protocol));
 
-                if (protocol != -1) {
-                    msgBundle.putString(RAW_KEY, response.substring(response.indexOf(';') + 1));
-                    Log.i(TAG, String.format("Raw: %s", response.substring(response.indexOf(';') + 1)));
-                } else {
-                    msgBundle.putString(RAW_KEY, "0:");
-                }
+                msgBundle.putString(RAW_KEY, response.substring(response.indexOf(';') + 1));
+                Log.i(TAG, String.format("Raw: %s", response.substring(response.indexOf(';') + 1)));
 
                 msgBundle.putInt(BUTTON_ID_KEY, Integer.parseInt(
                         ((HttpClient.Request) msg.getData()
