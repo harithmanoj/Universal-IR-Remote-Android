@@ -112,4 +112,14 @@ public class DeviceButtonConfigRepository {
         return true;
     }
 
+    public void doesEntryExist(String device, int button) {
+        if(_getterCallback == null)
+            return;
+
+        UniversalRemoteDatabase.databaseWriteExecutor.execute(
+                () -> _getterCallback.doesEntryExist(
+                        _deviceButtonConfigAccess.doesExist(device, button))
+        );
+    }
+
 }
