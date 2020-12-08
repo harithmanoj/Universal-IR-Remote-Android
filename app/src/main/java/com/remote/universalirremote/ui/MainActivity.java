@@ -155,8 +155,28 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         Log.d(TAG, "Starting ");
+
+        super.onStart();
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+
+        if(ApplicationWideSingleton.isSelectedDeviceValid())
+            outState.putString(Constant.INT_SELECTED_DEVICE, ApplicationWideSingleton.getSelectedDevice().getDeviceName());
+        if(ApplicationWideSingleton.isSelectedServiceValid())
+            outState.putParcelable(Constant.INT_SERVICE_KEY, ApplicationWideSingleton.getSelectedService());
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onResume() {
+        Log.d(TAG, "Resuming");
         _discoveryThread = new HandlerThread("DiscoverHandler");
         _discoveryThread.start();
+        _discoveredServicesAdapter.clear();
+        _discoveredServicesAdapter.notifyDataSetChanged();
+        refreshSpinner();
 
         _discoveryHandler = new Handler(_discoveryThread.getLooper()) {
             @Override
@@ -195,25 +215,6 @@ public class MainActivity extends AppCompatActivity {
         _networkManager = new NetworkManager(this, _discoveryHandler);
         refreshSpinner();
         _networkManager.discoverServices();     // start discovery
-        super.onStart();
-    }
-
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-
-        if(ApplicationWideSingleton.isSelectedDeviceValid())
-            outState.putString(Constant.INT_SELECTED_DEVICE, ApplicationWideSingleton.getSelectedDevice().getDeviceName());
-        if(ApplicationWideSingleton.isSelectedServiceValid())
-            outState.putParcelable(Constant.INT_SERVICE_KEY, ApplicationWideSingleton.getSelectedService());
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onResume() {
-        Log.d(TAG, "Resuming");
-        if (_networkManager != null) {
-            _networkManager.discoverServices();
-        }
         ProgressBar circle = findViewById(R.id.prg_resolveProgress);
         circle.setVisibility(View.GONE);
         ApplicationWideSingleton.refreshSelectedService(_selectedService);
