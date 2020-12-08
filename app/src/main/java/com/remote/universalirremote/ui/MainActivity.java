@@ -176,7 +176,6 @@ public class MainActivity extends AppCompatActivity {
         _discoveryThread.start();
         _discoveredServicesAdapter.clear();
         _discoveredServicesAdapter.notifyDataSetChanged();
-        refreshSpinner();
 
         _discoveryHandler = new Handler(_discoveryThread.getLooper()) {
             @Override
