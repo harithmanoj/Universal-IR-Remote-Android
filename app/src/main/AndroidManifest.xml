@@ -28,11 +28,37 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.GenRemoteConfigure"></activity>
-        <activity android:name=".ui.GenRemoteTransmit" />
-        <activity android:name=".ui.TvRemoteConfigure" />
-        <activity android:name=".ui.TvRemoteTransmit" />
-        <activity android:name=".ui.AcRemote"></activity>
+
+        <activity android:name=".ui.GenRemoteConfigure">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.remote.universalirremote.ui.GenRemoteTransmit" />
+        </activity>
+
+        <activity android:name=".ui.GenRemoteTransmit" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.remote.universalirremote.ui.DeviceSelect" />
+        </activity>
+
+        <activity android:name=".ui.TvRemoteConfigure" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.remote.universalirremote.ui.TvRemoteTransmit" />
+        </activity>
+
+        <activity android:name=".ui.TvRemoteTransmit" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.remote.universalirremote.ui.DeviceSelect" />
+        </activity>
+
+        <activity android:name=".ui.AcRemote">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.remote.universalirremote.ui.DeviceSelect" />
+        </activity>
+
         <activity android:name=".ui.NewDevice">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

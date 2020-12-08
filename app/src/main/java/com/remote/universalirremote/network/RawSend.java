@@ -73,6 +73,7 @@ public class RawSend {
     }
 
     public void sendData(String msg, String name) {
+        Log.i(TAG, "sendData: " + msg);
         _httpClient.transaction(new HttpClient.Request(
                 msg.getBytes(), "POST",
                 new HttpClient.Request.Property[]{

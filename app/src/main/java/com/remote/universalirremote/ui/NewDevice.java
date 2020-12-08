@@ -28,7 +28,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -197,9 +196,10 @@ public class NewDevice extends AppCompatActivity {
                         return;
                     }
                     DeviceData device = new DeviceData(name, Constant.getProtocol(protocol), Constant.getLayout(layout));
+                    ApplicationWideSingleton.setSelectedDevice(device);
+
                     _deviceDataRepository.getDao().insert(device);
 
-                    ApplicationWideSingleton.setSelectedDevice(device);
 
                     Intent intent;
 

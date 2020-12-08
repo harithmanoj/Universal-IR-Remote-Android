@@ -41,7 +41,7 @@ public class DeviceButtonConfig {
     private final String _irTimingData;
 
     @NonNull
-    @ColumnInfo(name = "deviceName", index = true)
+    @ColumnInfo(name = "deviceName")
     private final String _deviceName;
 
     @ColumnInfo(name = "isEditableName")

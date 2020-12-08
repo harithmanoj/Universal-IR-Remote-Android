@@ -24,7 +24,6 @@ package com.remote.universalirremote.database;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
-import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -52,5 +51,8 @@ public interface DeviceButtonConfigDao {
 
     @Query("SELECT deviceButtonName FROM DeviceButtonConfig WHERE ((deviceName = :device) AND (deviceButtonId = :button))")
     String getButtonName(String device, int button);
+
+    @Query("SELECT EXISTS(SELECT * FROM DEVICEBUTTONCONFIG WHERE ((deviceButtonId = :button) AND (deviceName = :device)))")
+    boolean doesExist(String device, int button);
 
 }

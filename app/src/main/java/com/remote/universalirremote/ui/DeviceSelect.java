@@ -92,17 +92,15 @@ public class DeviceSelect extends AppCompatActivity {
             _selectedDevice = null;
             return false;
         }
-        _deviceDataRepository.useDatabaseExecutor(
-                () -> {
-                    if(_deviceDataRepository.getDao().doesDeviceExist(deviceName)) {
-                        Log.d(TAG, "selected device is " + deviceName);
-                        setSelectedDevice(_deviceDataRepository.getDao().getDevice(deviceName));
-                    }
-                    else {
-                        _selectedDevice = null;
-                    }
+
+        if(_deviceDataRepository.getDao().doesDeviceExist(deviceName)) {
+            Log.d(TAG, "selected device is " + deviceName);
+            setSelectedDevice(_deviceDataRepository.getDao().getDevice(deviceName));
         }
-        );
+        else {
+            _selectedDevice = null;
+        }
+
         return true;
     }
 
@@ -137,52 +135,59 @@ public class DeviceSelect extends AppCompatActivity {
                     public void namesCallback(List<String> names) {
 
                         names.add(0, Constant.NO_SELECT);
+                        runOnUiThread(
+                                () -> {
+                                    ArrayAdapter<String> deviceListAdapter = new ArrayAdapter<>(
+                                            _context, R.layout.support_simple_spinner_dropdown_item,
+                                            names);
+                                    deviceListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                    Spinner devicesUiList = findViewById(R.id.spnr_DeviceSelection);
+                                    devicesUiList.setAdapter(deviceListAdapter);
 
-                        ArrayAdapter<String> deviceListAdapter = new ArrayAdapter<>(
-                                _context, R.layout.support_simple_spinner_dropdown_item,
-                                names);
-                        deviceListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        Spinner devicesUiList = findViewById(R.id.spnr_DeviceSelection);
-                        devicesUiList.setAdapter(deviceListAdapter);
+                                    devicesUiList.setOnItemSelectedListener
+                                            (new AdapterView.OnItemSelectedListener() {
+                                                @Override
+                                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                                    String name = parent.getItemAtPosition(position).toString();
 
-                        devicesUiList.setOnItemSelectedListener
-                                (new AdapterView.OnItemSelectedListener() {
-                                    @Override
-                                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                        String name = parent.getItemAtPosition(position).toString();
+                                                    if(name.equals(Constant.NO_SELECT)) {
+                                                        onNothingSelected(parent);
+                                                        return;
+                                                    }
 
-                                        if(name.equals(Constant.NO_SELECT)) {
-                                            onNothingSelected(parent);
-                                            return;
-                                        }
+                                                    _deviceDataRepository.useDatabaseExecutor(
+                                                            () -> {
+                                                                setSelectedDevice(name);
 
+                                                                Log.d(TAG, "selected device is " + name);
 
-                                        setSelectedDevice(name);
+                                                                TextView info = findViewById(R.id.text_selectedDeviceInfo);
 
-                                        Log.d(TAG, "selected device is " + name);
+                                                                String layout = Constant.getLayout(_selectedDevice.getDeviceLayout());
 
-                                        TextView info = findViewById(R.id.text_selectedDeviceInfo);
+                                                                runOnUiThread(
+                                                                        () -> info.setText(
+                                                                                "Device : " +
+                                                                                        _selectedDevice.getDeviceName() +
+                                                                                        " type " + layout + "\n" +
+                                                                                        "protocol used : " +
+                                                                                        Constant.getProtocol(
+                                                                                                _selectedDevice.getProtocolInfo())
+                                                                        ));
+                                                            });
+                                                }
 
-                                        String layout = Constant.getLayout(_selectedDevice.getDeviceLayout());
-
-                                        info.setText(
-                                                new StringBuilder().append("Device : ")
-                                                        .append(_selectedDevice.getDeviceName())
-                                                        .append(" type ").append(layout).append("\n")
-                                                        .append("protocol used : ")
-                                                        .append(Constant.getProtocol(
-                                                                _selectedDevice.getProtocolInfo())).toString()
-                                        );
-
-                                    }
-
-                                    @Override
-                                    public void onNothingSelected(AdapterView<?> parent) {
-                                        _selectedDevice = null;
-                                        TextView info = findViewById(R.id.text_selectedDeviceInfo);
-                                        info.setText("Nothing Selected");
-                                    }
-                                });
+                                                @Override
+                                                public void onNothingSelected(AdapterView<?> parent) {
+                                                    _selectedDevice = null;
+                                                    TextView info = findViewById(R.id.text_selectedDeviceInfo);
+                                                    runOnUiThread(
+                                                            () -> info.setText("Nothing Selected")
+                                                    );
+                                                }
+                                            });
+                                }
+                        );
                     }
 
                     @Override
@@ -199,6 +204,7 @@ public class DeviceSelect extends AppCompatActivity {
                     public void protocolCallback(int protocol) {
 
                     }
+
                 });
 
         _deviceDataRepository.getNames();
@@ -226,9 +232,12 @@ public class DeviceSelect extends AppCompatActivity {
     @Override
     protected void onStart() {
 
-        NsdServiceInfo _selectedService = getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY);
-        ApplicationWideSingleton.refreshSelectedService(_selectedService);
-        ((TextView)findViewById(R.id.text_selectedBlaster)).setText(_selectedService.getServiceName());
+        NsdServiceInfo selectedService = getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY);
+        if(selectedService == null)
+            selectedService = ApplicationWideSingleton.getSelectedService();
+        else
+            ApplicationWideSingleton.refreshSelectedService(selectedService);
+        ((TextView)findViewById(R.id.text_selectedBlaster)).setText(selectedService.getServiceName());
         super.onStart();
     }
 
@@ -294,5 +303,5 @@ public class DeviceSelect extends AppCompatActivity {
         intent.putExtra(Constant.INT_SERVICE_KEY,
                 (NsdServiceInfo)getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY));
         startActivity(intent);
-  }
+    }
 }
