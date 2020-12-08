@@ -238,7 +238,7 @@ public abstract class TvRemote extends AppCompatActivity {
 
     public void clickButton(View view) {
         int id;
-        if(view.getId() == R.id.btn_power) {
+        if(view.getId() == R.id.btn_Power) {
             id = (BTN_TV_PWR);
         } else if ( view.getId() == R.id.btn_Back) {
             id = (BTN_TV_BACK);
