@@ -32,6 +32,7 @@ import androidx.core.app.NavUtils;
 
 import com.remote.universalirremote.ApplicationWideSingleton;
 import com.remote.universalirremote.GenRemote;
+import com.remote.universalirremote.R;
 import com.remote.universalirremote.database.DeviceButtonConfig;
 import com.remote.universalirremote.network.HttpClient;
 import com.remote.universalirremote.network.RawSend;
@@ -47,6 +48,9 @@ public class GenRemoteTransmit extends GenRemote {
     protected void onCreate(Bundle savedInstanceState) {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+
         super.onCreate(savedInstanceState);
     }
     // Menu item selected process
@@ -62,6 +66,42 @@ public class GenRemoteTransmit extends GenRemote {
     }
     @Override
     protected void onStart() {
+
+        _deviceButtonConfigRepo.useDatabaseExecutor(
+                () -> {
+                    _buttonConfigList = _deviceButtonConfigRepo
+                            .getDao().getAllRawData(
+                                    ApplicationWideSingleton.getSelectedDeviceName());
+                    runOnUiThread(
+                            () -> {
+                                setDisplayName(R.id.btn_power, "");
+
+                                setDisplayName(R.id.btn_2, lookupButton(BTN_GEN_2).getDeviceButtonName());
+                                setDisplayName(R.id.btn_3, lookupButton(BTN_GEN_3).getDeviceButtonName());
+                                setDisplayName(R.id.btn_4, lookupButton(BTN_GEN_4).getDeviceButtonName());
+                                setDisplayName(R.id.btn_5, lookupButton(BTN_GEN_5).getDeviceButtonName());
+                                setDisplayName(R.id.btn_6, lookupButton(BTN_GEN_6).getDeviceButtonName());
+                                setDisplayName(R.id.btn_7, lookupButton(BTN_GEN_7).getDeviceButtonName());
+                                setDisplayName(R.id.btn_8, lookupButton(BTN_GEN_8).getDeviceButtonName());
+                                setDisplayName(R.id.btn_9, lookupButton(BTN_GEN_9).getDeviceButtonName());
+                                setDisplayName(R.id.btn_10, lookupButton(BTN_GEN_10).getDeviceButtonName());
+                                setDisplayName(R.id.btn_11, lookupButton(BTN_GEN_11).getDeviceButtonName());
+                                setDisplayName(R.id.btn_12, lookupButton(BTN_GEN_12).getDeviceButtonName());
+                                setDisplayName(R.id.btn_13, lookupButton(BTN_GEN_13).getDeviceButtonName());
+                                setDisplayName(R.id.btn_ok, lookupButton(BTN_GEN_OK).getDeviceButtonName());
+                                setDisplayName(R.id.btn_left, lookupButton(BTN_GEN_LEFT).getDeviceButtonName());
+                                setDisplayName(R.id.btn_right, lookupButton(BTN_GEN_RIGHT).getDeviceButtonName());
+                                setDisplayName(R.id.btn_up, lookupButton(BTN_GEN_UP).getDeviceButtonName());
+                                setDisplayName(R.id.btn_down, lookupButton(BTN_GEN_DOWN).getDeviceButtonName());
+                                setDisplayName(R.id.btn_increment_a, lookupButton(BTN_GEN_A_UP).getDeviceButtonName());
+                                setDisplayName(R.id.btn_decrement_b, lookupButton(BTN_GEN_A_DOWN).getDeviceButtonName());
+                                setDisplayName(R.id.btn_increment_x, lookupButton(BTN_GEN_X_UP).getDeviceButtonName());
+                                setDisplayName(R.id.btn_decrement_x, lookupButton(BTN_GEN_X_DOWN).getDeviceButtonName());
+                            }
+                    );
+                }
+        );
+
         _sendResponseThread = new HandlerThread("RawTvRemoteSendResponse");
         _sendResponseThread.start();
         Handler _sendResponse = new Handler(_sendResponseThread.getLooper()) {
