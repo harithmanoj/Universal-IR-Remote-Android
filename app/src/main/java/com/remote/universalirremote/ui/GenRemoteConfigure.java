@@ -18,18 +18,37 @@
 
 package com.remote.universalirremote.ui;
 
+import android.content.Intent;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.view.View;
 
 import com.remote.universalirremote.GenRemote;
+import com.remote.universalirremote.database.DeviceButtonConfig;
+import com.remote.universalirremote.network.RawGet;
+
+import java.util.ArrayList;
 
 public class GenRemoteConfigure extends GenRemote {
+
+    private RawGet _getRawIrTiming;
+    private HandlerThread _getResponseHandlerThread;
+    private Handler _getResponseHandler;
+    private ArrayList<DeviceButtonConfig> _allButtons;
+
+    private boolean _hasCompletedSave;
+    private final Object _waitOnWriteCompletion = new Object();
+
+    public static final String USE_MOD = "handler.mode";
+    public static final int STORE_ALL = 3;
+
     @Override
     public void handleButtonClicks(int btnId) {
 
     }
 
     @Override
-    public void clickConfigureOrOK(View view) {
+    public void startTransitOrConfigActivity(Intent configIntent, Intent transmitIntent) {
 
     }
 }
