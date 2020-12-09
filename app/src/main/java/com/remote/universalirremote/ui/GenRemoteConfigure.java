@@ -19,9 +19,13 @@
 package com.remote.universalirremote.ui;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.view.MenuItem;
 import android.view.View;
+
+import androidx.core.app.NavUtils;
 
 import com.remote.universalirremote.GenRemote;
 import com.remote.universalirremote.database.DeviceButtonConfig;
@@ -41,6 +45,27 @@ public class GenRemoteConfigure extends GenRemote {
 
     public static final String USE_MOD = "handler.mode";
     public static final int STORE_ALL = 3;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        _allButtons = new ArrayList<>();
+        super.onCreate(savedInstanceState);
+    }
+
+    // Menu item selected process
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public void handleButtonClicks(int btnId) {

@@ -49,9 +49,6 @@ public class GenRemoteTransmit extends GenRemote {
     protected void onCreate(Bundle savedInstanceState) {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
-
         super.onCreate(savedInstanceState);
     }
     // Menu item selected process
