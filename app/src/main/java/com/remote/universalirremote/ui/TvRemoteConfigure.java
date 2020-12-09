@@ -85,7 +85,6 @@ public class TvRemoteConfigure extends TvRemote {
                     for (int i = 0; i < _addedButtons.size(); ++i) {
                         if (_addedButtons.get(i).getButtonId() == id) {
                             DeviceButtonConfig current = _addedButtons.get(i);
-                            _addedButtons.remove(i);
                             _configuredButtons.add(
                                     new DeviceButtonConfig(
                                             id,
@@ -106,6 +105,7 @@ public class TvRemoteConfigure extends TvRemote {
                             break;
                         }
                     }
+                    _addedButtons.clear();
                 } else if (mode == STORE_ALL) {
                     synchronized (_waitOnWriteCompletion) {
                         for ( DeviceButtonConfig i : _configuredButtons ) {

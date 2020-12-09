@@ -122,7 +122,7 @@ public class GenRemoteTransmit extends GenRemote {
     @Override
     public void handleButtonClicks(int btnId) {
         DeviceButtonConfig selectedButton = lookupButton(btnId);
-        if(selectedButton == null) {
+        if((selectedButton == null)) {
             Toast.makeText(getApplicationContext(),
                     "not configured button", Toast.LENGTH_LONG).show();
             return;
