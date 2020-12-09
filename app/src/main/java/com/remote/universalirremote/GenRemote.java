@@ -35,6 +35,8 @@ import com.remote.universalirremote.database.DeviceButtonConfigRepository;
 import com.remote.universalirremote.database.DeviceData;
 import com.remote.universalirremote.database.DeviceDataParcelable;
 import com.remote.universalirremote.database.DeviceInfoRepository;
+import com.remote.universalirremote.ui.TvRemoteConfigure;
+import com.remote.universalirremote.ui.TvRemoteTransmit;
 
 import java.util.List;
 
@@ -160,6 +162,19 @@ public abstract class GenRemote extends AppCompatActivity {
     public abstract void startTransitOrConfigActivity(Intent configIntent, Intent transmitIntent);
 
     public void clickConfigureOrOK(View view) {
+
+        Intent config = new Intent(this, TvRemoteConfigure.class);
+        Intent transmit = new Intent(this, TvRemoteTransmit.class);
+
+        config.putExtra(Constant.INT_SERVICE_KEY, ApplicationWideSingleton.getSelectedService());
+        config.putExtra(Constant.INT_SELECTED_DEVICE,
+                new DeviceDataParcelable(ApplicationWideSingleton.getSelectedDevice()));
+
+        transmit.putExtra(Constant.INT_SERVICE_KEY, ApplicationWideSingleton.getSelectedService());
+        transmit.putExtra(Constant.INT_SELECTED_DEVICE,
+                new DeviceDataParcelable(ApplicationWideSingleton.getSelectedDevice()));
+
+        startTransitOrConfigActivity(config, transmit);
 
     }
 
