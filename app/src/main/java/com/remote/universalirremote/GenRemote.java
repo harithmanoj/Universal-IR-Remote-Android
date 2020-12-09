@@ -48,6 +48,30 @@ public abstract class GenRemote extends AppCompatActivity {
 
     public static final String TAG = "GenRemote";
 
+    public static final int BTN_GEN_POWER = 0,
+            BTN_GEN_2 = 1,
+            BTN_GEN_3 = 2,
+            BTN_GEN_4 = 3,
+            BTN_GEN_5 = 4,
+            BTN_GEN_6 = 5,
+            BTN_GEN_7 = 6,
+            BTN_GEN_8 = 7,
+            BTN_GEN_9 = 8,
+            BTN_GEN_10 = 9,
+            BTN_GEN_11 = 10,
+            BTN_GEN_12 = 11,
+            BTN_GEN_13 = 12,
+            BTN_GEN_OK = 13,
+            BTN_GEN_LEFT = 14,
+            BTN_GEN_RIGHT = 15,
+            BTN_GEN_UP = 16,
+            BTN_GEN_DOWN = 17,
+            BTN_GEN_A_UP = 18,
+            BTN_GEN_A_DOWN = 19,
+            BTN_GEN_X_UP = 20,
+            BTN_GEN_X_DOWN = 21;
+
+
     protected void renameOkOrConfig(String name) {
         ((TextView)findViewById(R.id.btn_OKorConfig)).setText(name);
     }
@@ -179,6 +203,51 @@ public abstract class GenRemote extends AppCompatActivity {
     }
 
     public void clickButton(View view) {
-
+        int id = view.getId();
+        if (id == R.id.btn_power) {
+            handleButtonClicks(BTN_GEN_POWER);
+        } else if (id == R.id.btn_2) {
+            handleButtonClicks(BTN_GEN_2);
+        } else if (id == R.id.btn_3) {
+            handleButtonClicks(BTN_GEN_3);
+        } else if (id == R.id.btn_4) {
+            handleButtonClicks(BTN_GEN_4);
+        } else if (id == R.id.btn_5) {
+            handleButtonClicks(BTN_GEN_5);
+        } else if (id == R.id.btn_6) {
+            handleButtonClicks(BTN_GEN_6);
+        } else if (id == R.id.btn_7) {
+            handleButtonClicks(BTN_GEN_7);
+        } else if (id == R.id.btn_8) {
+            handleButtonClicks(BTN_GEN_8);
+        } else if (id == R.id.btn_9) {
+            handleButtonClicks(BTN_GEN_9);
+        } else if (id == R.id.btn_10) {
+            handleButtonClicks(BTN_GEN_10);
+        } else if (id == R.id.btn_11) {
+            handleButtonClicks(BTN_GEN_11);
+        } else if (id == R.id.btn_12) {
+            handleButtonClicks(BTN_GEN_12);
+        } else if (id == R.id.btn_13) {
+            handleButtonClicks(BTN_GEN_13);
+        } else if (id == R.id.btn_ok) {
+            handleButtonClicks(BTN_GEN_OK);
+        } else if (id == R.id.btn_left) {
+            handleButtonClicks(BTN_GEN_LEFT);
+        } else if (id == R.id.btn_right) {
+            handleButtonClicks(BTN_GEN_RIGHT);
+        } else if (id == R.id.btn_up) {
+            handleButtonClicks(BTN_GEN_UP);
+        } else if (id == R.id.btn_down) {
+            handleButtonClicks(BTN_GEN_DOWN);
+        } else if (id == R.id.btn_increment_a) {
+            handleButtonClicks(BTN_GEN_A_UP);
+        } else if (id == R.id.btn_decrement_b) {
+            handleButtonClicks(BTN_GEN_A_DOWN);
+        } else if (id == R.id.btn_increment_x) {
+            handleButtonClicks(BTN_GEN_X_UP);
+        } else if (id == R.id.btn_decrement_x) {
+            handleButtonClicks(BTN_GEN_X_DOWN);
+        }
     }
 }
