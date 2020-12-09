@@ -25,6 +25,7 @@ import android.os.HandlerThread;
 import android.os.Message;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -74,29 +75,22 @@ public class GenRemoteTransmit extends GenRemote {
                                     ApplicationWideSingleton.getSelectedDeviceName());
                     runOnUiThread(
                             () -> {
-                                setDisplayName(R.id.btn_power, "");
-
-                                setDisplayName(R.id.btn_2, lookupButton(BTN_GEN_2).getDeviceButtonName());
-                                setDisplayName(R.id.btn_3, lookupButton(BTN_GEN_3).getDeviceButtonName());
-                                setDisplayName(R.id.btn_4, lookupButton(BTN_GEN_4).getDeviceButtonName());
-                                setDisplayName(R.id.btn_5, lookupButton(BTN_GEN_5).getDeviceButtonName());
-                                setDisplayName(R.id.btn_6, lookupButton(BTN_GEN_6).getDeviceButtonName());
-                                setDisplayName(R.id.btn_7, lookupButton(BTN_GEN_7).getDeviceButtonName());
-                                setDisplayName(R.id.btn_8, lookupButton(BTN_GEN_8).getDeviceButtonName());
-                                setDisplayName(R.id.btn_9, lookupButton(BTN_GEN_9).getDeviceButtonName());
-                                setDisplayName(R.id.btn_10, lookupButton(BTN_GEN_10).getDeviceButtonName());
-                                setDisplayName(R.id.btn_11, lookupButton(BTN_GEN_11).getDeviceButtonName());
-                                setDisplayName(R.id.btn_12, lookupButton(BTN_GEN_12).getDeviceButtonName());
-                                setDisplayName(R.id.btn_13, lookupButton(BTN_GEN_13).getDeviceButtonName());
-                                setDisplayName(R.id.btn_ok, lookupButton(BTN_GEN_OK).getDeviceButtonName());
-                                setDisplayName(R.id.btn_left, lookupButton(BTN_GEN_LEFT).getDeviceButtonName());
-                                setDisplayName(R.id.btn_right, lookupButton(BTN_GEN_RIGHT).getDeviceButtonName());
-                                setDisplayName(R.id.btn_up, lookupButton(BTN_GEN_UP).getDeviceButtonName());
-                                setDisplayName(R.id.btn_down, lookupButton(BTN_GEN_DOWN).getDeviceButtonName());
-                                setDisplayName(R.id.btn_increment_a, lookupButton(BTN_GEN_A_UP).getDeviceButtonName());
-                                setDisplayName(R.id.btn_decrement_b, lookupButton(BTN_GEN_A_DOWN).getDeviceButtonName());
-                                setDisplayName(R.id.btn_increment_x, lookupButton(BTN_GEN_X_UP).getDeviceButtonName());
-                                setDisplayName(R.id.btn_decrement_x, lookupButton(BTN_GEN_X_DOWN).getDeviceButtonName());
+                                setDisplayName(R.id.btn_2, lookupButton(BTN_GEN_2));
+                                setDisplayName(R.id.btn_3, lookupButton(BTN_GEN_3));
+                                setDisplayName(R.id.btn_4, lookupButton(BTN_GEN_4));
+                                setDisplayName(R.id.btn_5, lookupButton(BTN_GEN_5));
+                                setDisplayName(R.id.btn_6, lookupButton(BTN_GEN_6));
+                                setDisplayName(R.id.btn_7, lookupButton(BTN_GEN_7));
+                                setDisplayName(R.id.btn_8, lookupButton(BTN_GEN_8));
+                                setDisplayName(R.id.btn_9, lookupButton(BTN_GEN_9));
+                                setDisplayName(R.id.btn_10, lookupButton(BTN_GEN_10));
+                                setDisplayName(R.id.btn_11, lookupButton(BTN_GEN_11));
+                                setDisplayName(R.id.btn_12, lookupButton(BTN_GEN_12));
+                                setDisplayName(R.id.btn_13, lookupButton(BTN_GEN_13));
+                                if (!setDisplayName(TEXT_GEN_A, lookupButton(BTN_GEN_A_UP)))
+                                    setDisplayName(TEXT_GEN_A, lookupButton(BTN_GEN_A_DOWN));
+                                if (!setDisplayName(TEXT_GEN_X, lookupButton(BTN_GEN_X_UP)))
+                                    setDisplayName(TEXT_GEN_X, lookupButton(BTN_GEN_X_DOWN));
                             }
                     );
                 }

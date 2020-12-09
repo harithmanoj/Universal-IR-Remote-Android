@@ -157,6 +157,13 @@ public abstract class GenRemote extends AppCompatActivity {
         return null;
     }
 
+    protected boolean setDisplayName(int id, DeviceButtonConfig button) {
+        if(button == null)
+            return false;
+        setDisplayName(id, button.getDeviceButtonName());
+        return true;
+    }
+
     @Override
     protected void onStart() {
 
@@ -199,7 +206,7 @@ public abstract class GenRemote extends AppCompatActivity {
     }
 
     public void setDisplayName(int id, String name) {
-        ((Button)findViewById(id)).setText(name);
+        ((TextView)findViewById(id)).setText(name);
     }
 
     public void clickButton(View view) {
