@@ -27,6 +27,7 @@ import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.remote.universalirremote.database.DeviceButtonConfig;
@@ -48,7 +49,7 @@ public abstract class TvRemote extends AppCompatActivity {
     public static final String TAG = "TvRemote";
 
     protected void renameOkOrConfig(String name) {
-        ((TextView)findViewById(R.id.btn_okConfig)).setText(name);
+        ((Button)findViewById(R.id.btn_okConfig)).setText(name);
     }
 
     @Override
