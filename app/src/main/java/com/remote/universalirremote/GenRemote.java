@@ -19,17 +19,21 @@
 
 package com.remote.universalirremote;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.remote.universalirremote.database.DeviceButtonConfig;
+import com.remote.universalirremote.database.DeviceButtonConfigCallback;
 import com.remote.universalirremote.database.DeviceButtonConfigRepository;
 import com.remote.universalirremote.database.DeviceData;
+import com.remote.universalirremote.database.DeviceDataParcelable;
 import com.remote.universalirremote.database.DeviceInfoRepository;
 
 import java.util.List;
@@ -52,14 +56,89 @@ public abstract class GenRemote extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gen_remote);
+        _deviceButtonConfigRepo = new DeviceButtonConfigRepository(getApplication(),
+                new DeviceButtonConfigCallback() {
+                    @Override
+                    public void allRawDataCallback(List<DeviceButtonConfig> allRawData) {
+
+                    }
+
+                    @Override
+                    public void allRawDataForDeviceCallback(List<DeviceButtonConfig> allDeviceRawData) {
+                        _buttonConfigList = allDeviceRawData;
+                    }
+
+                    @Override
+                    public void irTimingDataCallback(String irTiming) {
+
+                    }
+
+                    @Override
+                    public void deviceButtonNameCallback(String buttonName) {
+
+                    }
+
+                    @Override
+                    public void doesEntryExist(boolean doesExist) {
+
+                    }
+                });
+        _deviceInfoRepo = new DeviceInfoRepository(getApplication(), null);
+
+        Intent intent = getIntent();
+        if(intent != null) {
+            Log.d(TAG, "intent called now saving");
+            DeviceDataParcelable device = intent.getParcelableExtra(Constant.INT_SELECTED_DEVICE);
+            NsdServiceInfo service = intent.getParcelableExtra(Constant.INT_SERVICE_KEY);
+
+            if(service != null )
+                ApplicationWideSingleton.refreshSelectedService(service);
+            if(device != null) {
+                ApplicationWideSingleton.refreshSelectedDevice(device);
+                Log.d(TAG, "refreshing device");
+
+                _deviceButtonConfigRepo.useDatabaseExecutor(
+                        () -> _deviceButtonConfigRepo.getAllRawData(device.getDeviceName())
+                );
+            }
+        }
+
+        if(savedInstanceState != null) {
+            DeviceDataParcelable device = savedInstanceState.getParcelable(Constant.INT_SELECTED_DEVICE);
+            NsdServiceInfo service = savedInstanceState.getParcelable(Constant.INT_SERVICE_KEY);
+            ApplicationWideSingleton.refreshSelectedDevice(device);
+            ApplicationWideSingleton.refreshSelectedService(service);
+            _deviceButtonConfigRepo.useDatabaseExecutor(
+                    () -> _deviceButtonConfigRepo.getAllRawData(device.getDeviceName())
+            );
+        }
     }
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+
+        super.onSaveInstanceState(outState);
+    }
+
+    protected DeviceButtonConfig lookupButton(int btnId) {
+
+    }
+
+    @Override
+    protected void onStart() {
+
+        super.onStart();
+    }
 
     public abstract void handleButtonClicks(int btnId);
 
     public abstract void startTransitOrConfigActivity(Intent configIntent, Intent transmitIntent);
 
     public void clickConfigureOrOK(View view) {
-        
+
+    }
+
+    public void clickButton(View view) {
+
     }
 }
