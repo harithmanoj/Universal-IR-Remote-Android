@@ -50,8 +50,6 @@ public abstract class GenRemote extends AppCompatActivity {
         ((TextView)findViewById(R.id.btn_OKorConfig)).setText(name);
     }
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,7 +114,11 @@ public abstract class GenRemote extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-
+        if(ApplicationWideSingleton.isSelectedDeviceValid())
+            outState.putParcelable(Constant.INT_SELECTED_DEVICE,
+                    new DeviceDataParcelable(ApplicationWideSingleton.getSelectedDevice()));
+        if(ApplicationWideSingleton.isSelectedServiceValid())
+            outState.putParcelable(Constant.INT_SERVICE_KEY, ApplicationWideSingleton.getSelectedService());
         super.onSaveInstanceState(outState);
     }
 
