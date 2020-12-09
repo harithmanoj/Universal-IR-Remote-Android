@@ -21,16 +21,32 @@ package com.remote.universalirremote;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
+import com.remote.universalirremote.database.DeviceButtonConfig;
+import com.remote.universalirremote.database.DeviceButtonConfigRepository;
 import com.remote.universalirremote.database.DeviceData;
+import com.remote.universalirremote.database.DeviceInfoRepository;
+
+import java.util.List;
 
 public abstract class GenRemote extends AppCompatActivity {
 
-    private DeviceData _selectedDevice;
-    private NsdServiceInfo _selectedService;
+    protected DeviceInfoRepository _deviceInfoRepo;
+    protected DeviceButtonConfigRepository _deviceButtonConfigRepo;
+    protected List<DeviceButtonConfig> _buttonConfigList;
+
+    public static final String TAG = "GenRemote";
+
+    protected void renameOkOrConfig(String name) {
+        ((TextView)findViewById(R.id.btn_OKorConfig)).setText(name);
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,5 +57,9 @@ public abstract class GenRemote extends AppCompatActivity {
 
     public abstract void handleButtonClicks(int btnId);
 
-    public abstract void clickConfigureOrOK(View view);
+    public abstract void startTransitOrConfigActivity(Intent configIntent, Intent transmitIntent);
+
+    public void clickConfigureOrOK(View view) {
+        
+    }
 }
