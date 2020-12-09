@@ -135,6 +135,23 @@ public abstract class GenRemote extends AppCompatActivity {
     @Override
     protected void onStart() {
 
+        Intent intent = getIntent();
+        if(intent != null) {
+            Log.d(TAG, "intent called now saving");
+
+            DeviceDataParcelable device = intent.getParcelableExtra(Constant.INT_SELECTED_DEVICE);
+            NsdServiceInfo service = intent.getParcelableExtra(Constant.INT_SERVICE_KEY);
+
+            if(service != null )
+                ApplicationWideSingleton.refreshSelectedService(service);
+            if(device != null) {
+                ApplicationWideSingleton.refreshSelectedDevice(device);
+                Log.d(TAG, "refreshing device");
+                _deviceButtonConfigRepo.useDatabaseExecutor(
+                        () -> _deviceButtonConfigRepo.getAllRawData(device.getDeviceName())
+                );
+            }
+        }
         super.onStart();
     }
 
