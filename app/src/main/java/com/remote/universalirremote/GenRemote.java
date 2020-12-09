@@ -49,28 +49,31 @@ public abstract class GenRemote extends AppCompatActivity {
 
     public static final String TAG = "GenRemote";
 
-    public static final int BTN_GEN_POWER = 0,
-            BTN_GEN_2 = 1,
-            BTN_GEN_3 = 2,
-            BTN_GEN_4 = 3,
-            BTN_GEN_5 = 4,
-            BTN_GEN_6 = 5,
-            BTN_GEN_7 = 6,
-            BTN_GEN_8 = 7,
-            BTN_GEN_9 = 8,
-            BTN_GEN_10 = 9,
-            BTN_GEN_11 = 10,
-            BTN_GEN_12 = 11,
-            BTN_GEN_13 = 12,
-            BTN_GEN_OK = 13,
-            BTN_GEN_LEFT = 14,
-            BTN_GEN_RIGHT = 15,
-            BTN_GEN_UP = 16,
-            BTN_GEN_DOWN = 17,
-            BTN_GEN_A_UP = 18,
-            BTN_GEN_A_DOWN = 19,
-            BTN_GEN_X_UP = 20,
-            BTN_GEN_X_DOWN = 21;
+    public static final int BTN_GEN_POWER = R.id.btn_power,
+            BTN_GEN_2 = R.id.btn_2,
+            BTN_GEN_3 = R.id.btn_3,
+            BTN_GEN_4 = R.id.btn_4,
+            BTN_GEN_5 = R.id.btn_5,
+            BTN_GEN_6 = R.id.btn_6,
+            BTN_GEN_7 = R.id.btn_7,
+            BTN_GEN_8 = R.id.btn_8,
+            BTN_GEN_9 = R.id.btn_9,
+            BTN_GEN_10 = R.id.btn_10,
+            BTN_GEN_11 = R.id.btn_11,
+            BTN_GEN_12 = R.id.btn_12,
+            BTN_GEN_13 = R.id.btn_13,
+            BTN_GEN_OK = R.id.btn_ok,
+            BTN_GEN_LEFT = R.id.btn_left,
+            BTN_GEN_RIGHT = R.id.btn_right,
+            BTN_GEN_UP = R.id.btn_up,
+            BTN_GEN_DOWN = R.id.btn_down,
+            BTN_GEN_A_UP = R.id.btn_increment_a,
+            BTN_GEN_A_DOWN = R.id.btn_decrement_b,
+            BTN_GEN_X_UP = R.id.btn_increment_x,
+            BTN_GEN_X_DOWN = R.id.btn_decrement_x;
+
+    public static final int TEXT_GEN_A = R.id.text_gen_a,
+            TEXT_GEN_X = R.id.text_gen_x;
 
 
     protected void renameOkOrConfig(String name) {
