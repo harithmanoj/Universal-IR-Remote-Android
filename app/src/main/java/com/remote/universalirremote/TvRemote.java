@@ -96,9 +96,7 @@ public abstract class TvRemote extends AppCompatActivity {
                 ApplicationWideSingleton.refreshSelectedDevice(device);
                 Log.d(TAG, "refreshing device");
 
-                _deviceButtonConfigRepo.useDatabaseExecutor(
-                        () -> _deviceButtonConfigRepo.getAllRawData(device.getDeviceName())
-                );
+                _deviceButtonConfigRepo.getAllRawData(device.getDeviceName());
             }
         }
 
@@ -107,9 +105,7 @@ public abstract class TvRemote extends AppCompatActivity {
             NsdServiceInfo service = savedInstanceState.getParcelable(Constant.INT_SERVICE_KEY);
             ApplicationWideSingleton.refreshSelectedDevice(device);
             ApplicationWideSingleton.refreshSelectedService(service);
-            _deviceButtonConfigRepo.useDatabaseExecutor(
-                    () -> _deviceButtonConfigRepo.getAllRawData(device.getDeviceName())
-            );
+            _deviceButtonConfigRepo.getAllRawData(device.getDeviceName());
         }
     }
 
@@ -139,9 +135,7 @@ public abstract class TvRemote extends AppCompatActivity {
             if(device != null) {
                 ApplicationWideSingleton.refreshSelectedDevice(device);
                 Log.d(TAG, "refreshing device");
-                _deviceButtonConfigRepo.useDatabaseExecutor(
-                        () -> _deviceButtonConfigRepo.getAllRawData(device.getDeviceName())
-                );
+                _deviceButtonConfigRepo.getAllRawData(device.getDeviceName());
             }
         }
         super.onStart();

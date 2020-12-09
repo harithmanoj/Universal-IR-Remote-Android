@@ -121,9 +121,7 @@ public abstract class GenRemote extends AppCompatActivity {
                 ApplicationWideSingleton.refreshSelectedDevice(device);
                 Log.d(TAG, "refreshing device");
 
-                _deviceButtonConfigRepo.useDatabaseExecutor(
-                        () -> _deviceButtonConfigRepo.getAllRawData(device.getDeviceName())
-                );
+                _deviceButtonConfigRepo.getAllRawData(device.getDeviceName());
             }
         }
 
@@ -132,9 +130,7 @@ public abstract class GenRemote extends AppCompatActivity {
             NsdServiceInfo service = savedInstanceState.getParcelable(Constant.INT_SERVICE_KEY);
             ApplicationWideSingleton.refreshSelectedDevice(device);
             ApplicationWideSingleton.refreshSelectedService(service);
-            _deviceButtonConfigRepo.useDatabaseExecutor(
-                    () -> _deviceButtonConfigRepo.getAllRawData(device.getDeviceName())
-            );
+            _deviceButtonConfigRepo.getAllRawData(device.getDeviceName());
         }
     }
 
@@ -173,9 +169,7 @@ public abstract class GenRemote extends AppCompatActivity {
             if(device != null) {
                 ApplicationWideSingleton.refreshSelectedDevice(device);
                 Log.d(TAG, "refreshing device");
-                _deviceButtonConfigRepo.useDatabaseExecutor(
-                        () -> _deviceButtonConfigRepo.getAllRawData(device.getDeviceName())
-                );
+                _deviceButtonConfigRepo.getAllRawData(device.getDeviceName());
             }
         }
         super.onStart();
