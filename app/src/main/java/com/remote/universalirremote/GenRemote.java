@@ -27,6 +27,7 @@ import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.remote.universalirremote.database.DeviceButtonConfig;
@@ -73,7 +74,7 @@ public abstract class GenRemote extends AppCompatActivity {
 
 
     protected void renameOkOrConfig(String name) {
-        ((TextView)findViewById(R.id.btn_OKorConfig)).setText(name);
+        ((Button)findViewById(R.id.btn_OKorConfig)).setText(name);
     }
 
     @Override
@@ -121,7 +122,6 @@ public abstract class GenRemote extends AppCompatActivity {
                 ApplicationWideSingleton.refreshSelectedDevice(device);
                 Log.d(TAG, "refreshing device");
 
-                _deviceButtonConfigRepo.getAllRawData(device.getDeviceName());
             }
         }
 
@@ -130,7 +130,7 @@ public abstract class GenRemote extends AppCompatActivity {
             NsdServiceInfo service = savedInstanceState.getParcelable(Constant.INT_SERVICE_KEY);
             ApplicationWideSingleton.refreshSelectedDevice(device);
             ApplicationWideSingleton.refreshSelectedService(service);
-            _deviceButtonConfigRepo.getAllRawData(device.getDeviceName());
+
         }
     }
 
@@ -169,7 +169,6 @@ public abstract class GenRemote extends AppCompatActivity {
             if(device != null) {
                 ApplicationWideSingleton.refreshSelectedDevice(device);
                 Log.d(TAG, "refreshing device");
-                _deviceButtonConfigRepo.getAllRawData(device.getDeviceName());
             }
         }
         super.onStart();
@@ -194,6 +193,10 @@ public abstract class GenRemote extends AppCompatActivity {
 
         startTransitOrConfigActivity(config, transmit);
 
+    }
+
+    public void setDisplayName(int id, String name) {
+        ((Button)findViewById(id)).setText(name);
     }
 
     public void clickButton(View view) {
