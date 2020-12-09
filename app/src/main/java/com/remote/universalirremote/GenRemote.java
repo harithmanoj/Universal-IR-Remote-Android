@@ -124,6 +124,12 @@ public abstract class GenRemote extends AppCompatActivity {
 
     protected DeviceButtonConfig lookupButton(int btnId) {
 
+        for(DeviceButtonConfig i : _buttonConfigList) {
+            if(i.getButtonId() == btnId)
+                return i;
+        }
+
+        return null;
     }
 
     @Override
