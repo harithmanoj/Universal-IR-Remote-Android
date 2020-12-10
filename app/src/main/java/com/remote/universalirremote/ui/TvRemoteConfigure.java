@@ -99,7 +99,7 @@ public class TvRemoteConfigure extends TvRemote {
                                     () -> Toast.makeText(
                                             getApplicationContext(),
                                             "button " + current.getDeviceButtonName() + " configured",
-                                            Toast.LENGTH_LONG).show()
+                                            Toast.LENGTH_SHORT).show()
                             );
 
                             break;

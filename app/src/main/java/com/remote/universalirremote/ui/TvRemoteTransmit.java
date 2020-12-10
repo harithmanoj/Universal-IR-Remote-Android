@@ -71,7 +71,7 @@ public class TvRemoteTransmit extends TvRemote {
                             "button send fail "
                                     + ((HttpClient.Request.Property) msg.getData()
                                     .getParcelable(RawSend.POST_META_KEY)).getValue(),
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -92,7 +92,7 @@ public class TvRemoteTransmit extends TvRemote {
         DeviceButtonConfig selectedButton = lookupButton(btnId);
         if(selectedButton == null) {
             Toast.makeText(getApplicationContext(),
-                    "not configured button", Toast.LENGTH_LONG).show();
+                    "not configured button", Toast.LENGTH_SHORT).show();
             return;
         }
         _sendRawIrTiming.sendData(selectedButton.getIrTimingData(), selectedButton.getDeviceName());

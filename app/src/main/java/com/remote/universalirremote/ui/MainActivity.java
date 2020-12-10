@@ -254,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
         if (!setSelectedService(name, false)) {
             if (_selectedService == null) {
                 Toast.makeText(getApplicationContext(),
-                        "No service Selected", Toast.LENGTH_LONG).show();
+                        "No service Selected", Toast.LENGTH_SHORT).show();
             }
             else {
                 Toast.makeText(getApplicationContext(),
@@ -272,7 +272,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (_selectedService == null) {
             Toast.makeText(getApplicationContext(),
-                    "No service Selected", Toast.LENGTH_LONG).show();
+                    "No service Selected", Toast.LENGTH_SHORT).show();
         } else {
             _networkManager.stopDiscover();
             _networkManager.resolveServices(_selectedService);
@@ -299,7 +299,7 @@ public class MainActivity extends AppCompatActivity {
             if(_networkManager.getChosenServiceInfo() == null) {
                 Toast.makeText(getApplicationContext(),
                         "cannot resolve " + _selectedService.getServiceName(),
-                        Toast.LENGTH_LONG).show();
+                        Toast.LENGTH_SHORT).show();
                 _networkManager._isResolved = false;
                 setSelectedService(Constant.NO_SELECT, false);
                 ((Spinner)findViewById(R.id.spnr_blasterSelection)).setSelection(0);
