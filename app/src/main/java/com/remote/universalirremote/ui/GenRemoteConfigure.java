@@ -246,20 +246,14 @@ public class GenRemoteConfigure extends GenRemote {
         input.setLayoutParams(lp);
         alertDialog.setView(input);
         alertDialog.setPositiveButton("Name it",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        String name = input.getText().toString();
-                        setName(view.getId(), name);
-                        dialog.dismiss();
-                    }
+                (dialog, which) -> {
+                    String name = input.getText().toString();
+                    setName(view.getId(), name);
+                    dialog.dismiss();
                 });
 
         alertDialog.setNegativeButton("Cancel",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
+                (dialog, which) -> dialog.cancel());
 
         alertDialog.show();
     }
