@@ -33,11 +33,10 @@ import android.widget.TextView;
 import com.remote.universalirremote.database.DeviceButtonConfig;
 import com.remote.universalirremote.database.DeviceButtonConfigCallback;
 import com.remote.universalirremote.database.DeviceButtonConfigRepository;
-import com.remote.universalirremote.database.DeviceData;
 import com.remote.universalirremote.database.DeviceDataParcelable;
 import com.remote.universalirremote.database.DeviceInfoRepository;
-import com.remote.universalirremote.ui.TvRemoteConfigure;
-import com.remote.universalirremote.ui.TvRemoteTransmit;
+import com.remote.universalirremote.ui.GenRemoteConfigure;
+import com.remote.universalirremote.ui.GenRemoteTransmit;
 
 import java.util.List;
 
@@ -195,8 +194,8 @@ public abstract class GenRemote extends AppCompatActivity {
 
     public void clickConfigureOrOK(View view) {
 
-        Intent config = new Intent(this, TvRemoteConfigure.class);
-        Intent transmit = new Intent(this, TvRemoteTransmit.class);
+        Intent config = new Intent(this, GenRemoteConfigure.class);
+        Intent transmit = new Intent(this, GenRemoteTransmit.class);
 
         config.putExtra(Constant.INT_SERVICE_KEY, ApplicationWideSingleton.getSelectedService());
         config.putExtra(Constant.INT_SELECTED_DEVICE,
