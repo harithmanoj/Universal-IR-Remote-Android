@@ -178,12 +178,12 @@ public class NewDevice extends AppCompatActivity {
         }
 
         if(protocol == null || protocol.equals(Constant.NO_SELECT)) {
-            Toast.makeText(getApplicationContext(), "No protocol selected", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "No protocol selected", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if(layout == null || layout.equals(Constant.NO_SELECT)) {
-            Toast.makeText(getApplicationContext(), "No layout selected", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "No layout selected", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -192,7 +192,7 @@ public class NewDevice extends AppCompatActivity {
                     if(_deviceDataRepository.getDao().doesDeviceExist(name)) {
                         runOnUiThread(
                                 () -> Toast.makeText(getApplicationContext(),
-                                        "Device name exists", Toast.LENGTH_LONG).show());
+                                        "Device name exists", Toast.LENGTH_SHORT).show());
                         return;
                     }
                     DeviceData device = new DeviceData(name, Constant.getProtocol(protocol), Constant.getLayout(layout));
@@ -221,7 +221,7 @@ public class NewDevice extends AppCompatActivity {
                         default: {
                             runOnUiThread(
                                     () -> Toast.makeText(getApplicationContext(),
-                                    "invalid layout", Toast.LENGTH_LONG).show());
+                                    "invalid layout", Toast.LENGTH_SHORT).show());
                             return;
                         }
                     }

@@ -149,7 +149,7 @@ public class GenRemoteConfigure extends GenRemote {
                                     () -> Toast.makeText(
                                             getApplicationContext(),
                                             "button " + current.getDeviceButtonName() + " configured",
-                                            Toast.LENGTH_LONG
+                                            Toast.LENGTH_SHORT
                                     ).show()
                             );
                             break;
@@ -174,7 +174,7 @@ public class GenRemoteConfigure extends GenRemote {
                                         Toast.makeText(
                                                 getApplicationContext(),
                                                 "set name " + current.getDeviceButtonName(),
-                                                Toast.LENGTH_LONG
+                                                Toast.LENGTH_SHORT
                                         ).show();
                                     }
                             );
@@ -299,7 +299,7 @@ public class GenRemoteConfigure extends GenRemote {
                     Toast.makeText(
                             getApplicationContext(),
                             "set name " + Name,
-                            Toast.LENGTH_LONG
+                            Toast.LENGTH_SHORT
                     ).show();
                 }
         );
