@@ -39,7 +39,7 @@ public class RawGet {
     public static final String RAW_KEY = "response.raw";
     public static final String BUTTON_ID_KEY = "request.btn.id";
 
-    public RawGet(NsdServiceInfo info, Handler handler, Runnable reAcquireService) {
+    public RawGet(NsdServiceInfo info, Handler handler, NetworkErrorCallback errorCallback) {
         _responseHandlerThread = new HandlerThread("GetHandlerThread");
         _responseHandlerThread.start();
         _outerHandler = handler;
@@ -47,7 +47,11 @@ public class RawGet {
             @Override
             public void handleMessage(@NonNull Message msg) {
                 if(msg.getData().getInt(HttpClient.EXCEPTION_KEY, 0) == HttpClient.NO_ROUTE_TO_HOST) {
-                    reAcquireService.run();
+                    errorCallback.errorResponse("Host unreachable");
+                    return;
+                } else if (msg.getData().getInt(HttpClient.EXCEPTION_KEY, 0) == HttpClient.IO_EXCEPTION) {
+                    errorCallback.errorResponse("IO exception "
+                            + msg.getData().getString(HttpClient.EXCEPTION_DATA_KEY));
                     return;
                 }
 
