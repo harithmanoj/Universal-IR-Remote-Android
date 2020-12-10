@@ -32,8 +32,11 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NavUtils;
 
 import com.remote.universalirremote.ApplicationWideSingleton;
+import com.remote.universalirremote.Constant;
 import com.remote.universalirremote.TvRemote;
 import com.remote.universalirremote.database.DeviceButtonConfig;
+import com.remote.universalirremote.database.DeviceDataParcelable;
+import com.remote.universalirremote.network.NetworkErrorCallback;
 import com.remote.universalirremote.network.RawGet;
 
 import java.util.ArrayList;
@@ -122,7 +125,11 @@ public class TvRemoteConfigure extends TvRemote {
             }
         };
         _getRawIrTiming = new RawGet(ApplicationWideSingleton.getSelectedService(),
-                _getResponseHandler);
+                _getResponseHandler,
+                errorString -> runOnUiThread(
+                        () -> Toast.makeText(getApplicationContext(),
+                                "Network error: " + errorString, Toast.LENGTH_SHORT)
+        ));
         super.onStart();
     }
 
@@ -171,7 +178,6 @@ public class TvRemoteConfigure extends TvRemote {
                     _waitOnWriteCompletion.wait();
             } catch (InterruptedException ex) {
                 Log.d(TAG, "interrupted ", ex);
-                ex.printStackTrace();
             }
         }
         dialog.dismiss();

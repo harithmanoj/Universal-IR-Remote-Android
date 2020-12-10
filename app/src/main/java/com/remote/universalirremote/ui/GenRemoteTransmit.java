@@ -18,11 +18,13 @@
 
 package com.remote.universalirremote.ui;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -32,9 +34,11 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NavUtils;
 
 import com.remote.universalirremote.ApplicationWideSingleton;
+import com.remote.universalirremote.Constant;
 import com.remote.universalirremote.GenRemote;
 import com.remote.universalirremote.R;
 import com.remote.universalirremote.database.DeviceButtonConfig;
+import com.remote.universalirremote.database.DeviceDataParcelable;
 import com.remote.universalirremote.network.HttpClient;
 import com.remote.universalirremote.network.RawSend;
 
@@ -108,7 +112,11 @@ public class GenRemoteTransmit extends GenRemote {
             }
         };
         _sendRawIrTiming = new RawSend(ApplicationWideSingleton.getSelectedService(),
-                _sendResponse);
+                _sendResponse,
+                errorString -> runOnUiThread(
+                        () -> Toast.makeText(getApplicationContext(),
+                                "Network error: " + errorString, Toast.LENGTH_SHORT)
+                ));
         super.onStart();
     }
 

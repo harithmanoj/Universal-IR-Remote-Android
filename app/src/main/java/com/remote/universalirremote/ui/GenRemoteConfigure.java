@@ -38,9 +38,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.NavUtils;
 
 import com.remote.universalirremote.ApplicationWideSingleton;
+import com.remote.universalirremote.Constant;
 import com.remote.universalirremote.GenRemote;
 import com.remote.universalirremote.R;
 import com.remote.universalirremote.database.DeviceButtonConfig;
+import com.remote.universalirremote.database.DeviceDataParcelable;
 import com.remote.universalirremote.network.RawGet;
 
 import java.util.ArrayList;
@@ -202,7 +204,11 @@ public class GenRemoteConfigure extends GenRemote {
             }
         };
         _getRawIrTiming = new RawGet(ApplicationWideSingleton.getSelectedService(),
-                _getResponseHandler);
+                _getResponseHandler,
+                errorString -> runOnUiThread(
+                        () -> Toast.makeText(getApplicationContext(),
+                                "Network error: " + errorString, Toast.LENGTH_SHORT)
+                ));
 
         setOnLongClick(BTN_GEN_2);
         setOnLongClick(BTN_GEN_3);
@@ -404,7 +410,6 @@ public class GenRemoteConfigure extends GenRemote {
                     _waitOnWriteCompletion.wait();
             } catch (InterruptedException ex) {
                 Log.d(TAG, "interrupted ", ex);
-                ex.printStackTrace();
             }
         }
         dialog.dismiss();
