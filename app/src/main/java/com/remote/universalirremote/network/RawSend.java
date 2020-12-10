@@ -39,12 +39,18 @@ public class RawSend {
     public static final String POST_MSG_KEY = "post.msg.key";
     public static final String POST_META_KEY = "post.meta.key";
 
-    public RawSend(NsdServiceInfo info, Handler handler) {
+    public RawSend(NsdServiceInfo info, Handler handler, Runnable reAcquireService) {
         _responseHandlerThread = new HandlerThread("SendHandlerThread");
         _responseHandlerThread.start();
         Handler _responseHandler = new Handler(_responseHandlerThread.getLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
+
+                if(msg.getData().getInt(HttpClient.EXCEPTION_KEY, 0) == HttpClient.NO_ROUTE_TO_HOST) {
+                    reAcquireService.run();
+                    return;
+                }
+
                 String response = msg.getData().getString(HttpClient.RESPONSE_KEY);
 
                 Log.i(TAG, String.format("Message was :%s", response));
