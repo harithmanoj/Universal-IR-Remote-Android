@@ -26,7 +26,6 @@ import android.os.HandlerThread;
 import android.os.Message;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -147,7 +146,7 @@ public class GenRemoteConfigure extends GenRemote {
                                             Toast.LENGTH_LONG
                                     ).show()
                             );
-
+                            break;
                         }
                     }
                 } else if (mode == SET_NAME) {
@@ -185,7 +184,7 @@ public class GenRemoteConfigure extends GenRemote {
                                                 i.getButtonId())) {
                                     _deviceButtonConfigRepo.getDao().update(i);
                                 } else {
-                                    _deviceButtonConfigRepo.getDao().insert(i);;
+                                    _deviceButtonConfigRepo.getDao().insert(i);
                                 }
                             }
                         }
@@ -202,6 +201,46 @@ public class GenRemoteConfigure extends GenRemote {
     }
 
 
+    private void setName(int btnId, String Name) {
+        int index = -1;
+        for (int i = 0; i <_allButtons.size(); ++i)
+            if (_allButtons.get(i).getButtonId() == btnId) {
+                index = i;
+                break;
+            }
+        if(index == -1) {
+            _allButtons.add(
+                    new DeviceButtonConfig(
+                            btnId,
+                            null,
+                            ApplicationWideSingleton.getSelectedDeviceName(),
+                            true,
+                            Name
+                    )
+            );
+
+        } else {
+            DeviceButtonConfig current = _allButtons.get(index);
+            _allButtons.set(index,
+                    new DeviceButtonConfig(
+                            current.getButtonId(),
+                            current.getIrTimingData(),
+                            current.getDeviceName(),
+                            true,
+                            Name
+                    ));
+        }
+        runOnUiThread(
+                () -> {
+                    setDisplayName(btnId,Name);
+                    Toast.makeText(
+                            getApplicationContext(),
+                            "set name " + Name,
+                            Toast.LENGTH_LONG
+                    ).show();
+                }
+        );
+    }
 
     @Override
     protected void onResume() {
@@ -215,23 +254,27 @@ public class GenRemoteConfigure extends GenRemote {
         _deviceButtonConfigRepo.useDatabaseExecutor(
                 () -> {
                     DeviceButtonConfig current = null;
+                    boolean found = false;
                     for (int i = 0; i < _allButtons.size(); ++i) {
-                        if(_allButtons.get(i).getButtonId() == btnId) {
+                        if (_allButtons.get(i).getButtonId() == btnId) {
                             current = _allButtons.get(i);
+                            found = true;
                             break;
-                        } else if (_deviceButtonConfigRepo.getDao()
+                        }
+                    }
+                    if (!found) {
+                        if (_deviceButtonConfigRepo.getDao()
                                 .doesExist(ApplicationWideSingleton
                                         .getSelectedDeviceName(), btnId)) {
                             current = _deviceButtonConfigRepo.getDao()
                                     .getButtonConfig(
                                             ApplicationWideSingleton.getSelectedDeviceName(), btnId);
-                            break;
                         } else {
 
                             boolean editable = true;
                             String name = "##";
 
-                            if ( btnId == BTN_GEN_DOWN) {
+                            if (btnId == BTN_GEN_DOWN) {
                                 editable = false;
                                 name = "BTN_GEN_DOWN";
                             } else if (btnId == BTN_GEN_UP) {
@@ -259,7 +302,6 @@ public class GenRemoteConfigure extends GenRemote {
                                     editable,
                                     name
                             );
-                            break;
                         }
                     }
                     _allButtons.add(
