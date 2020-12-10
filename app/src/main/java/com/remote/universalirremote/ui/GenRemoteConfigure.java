@@ -404,7 +404,6 @@ public class GenRemoteConfigure extends GenRemote {
                     _waitOnWriteCompletion.wait();
             } catch (InterruptedException ex) {
                 Log.d(TAG, "interrupted ", ex);
-                ex.printStackTrace();
             }
         }
         dialog.dismiss();

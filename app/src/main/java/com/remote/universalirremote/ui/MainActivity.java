@@ -291,7 +291,6 @@ public class MainActivity extends AppCompatActivity {
 
                 } catch (InterruptedException ie) {
                     Log.e(TAG, "interrupted Exception ", ie);
-                    ie.printStackTrace();
                 }
 
             }
