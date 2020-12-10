@@ -36,6 +36,7 @@ import com.remote.universalirremote.Constant;
 import com.remote.universalirremote.TvRemote;
 import com.remote.universalirremote.database.DeviceButtonConfig;
 import com.remote.universalirremote.database.DeviceDataParcelable;
+import com.remote.universalirremote.network.NetworkErrorCallback;
 import com.remote.universalirremote.network.RawGet;
 
 import java.util.ArrayList;
@@ -125,37 +126,10 @@ public class TvRemoteConfigure extends TvRemote {
         };
         _getRawIrTiming = new RawGet(ApplicationWideSingleton.getSelectedService(),
                 _getResponseHandler,
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent intent = new Intent(TvRemoteConfigure.this, MainActivity.class);
-                        intent.putExtra(Constant.INT_LAUNCHER_KEY, Constant.INT_LAUNCHER_TV_CONFIGURE);
-                        intent.putExtra(Constant.INT_SELECTED_DEVICE,
-                                new DeviceDataParcelable(ApplicationWideSingleton.getSelectedDevice()));
-                        Bundle msgBundle = new Bundle();
-                        msgBundle.putInt(USE_MOD, STORE_ALL);
-                        Message msg = new Message();
-                        msg.setData(msgBundle);
-                        _getResponseHandler.sendMessage(msg);
-                        ProgressDialog dialog = new ProgressDialog(TvRemoteConfigure.this); // this = YourActivity
-                        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                        dialog.setTitle("Writing");
-                        dialog.setMessage("Writing configuration to database, please wait");
-                        dialog.setIndeterminate(true);
-                        dialog.setCanceledOnTouchOutside(false);
-                        dialog.show();
-                        synchronized (_waitOnWriteCompletion) {
-                            try {
-                                while (!_hasCompletedSave)
-                                    _waitOnWriteCompletion.wait();
-                            } catch (InterruptedException ex) {
-                                Log.d(TAG, "interrupted ", ex);
-                            }
-                        }
-                        dialog.dismiss();
-                        startActivity(intent);
-                    }
-                });
+                errorString -> runOnUiThread(
+                        () -> Toast.makeText(getApplicationContext(),
+                                "Network error: " + errorString, Toast.LENGTH_SHORT)
+        ));
         super.onStart();
     }
 
