@@ -210,7 +210,20 @@ public class GenRemoteConfigure extends GenRemote {
 
     @Override
     public void handleButtonClicks(int btnId) {
+        _deviceButtonConfigRepo.useDatabaseExecutor(
+                () -> {
+                    if (_deviceButtonConfigRepo.getDao()
+                            .doesExist(ApplicationWideSingleton
+                                    .getSelectedDeviceName(), btnId)) {
+                        DeviceButtonConfig current = new DeviceButtonConfig(
+                                btnId,
+                                null,
+                                ApplicationWideSingleton.getSelectedDeviceName(),
 
+                        )
+                    }
+                }
+        );
     }
 
     @Override

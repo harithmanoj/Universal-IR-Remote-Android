@@ -55,4 +55,6 @@ public interface DeviceButtonConfigDao {
     @Query("SELECT EXISTS(SELECT * FROM DEVICEBUTTONCONFIG WHERE ((deviceButtonId = :button) AND (deviceName = :device)))")
     boolean doesExist(String device, int button);
 
+    @Query("SELECT * FROM DeviceButtonConfig WHERE ((deviceName = :device) AND (deviceButtonId = :button))")
+    DeviceButtonConfig getButtonConfig(String device, int button);
 }
