@@ -124,16 +124,10 @@ public class GenRemoteTransmit extends GenRemote {
         };
         _sendRawIrTiming = new RawSend(ApplicationWideSingleton.getSelectedService(),
                 _sendResponse,
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent intent = new Intent(GenRemoteTransmit.this, MainActivity.class);
-                        intent.putExtra(Constant.INT_LAUNCHER_KEY, Constant.INT_LAUNCHER_GEN_TRANSMIT);
-                        intent.putExtra(Constant.INT_SELECTED_DEVICE,
-                                new DeviceDataParcelable(ApplicationWideSingleton.getSelectedDevice()));
-                        startActivity(intent);
-                    }
-                });
+                errorString -> runOnUiThread(
+                        () -> Toast.makeText(getApplicationContext(),
+                                "Network error: " + errorString, Toast.LENGTH_SHORT)
+                ));
         super.onStart();
     }
 

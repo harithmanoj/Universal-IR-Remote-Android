@@ -54,6 +54,8 @@ public class HttpClient {
     public static final String TRANSACTION_KEY = "transaction.request";
     public static final String EXCEPTION_KEY = "transaction.exception";
     public static final int NO_ROUTE_TO_HOST = 10;
+    public static final int IO_EXCEPTION = 20;
+    public static final String EXCEPTION_DATA_KEY = "exception.key";
 
     private final HandlerThread _transactionHandlerThread;
     private final Handler _transactionHandler;
@@ -134,7 +136,12 @@ public class HttpClient {
                     _responseHandler.sendMessage(msgr);
                 } catch (IOException ex) {
                     Log.e(TAG, " exception at transaction executor", ex);
-
+                    Bundle msgBundle = new Bundle();
+                    msgBundle.putInt(EXCEPTION_KEY, IO_EXCEPTION);
+                    msgBundle.putString(EXCEPTION_DATA_KEY, ex.getMessage());
+                    Message msgr = new Message();
+                    msgr.setData(msgBundle);
+                    _responseHandler.sendMessage(msgr);
                 }
 
             }
