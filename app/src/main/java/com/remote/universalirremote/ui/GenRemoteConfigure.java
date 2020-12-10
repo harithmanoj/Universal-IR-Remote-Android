@@ -19,6 +19,7 @@
 package com.remote.universalirremote.ui;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,9 +27,13 @@ import android.os.HandlerThread;
 import android.os.Message;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.NavUtils;
 
 import com.remote.universalirremote.ApplicationWideSingleton;
@@ -197,7 +202,39 @@ public class GenRemoteConfigure extends GenRemote {
         };
         _getRawIrTiming = new RawGet(ApplicationWideSingleton.getSelectedService(),
                 _getResponseHandler);
+
+
         super.onStart();
+    }
+
+    private void onLongClickListener(View view) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(GenRemoteConfigure.this);
+        alertDialog.setTitle("Button Name");
+        alertDialog.setMessage("Enter Custom Name");
+
+        final EditText input = new EditText(GenRemoteConfigure.this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        input.setLayoutParams(lp);
+        alertDialog.setView(input);
+        alertDialog.setPositiveButton("Name it",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        String name = input.getText().toString();
+                        setName(view.getId(), name);
+                        dialog.dismiss();
+                    }
+                });
+
+        alertDialog.setNegativeButton("Cancel",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+        alertDialog.show();
     }
 
 
