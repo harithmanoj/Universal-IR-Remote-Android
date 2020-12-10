@@ -212,16 +212,63 @@ public class GenRemoteConfigure extends GenRemote {
     public void handleButtonClicks(int btnId) {
         _deviceButtonConfigRepo.useDatabaseExecutor(
                 () -> {
-                    if (_deviceButtonConfigRepo.getDao()
-                            .doesExist(ApplicationWideSingleton
-                                    .getSelectedDeviceName(), btnId)) {
-                        DeviceButtonConfig current = new DeviceButtonConfig(
-                                btnId,
-                                null,
-                                ApplicationWideSingleton.getSelectedDeviceName(),
+                    DeviceButtonConfig current = null;
+                    for (int i = 0; i < _allButtons.size(); ++i) {
+                        if(_allButtons.get(i).getButtonId() == btnId) {
+                            current = _allButtons.get(i);
+                            break;
+                        } else if (_deviceButtonConfigRepo.getDao()
+                                .doesExist(ApplicationWideSingleton
+                                        .getSelectedDeviceName(), btnId)) {
+                            current = _deviceButtonConfigRepo.getDao()
+                                    .getButtonConfig(
+                                            ApplicationWideSingleton.getSelectedDeviceName(), btnId);
+                            break;
+                        } else {
 
-                        )
+                            boolean editable = true;
+                            String name = "##";
+
+                            if ( btnId == BTN_GEN_DOWN) {
+                                editable = false;
+                                name = "BTN_GEN_DOWN";
+                            } else if (btnId == BTN_GEN_UP) {
+                                editable = false;
+                                name = "BTN_GEN_UP";
+                            } else if (btnId == BTN_GEN_LEFT) {
+                                editable = false;
+                                name = "BTN_GEN_LEFT";
+                            } else if (btnId == BTN_GEN_RIGHT) {
+                                editable = false;
+                                name = "BTN_GEN_RIGHT";
+                            } else if (btnId == BTN_GEN_OK) {
+                                editable = false;
+                                name = "BTN_GEN_OK";
+                            } else if (btnId == BTN_GEN_POWER) {
+                                editable = false;
+                                name = "BTN_GEN_POWER";
+                            }
+
+
+                            current = new DeviceButtonConfig(
+                                    btnId,
+                                    null,
+                                    ApplicationWideSingleton.getSelectedDeviceName(),
+                                    editable,
+                                    name
+                            );
+                            break;
+                        }
                     }
+                    _allButtons.add(
+                            new DeviceButtonConfig(
+                                    current.getButtonId(),
+                                    null,
+                                    current.getDeviceName(),
+                                    current.isEditableName(),
+                                    current.getDeviceButtonName()
+                            )
+                    );
                 }
         );
     }
