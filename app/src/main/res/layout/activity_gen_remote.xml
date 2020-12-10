@@ -325,8 +325,8 @@
 
     <TextView
         android:id="@+id/text_gen_x"
-        android:layout_width="1dp"
-        android:layout_height="11dp"
+        android:layout_width="wrap_content"	 
+        android:layout_height="wrap_content"
         android:text="X"
         app:layout_constraintBottom_toTopOf="@+id/btn_decrement_x"
         app:layout_constraintEnd_toStartOf="@+id/btn_12"
