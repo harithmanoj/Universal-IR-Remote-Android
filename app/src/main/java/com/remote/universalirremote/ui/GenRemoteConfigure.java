@@ -271,6 +271,7 @@ public class GenRemoteConfigure extends GenRemote {
                     );
                 }
         );
+        _getRawIrTiming.getData(btnId);
     }
 
     @Override
