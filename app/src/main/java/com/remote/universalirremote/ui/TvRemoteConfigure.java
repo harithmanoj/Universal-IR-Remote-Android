@@ -145,6 +145,9 @@ public class TvRemoteConfigure extends TvRemote {
                         _btnNames[btnId]
                 )
         );
+        synchronized (_waitOnWriteCompletion) {
+            _hasCompletedSave = false;
+        }
         _getRawIrTiming.getData(btnId);
     }
 

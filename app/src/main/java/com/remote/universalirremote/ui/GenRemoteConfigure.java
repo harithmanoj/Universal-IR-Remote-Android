@@ -18,11 +18,13 @@
 
 package com.remote.universalirremote.ui;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -269,6 +271,9 @@ public class GenRemoteConfigure extends GenRemote {
                                     current.getDeviceButtonName()
                             )
                     );
+                    synchronized (_waitOnWriteCompletion) {
+                        _hasCompletedSave = false;
+                    }
                 }
         );
         _getRawIrTiming.getData(btnId);
@@ -276,6 +281,28 @@ public class GenRemoteConfigure extends GenRemote {
 
     @Override
     public void startTransitOrConfigActivity(Intent configIntent, Intent transmitIntent) {
-
+        Bundle msgBundle = new Bundle();
+        msgBundle.putInt(USE_MOD, STORE_ALL);
+        Message msg = new Message();
+        msg.setData(msgBundle);
+        _getResponseHandler.sendMessage(msg);
+        ProgressDialog dialog = new ProgressDialog(this); // this = YourActivity
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setTitle("Writing");
+        dialog.setMessage("Writing configuration to database, please wait");
+        dialog.setIndeterminate(true);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+        synchronized (_waitOnWriteCompletion) {
+            try {
+                while (!_hasCompletedSave)
+                    _waitOnWriteCompletion.wait();
+            } catch (InterruptedException ex) {
+                Log.d(TAG, "interrupted ", ex);
+                ex.printStackTrace();
+            }
+        }
+        dialog.dismiss();
+        startActivity(transmitIntent);
     }
 }
