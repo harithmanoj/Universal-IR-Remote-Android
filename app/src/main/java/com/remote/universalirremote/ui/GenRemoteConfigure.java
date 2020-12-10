@@ -199,6 +199,15 @@ public class GenRemoteConfigure extends GenRemote {
         super.onStart();
     }
 
+
+
+    @Override
+    protected void onResume() {
+        renameOkOrConfig("OK");
+        _deviceButtonConfigRepo.getAllRawData(ApplicationWideSingleton.getSelectedDeviceName());
+        super.onResume();
+    }
+
     @Override
     public void handleButtonClicks(int btnId) {
 
