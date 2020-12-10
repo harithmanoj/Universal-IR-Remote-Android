@@ -28,6 +28,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -203,8 +204,34 @@ public class GenRemoteConfigure extends GenRemote {
         _getRawIrTiming = new RawGet(ApplicationWideSingleton.getSelectedService(),
                 _getResponseHandler);
 
+        setOnLongClick(BTN_GEN_2);
+        setOnLongClick(BTN_GEN_3);
+        setOnLongClick(BTN_GEN_4);
+        setOnLongClick(BTN_GEN_5);
+        setOnLongClick(BTN_GEN_6);
+        setOnLongClick(BTN_GEN_7);
+        setOnLongClick(BTN_GEN_8);
+        setOnLongClick(BTN_GEN_9);
+        setOnLongClick(BTN_GEN_10);
+        setOnLongClick(BTN_GEN_11);
+        setOnLongClick(BTN_GEN_12);
+        setOnLongClick(BTN_GEN_13);
+        setOnLongClick(BTN_GEN_A_UP);
+        setOnLongClick(BTN_GEN_A_DOWN);
+        setOnLongClick(BTN_GEN_X_DOWN);
+        setOnLongClick(BTN_GEN_X_UP);
+
 
         super.onStart();
+    }
+
+    private void setOnLongClick(int btnId) {
+        ((Button)findViewById(btnId)).setOnLongClickListener(
+                (View view) -> {
+                    onLongClickListener(view);
+                    return true;
+                }
+        );
     }
 
     private void onLongClickListener(View view) {
