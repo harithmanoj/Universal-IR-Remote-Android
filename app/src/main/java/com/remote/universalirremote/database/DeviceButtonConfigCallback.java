@@ -32,4 +32,6 @@ public interface DeviceButtonConfigCallback {
     void deviceButtonNameCallback(String buttonName);
 
     void doesEntryExist(boolean doesExist);
+
+    void buttonConfig(DeviceButtonConfig buttonConfigData);
 }
