@@ -44,6 +44,10 @@ public class ACSend {
 
     public static final String AC_URI = "/ac";
 
+    public void terminate() {
+        _responseHandlerThread.quitSafely();
+    }
+
     public ACSend(NsdServiceInfo info, Handler handler, Runnable reAcquireService) {
         _responseHandlerThread = new HandlerThread("SendHandlerThread");
         _responseHandlerThread.start();

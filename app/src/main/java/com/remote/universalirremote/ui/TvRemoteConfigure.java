@@ -54,6 +54,17 @@ public class TvRemoteConfigure extends TvRemote {
     public static final String USE_MOD = "handler.mode";
     public static final int STORE_ALL = 3;
 
+    void terminate() {
+        _getRawIrTiming.terminate();
+        _getResponseHandlerThread.quitSafely();
+    }
+
+    @Override
+    protected void onStop() {
+        terminate();
+        super.onStop();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

@@ -39,6 +39,10 @@ public class RawGet {
     public static final String RAW_KEY = "response.raw";
     public static final String BUTTON_ID_KEY = "request.btn.id";
 
+    public void terminate() {
+        _responseHandlerThread.quitSafely();
+    }
+
     public RawGet(NsdServiceInfo info, Handler handler, Runnable reAcquireService) {
         _responseHandlerThread = new HandlerThread("GetHandlerThread");
         _responseHandlerThread.start();
