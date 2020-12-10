@@ -39,6 +39,12 @@ public class RawSend {
     public static final String POST_MSG_KEY = "post.msg.key";
     public static final String POST_META_KEY = "post.meta.key";
 
+
+    public void terminate() {
+        _responseHandlerThread.quitSafely();
+    }
+
+
     public RawSend(NsdServiceInfo info, Handler handler, NetworkErrorCallback errorCallback) {
         _responseHandlerThread = new HandlerThread("SendHandlerThread");
         _responseHandlerThread.start();

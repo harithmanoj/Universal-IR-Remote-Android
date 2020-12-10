@@ -62,6 +62,16 @@ public class GenRemoteConfigure extends GenRemote {
     public static final int SET_NAME = 4;
     public static final String SET_NAME_KEY = "handler.key";
 
+    void terminate() {
+        _getRawIrTiming.terminate();
+        _getResponseHandlerThread.quitSafely();
+    }
+
+    @Override
+    protected void onStop() {
+        terminate();
+        super.onStop();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

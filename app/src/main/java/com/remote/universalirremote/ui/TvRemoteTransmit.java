@@ -44,6 +44,17 @@ public class TvRemoteTransmit extends TvRemote {
     private RawSend _sendRawIrTiming;
     private HandlerThread _sendResponseThread;
 
+    void terminate() {
+        _sendRawIrTiming.terminate();
+        _sendResponseThread.quitSafely();
+    }
+
+    @Override
+    protected void onStop() {
+        terminate();
+        super.onStop();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 

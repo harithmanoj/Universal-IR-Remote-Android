@@ -90,6 +90,10 @@ public class MainActivity extends AppCompatActivity {
     // Debug TAG
     public static final String TAG = "MainActivity";
 
+    private void terminate() {
+        _discoveryThread.quitSafely();
+    }
+
 
     // Set selected service ( take from _networkManger.getDiscoveredServices() with matching name).
     // Returns false if it doesn't exist or if parameters are null
@@ -231,6 +235,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         Log.d(TAG, "stopped");
+        terminate();
         super.onStop();
     }
 
