@@ -296,7 +296,12 @@ public class GenRemoteConfigure extends GenRemote {
         }
         runOnUiThread(
                 () -> {
-                    setDisplayName(btnId,Name);
+                    if ((btnId == BTN_GEN_A_DOWN) || (btnId == BTN_GEN_A_UP))
+                        setDisplayName(TEXT_GEN_A, Name);
+                    else if ((btnId == BTN_GEN_X_DOWN) || (btnId == BTN_GEN_X_UP))
+                        setDisplayName(TEXT_GEN_X, Name);
+                    else
+                        setDisplayName(btnId,Name);
                     Toast.makeText(
                             getApplicationContext(),
                             "set name " + Name,
