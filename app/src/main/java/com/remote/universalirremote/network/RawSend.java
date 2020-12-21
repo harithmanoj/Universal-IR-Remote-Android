@@ -51,12 +51,18 @@ public class RawSend {
         Handler _responseHandler = new Handler(_responseHandlerThread.getLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
-                if(msg.getData().getInt(HttpClient.EXCEPTION_KEY, 0) == HttpClient.NO_ROUTE_TO_HOST) {
+                if(msg.getData().getInt(
+                        HttpClient.EXCEPTION_KEY, 0) == HttpClient.NO_ROUTE_TO_HOST) {
                     errorCallback.errorResponse("Host unreachable");
                     return;
-                } else if (msg.getData().getInt(HttpClient.EXCEPTION_KEY, 0) == HttpClient.IO_EXCEPTION) {
+                } else if (msg.getData().getInt(
+                        HttpClient.EXCEPTION_KEY, 0) == HttpClient.IO_EXCEPTION) {
                     errorCallback.errorResponse("IO exception "
                             + msg.getData().getString(HttpClient.EXCEPTION_DATA_KEY));
+                    return;
+                } else if (msg.getData().getInt(
+                        HttpClient.EXCEPTION_KEY, 0) == HttpClient.CONNECT_EXCEPTION) {
+                    errorCallback.errorResponse("Connection error, check if blaster is active");
                     return;
                 }
 
