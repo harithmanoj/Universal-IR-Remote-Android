@@ -42,7 +42,6 @@ import java.util.List;
 
 public abstract class GenRemote extends AppCompatActivity {
 
-    protected DeviceInfoRepository _deviceInfoRepo;
     protected DeviceButtonConfigRepository _deviceButtonConfigRepo;
     protected List<DeviceButtonConfig> _buttonConfigList;
 
@@ -115,7 +114,6 @@ public abstract class GenRemote extends AppCompatActivity {
 
                     }
                 });
-        _deviceInfoRepo = new DeviceInfoRepository(getApplication(), null);
 
         Intent intent = getIntent();
         if(intent != null) {

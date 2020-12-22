@@ -42,7 +42,6 @@ import java.util.List;
 
 public abstract class TvRemote extends AppCompatActivity {
 
-    protected DeviceInfoRepository _deviceInfoRepo;
     protected DeviceButtonConfigRepository _deviceButtonConfigRepo;
     protected List<DeviceButtonConfig> _buttonConfigList;
 
@@ -88,7 +87,6 @@ public abstract class TvRemote extends AppCompatActivity {
 
                     }
                 });
-        _deviceInfoRepo = new DeviceInfoRepository(getApplication(), null);
 
         Intent intent = getIntent();
         if(intent != null) {
