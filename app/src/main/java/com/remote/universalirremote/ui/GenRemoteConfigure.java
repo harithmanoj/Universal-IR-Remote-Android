@@ -38,9 +38,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.NavUtils;
 
 import com.remote.universalirremote.ApplicationWideSingleton;
+import com.remote.universalirremote.Constant;
 import com.remote.universalirremote.GenRemote;
 import com.remote.universalirremote.R;
 import com.remote.universalirremote.database.DeviceButtonConfig;
+import com.remote.universalirremote.database.DeviceDataParcelable;
 import com.remote.universalirremote.network.RawGet;
 
 import java.util.ArrayList;
@@ -60,6 +62,16 @@ public class GenRemoteConfigure extends GenRemote {
     public static final int SET_NAME = 4;
     public static final String SET_NAME_KEY = "handler.key";
 
+    void terminate() {
+        _getRawIrTiming.terminate();
+        _getResponseHandlerThread.quitSafely();
+    }
+
+    @Override
+    protected void onStop() {
+        terminate();
+        super.onStop();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,7 +161,7 @@ public class GenRemoteConfigure extends GenRemote {
                                     () -> Toast.makeText(
                                             getApplicationContext(),
                                             "button " + current.getDeviceButtonName() + " configured",
-                                            Toast.LENGTH_LONG
+                                            Toast.LENGTH_SHORT
                                     ).show()
                             );
                             break;
@@ -174,7 +186,7 @@ public class GenRemoteConfigure extends GenRemote {
                                         Toast.makeText(
                                                 getApplicationContext(),
                                                 "set name " + current.getDeviceButtonName(),
-                                                Toast.LENGTH_LONG
+                                                Toast.LENGTH_SHORT
                                         ).show();
                                     }
                             );
@@ -202,7 +214,11 @@ public class GenRemoteConfigure extends GenRemote {
             }
         };
         _getRawIrTiming = new RawGet(ApplicationWideSingleton.getSelectedService(),
-                _getResponseHandler);
+                _getResponseHandler,
+                errorString -> runOnUiThread(
+                        () -> Toast.makeText(getApplicationContext(),
+                                "Network error: " + errorString, Toast.LENGTH_SHORT)
+                ));
 
         setOnLongClick(BTN_GEN_2);
         setOnLongClick(BTN_GEN_3);
@@ -299,7 +315,7 @@ public class GenRemoteConfigure extends GenRemote {
                     Toast.makeText(
                             getApplicationContext(),
                             "set name " + Name,
-                            Toast.LENGTH_LONG
+                            Toast.LENGTH_SHORT
                     ).show();
                 }
         );
@@ -404,7 +420,6 @@ public class GenRemoteConfigure extends GenRemote {
                     _waitOnWriteCompletion.wait();
             } catch (InterruptedException ex) {
                 Log.d(TAG, "interrupted ", ex);
-                ex.printStackTrace();
             }
         }
         dialog.dismiss();

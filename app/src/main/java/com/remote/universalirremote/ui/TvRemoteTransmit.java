@@ -30,8 +30,10 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NavUtils;
 
 import com.remote.universalirremote.ApplicationWideSingleton;
+import com.remote.universalirremote.Constant;
 import com.remote.universalirremote.TvRemote;
 import com.remote.universalirremote.database.DeviceButtonConfig;
+import com.remote.universalirremote.database.DeviceDataParcelable;
 import com.remote.universalirremote.network.HttpClient;
 import com.remote.universalirremote.network.RawSend;
 
@@ -41,6 +43,17 @@ public class TvRemoteTransmit extends TvRemote {
 
     private RawSend _sendRawIrTiming;
     private HandlerThread _sendResponseThread;
+
+    void terminate() {
+        _sendRawIrTiming.terminate();
+        _sendResponseThread.quitSafely();
+    }
+
+    @Override
+    protected void onStop() {
+        terminate();
+        super.onStop();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,12 +84,16 @@ public class TvRemoteTransmit extends TvRemote {
                             "button send fail "
                                     + ((HttpClient.Request.Property) msg.getData()
                                     .getParcelable(RawSend.POST_META_KEY)).getValue(),
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         };
         _sendRawIrTiming = new RawSend(ApplicationWideSingleton.getSelectedService(),
-                _sendResponse);
+                _sendResponse,
+                errorString -> runOnUiThread(
+                        () -> Toast.makeText(getApplicationContext(),
+                                "Network error: " + errorString, Toast.LENGTH_SHORT)
+                ));
         super.onStart();
     }
 
@@ -92,7 +109,7 @@ public class TvRemoteTransmit extends TvRemote {
         DeviceButtonConfig selectedButton = lookupButton(btnId);
         if(selectedButton == null) {
             Toast.makeText(getApplicationContext(),
-                    "not configured button", Toast.LENGTH_LONG).show();
+                    "not configured button", Toast.LENGTH_SHORT).show();
             return;
         }
         _sendRawIrTiming.sendData(selectedButton.getIrTimingData(), selectedButton.getDeviceName());

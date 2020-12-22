@@ -18,11 +18,13 @@
 
 package com.remote.universalirremote.ui;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -32,9 +34,11 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NavUtils;
 
 import com.remote.universalirremote.ApplicationWideSingleton;
+import com.remote.universalirremote.Constant;
 import com.remote.universalirremote.GenRemote;
 import com.remote.universalirremote.R;
 import com.remote.universalirremote.database.DeviceButtonConfig;
+import com.remote.universalirremote.database.DeviceDataParcelable;
 import com.remote.universalirremote.network.HttpClient;
 import com.remote.universalirremote.network.RawSend;
 
@@ -44,6 +48,17 @@ public class GenRemoteTransmit extends GenRemote {
 
     private RawSend _sendRawIrTiming;
     private HandlerThread _sendResponseThread;
+
+    void terminate() {
+        _sendRawIrTiming.terminate();
+        _sendResponseThread.quitSafely();
+    }
+
+    @Override
+    protected void onStop() {
+        terminate();
+        super.onStop();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,12 +118,16 @@ public class GenRemoteTransmit extends GenRemote {
                             "button send fail "
                                     + ((HttpClient.Request.Property) msg.getData()
                                     .getParcelable(RawSend.POST_META_KEY)).getValue(),
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         };
         _sendRawIrTiming = new RawSend(ApplicationWideSingleton.getSelectedService(),
-                _sendResponse);
+                _sendResponse,
+                errorString -> runOnUiThread(
+                        () -> Toast.makeText(getApplicationContext(),
+                                "Network error: " + errorString, Toast.LENGTH_SHORT)
+                ));
         super.onStart();
     }
 
@@ -124,7 +143,7 @@ public class GenRemoteTransmit extends GenRemote {
         DeviceButtonConfig selectedButton = lookupButton(btnId);
         if((selectedButton == null)) {
             Toast.makeText(getApplicationContext(),
-                    "not configured button", Toast.LENGTH_LONG).show();
+                    "not configured button", Toast.LENGTH_SHORT).show();
             return;
         }
         _sendRawIrTiming.sendData(selectedButton.getIrTimingData(), selectedButton.getDeviceName());
