@@ -88,11 +88,30 @@ public class AcRemote extends AppCompatActivity {
 
     public static final String TAG = "AcRemote";
 
+    private void updateEconomy() {
+        int ecoColor = R.color.transparent;
+        if(_isEconomy)
+            ecoColor = R.color.translucentGreen;
+        ((Button)findViewById(R.id.btn_economy)).setBackgroundColor(ecoColor);
+    }
+
+    public void clickEconomy() {
+        _isEconomy = !_isEconomy;
+        sendDataNow(BTN_ECO);
+        updateEconomy();
+    }
+
     private void updateTurbo() {
         int turboColor = R.color.transparent;
         if(_isTurboing)
             turboColor = R.color.translucentGreen;
         ((Button)findViewById(R.id.btn_turbo)).setBackgroundColor(turboColor);
+    }
+
+    public void clickTurbo(View view) {
+        _isTurboing = !_isTurboing;
+        sendDataNow(BTN_TURBO);
+        updateTurbo();
     }
 
     private void updateSwingVertical() {
