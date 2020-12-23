@@ -19,6 +19,7 @@
 
 package com.remote.universalirremote.ui;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -66,6 +67,17 @@ public class AcRemote extends AppCompatActivity {
             ApplicationWideSingleton.refreshSelectedService(service);
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+
+        if(ApplicationWideSingleton.isSelectedDeviceValid())
+            outState.putParcelable(Constant.INT_SELECTED_DEVICE,
+                    new DeviceDataParcelable(ApplicationWideSingleton.getSelectedDevice()));
+        if(ApplicationWideSingleton.isSelectedServiceValid())
+            outState.putParcelable(Constant.INT_SERVICE_KEY, ApplicationWideSingleton.getSelectedService());
+        super.onSaveInstanceState(outState);
     }
 
 
