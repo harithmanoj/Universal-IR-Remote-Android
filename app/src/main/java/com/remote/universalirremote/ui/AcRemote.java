@@ -21,6 +21,7 @@ package com.remote.universalirremote.ui;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NavUtils;
 
 import android.content.Intent;
 import android.net.nsd.NsdServiceInfo;
@@ -29,6 +30,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.remote.universalirremote.ApplicationWideSingleton;
@@ -108,11 +110,11 @@ public class AcRemote extends AppCompatActivity {
         Handler sendResponse = new Handler(_sendResponseHandlerThread.getLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
-                if (msg.getData().getInt(RawSend.CODE_KEY) != HttpURLConnection.HTTP_OK) {
+                if (msg.getData().getInt(ACSend.CODE_KEY) != HttpURLConnection.HTTP_OK) {
                     Toast.makeText(getApplicationContext(),
                             "button send fail "
                                     + ((HttpClient.Request.Property) msg.getData()
-                                    .getParcelable(RawSend.POST_META_KEY)).getValue(),
+                                    .getParcelable(ACSend.POST_META_KEY)).getValue(),
                             Toast.LENGTH_SHORT).show();
                 }
             }
@@ -124,6 +126,18 @@ public class AcRemote extends AppCompatActivity {
                                 "Network error: " + errorString, Toast.LENGTH_SHORT).show()
                 ));
         super.onStart();
+    }
+
+    // Menu item selected process
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }
