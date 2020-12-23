@@ -56,7 +56,6 @@ public class AcRemote extends AppCompatActivity {
     private int _temperatureStatus = 16;
     private boolean _isTemperatureInCelsius = true; // false is Fahrenheit
     private int _fanSpeed = Constant.AcFan.kLow;
-    private int _fanSpeedPrevious = Constant.AcFan.kLow;
     private int _swingVertical = Constant.AcSwingv.kAuto;
     private int _swingHorizontal = Constant.AcSwingh.kAuto;
     private boolean _isQuiet = false;
@@ -85,7 +84,7 @@ public class AcRemote extends AppCompatActivity {
             BTN_SPEED_MID = "MediumFanSpeed";
 
 
-    private void undoButtonClick(String btnName) {
+    private void undoButtonClick(String btnName, int prevFanSpeed) {
         if(btnName.equals(BTN_TEMP_INC)) {
             --_temperatureStatus;
             updateTemperature();
@@ -131,7 +130,7 @@ public class AcRemote extends AppCompatActivity {
         } else if (btnName.equals(BTN_SPEED_HIGH)
                         || btnName.equals(BTN_SPEED_LOW)
                         || btnName.equals(BTN_SPEED_MID)) {
-            _fanSpeed = _fanSpeedPrevious;
+            _fanSpeed = prevFanSpeed;
             updateFanSpeed();
         }
     }
@@ -389,9 +388,9 @@ public class AcRemote extends AppCompatActivity {
                     "Fan speed is already high", Toast.LENGTH_SHORT).show();
             return;
         }
-        _fanSpeedPrevious = _fanSpeed;
+        int temp = _fanSpeed;
         _fanSpeed = Constant.AcFan.kHigh;
-        sendDataNow(BTN_SPEED_HIGH);
+        sendDataNow(BTN_SPEED_HIGH, temp);
         updateFanSpeed();
     }
 
@@ -401,9 +400,9 @@ public class AcRemote extends AppCompatActivity {
                     "Fan speed is already low", Toast.LENGTH_SHORT).show();
             return;
         }
-        _fanSpeedPrevious = _fanSpeed;
+        int temp = _fanSpeed;
         _fanSpeed = Constant.AcFan.kLow;
-        sendDataNow(BTN_SPEED_LOW);
+        sendDataNow(BTN_SPEED_LOW, temp);
         updateFanSpeed();
     }
 
@@ -413,9 +412,9 @@ public class AcRemote extends AppCompatActivity {
                     "Fan speed is already medium", Toast.LENGTH_SHORT).show();
             return;
         }
-        _fanSpeedPrevious = _fanSpeed;
+        int temp = _fanSpeed;
         _fanSpeed = Constant.AcFan.kMedium;
-        sendDataNow(BTN_SPEED_MID);
+        sendDataNow(BTN_SPEED_MID, temp);
         updateFanSpeed();
     }
     
@@ -481,8 +480,11 @@ public class AcRemote extends AppCompatActivity {
             public void handleMessage(@NonNull Message msg) {
                 if (msg.getData().getInt(ACSend.CODE_KEY) != HttpURLConnection.HTTP_OK) {
                     runOnUiThread( () -> {
-                        undoButtonClick(((HttpClient.Request.Property) msg.getData()
-                                .getParcelable(ACSend.POST_META_KEY)).getValue());
+                        undoButtonClick(
+                                ((HttpClient.Request.Property) msg.getData()
+                                        .getParcelable(ACSend.POST_META_KEY)).getValue(),
+                                Integer.parseInt(((HttpClient.Request.Property) msg.getData()
+                                        .getParcelable(ACSend.POST_META_FAN_KEY)).getValue()));
                         Toast.makeText(getApplicationContext(),
                                 "undoing.. : button send fail "
                                         + ((HttpClient.Request.Property) msg.getData()
@@ -513,6 +515,10 @@ public class AcRemote extends AppCompatActivity {
     }
 
     private void sendDataNow(String btnName) {
+        sendDataNow(btnName, _fanSpeed);
+    }
+
+    private void sendDataNow(String btnName, int prevFan) {
         _sendAcStatusUpdate.sendData(
                 ApplicationWideSingleton.getSelectedDevice().getProtocolInfo(),
                 0,
@@ -532,7 +538,8 @@ public class AcRemote extends AppCompatActivity {
                 _isReceivingBeepOn,
                 _sleepMinutes,
                 _clockMinutesSinceMidnight,
-                btnName
+                btnName,
+                prevFan
         );
     }
 
