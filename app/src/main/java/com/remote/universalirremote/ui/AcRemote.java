@@ -31,6 +31,8 @@ import android.os.HandlerThread;
 import android.os.Message;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.remote.universalirremote.ApplicationWideSingleton;
@@ -48,7 +50,44 @@ public class AcRemote extends AppCompatActivity {
     private HandlerThread _sendResponseHandlerThread;
     private ACSend _sendAcStatusUpdate;
 
+    private boolean _powerStatus = false;
+    private int _modeStatus = Constant.AcMode.kAuto;
+    private int _temperatureStatus = 16;
+    private boolean _isTemperatureInCelsius = true; // false is Fahrenheit
+    private int _fanSpeed = Constant.AcFan.kAuto;
+    private int _swingVertical = Constant.AcSwingv.kAuto;
+    private int _swingHorizontal = Constant.AcSwingh.kAuto;
+    private boolean _isQuiet = false;
+    private boolean _isTurboing = false;
+    private boolean _isEconomy = false;
+    private boolean _isDisplayOn = true;
+    private boolean _isFilterModeOn = true;
+    private boolean _isSelfCleanModeOn = true;
+    private boolean _isReceivingBeepOn = true;
+    private int _sleepMinutes = 0;
+    private int _clockMinutesSinceMidnight = -10;
+
     public static final String TAG = "AcRemote";
+
+    private int updateTemperature() {
+        ((TextView)findViewById(R.id.text_temperatureDisplay)).setText(
+                ((Integer)_temperatureStatus).toString() + getString(R.string.degree) + " C"
+        );
+        return _temperatureStatus;
+    }
+
+    private void updatePowerStatus() {
+        if(_powerStatus) {
+            ((Button)findViewById(R.id.btn_power)).setBackgroundColor(
+                    getResources().getColor(R.color.translucentGreen));
+        } else {
+            ((Button)findViewById(R.id.btn_power)).setBackgroundColor(
+                    getResources().getColor(R.color.transparent));
+        }
+    }
+
+
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,18 +117,17 @@ public class AcRemote extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-
+        super.onSaveInstanceState(outState);
         if(ApplicationWideSingleton.isSelectedDeviceValid())
             outState.putParcelable(Constant.INT_SELECTED_DEVICE,
                     new DeviceDataParcelable(ApplicationWideSingleton.getSelectedDevice()));
         if(ApplicationWideSingleton.isSelectedServiceValid())
             outState.putParcelable(Constant.INT_SERVICE_KEY, ApplicationWideSingleton.getSelectedService());
-        super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onStart() {
-
+        super.onStart();
         Intent intent = getIntent();
         if(intent != null) {
             Log.d(TAG, "intent called now saving");
@@ -125,7 +163,6 @@ public class AcRemote extends AppCompatActivity {
                         () -> Toast.makeText(getApplicationContext(),
                                 "Network error: " + errorString, Toast.LENGTH_SHORT).show()
                 ));
-        super.onStart();
     }
 
     // Menu item selected process
