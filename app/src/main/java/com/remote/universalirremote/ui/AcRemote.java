@@ -270,11 +270,15 @@ public class AcRemote extends AppCompatActivity {
             @Override
             public void handleMessage(@NonNull Message msg) {
                 if (msg.getData().getInt(ACSend.CODE_KEY) != HttpURLConnection.HTTP_OK) {
-                    Toast.makeText(getApplicationContext(),
-                            "button send fail "
-                                    + ((HttpClient.Request.Property) msg.getData()
-                                    .getParcelable(ACSend.POST_META_KEY)).getValue(),
-                            Toast.LENGTH_SHORT).show();
+                    runOnUiThread( () -> {
+                        undoButtonClick(((HttpClient.Request.Property) msg.getData()
+                                .getParcelable(ACSend.POST_META_KEY)).getValue());
+                        Toast.makeText(getApplicationContext(),
+                                "undoing.. : button send fail "
+                                        + ((HttpClient.Request.Property) msg.getData()
+                                        .getParcelable(ACSend.POST_META_KEY)).getValue(),
+                                Toast.LENGTH_SHORT).show();
+                    });
                 }
             }
         };
@@ -320,6 +324,10 @@ public class AcRemote extends AppCompatActivity {
                 _clockMinutesSinceMidnight,
                 btnName
         );
+    }
+
+    private void undoButtonClick(String btnName) {
+
     }
 
 }
