@@ -39,13 +39,31 @@ public class RawGet {
     public static final String RAW_KEY = "response.raw";
     public static final String BUTTON_ID_KEY = "request.btn.id";
 
-    public RawGet(NsdServiceInfo info, Handler handler) {
+
+    public void terminate() {
+        _responseHandlerThread.quitSafely();
+    }
+
+    public RawGet(NsdServiceInfo info, Handler handler, NetworkErrorCallback errorCallback) {
         _responseHandlerThread = new HandlerThread("GetHandlerThread");
         _responseHandlerThread.start();
         _outerHandler = handler;
         Handler _responseHandler = new Handler(_responseHandlerThread.getLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
+                if(msg.getData().getInt(HttpClient.EXCEPTION_KEY, 0) == HttpClient.NO_ROUTE_TO_HOST) {
+                    errorCallback.errorResponse("Host unreachable");
+                    return;
+                } else if (msg.getData().getInt(HttpClient.EXCEPTION_KEY, 0) == HttpClient.IO_EXCEPTION) {
+                    errorCallback.errorResponse("IO exception "
+                            + msg.getData().getString(HttpClient.EXCEPTION_DATA_KEY));
+                    return;
+                } else if (msg.getData().getInt(
+                        HttpClient.EXCEPTION_KEY, 0) == HttpClient.CONNECT_EXCEPTION) {
+                    errorCallback.errorResponse("Connection error, check if blaster is active");
+                    return;
+                }
+
                 String response = msg.getData().getString(HttpClient.RESPONSE_KEY);
 
                 int protocol = Integer.parseInt(response.substring(0, response.indexOf(';')));

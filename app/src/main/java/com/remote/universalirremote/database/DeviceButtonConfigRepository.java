@@ -122,4 +122,17 @@ public class DeviceButtonConfigRepository {
         );
     }
 
+    public boolean getDeviceButtonConfig(String device, int button) {
+        if(_getterCallback == null)
+            return false;
+
+        UniversalRemoteDatabase.databaseWriteExecutor.execute(
+                () -> _getterCallback.buttonConfig(
+                        _deviceButtonConfigAccess.getButtonConfig(device, button)
+                )
+        );
+
+        return true;
+    }
+
 }

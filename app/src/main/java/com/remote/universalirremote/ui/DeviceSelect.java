@@ -262,7 +262,7 @@ public class DeviceSelect extends AppCompatActivity {
 
         if(_selectedDevice == null) {
             Toast.makeText(getApplicationContext(),
-                    "Select a device ", Toast.LENGTH_LONG).show();
+                    "Select a device ", Toast.LENGTH_SHORT).show();
         } else {
             Intent intent;
             switch( _selectedDevice.getDeviceLayout() ) {
@@ -282,7 +282,7 @@ public class DeviceSelect extends AppCompatActivity {
 
                 default: {
                     Toast.makeText(getApplicationContext(),
-                            "invalid layout", Toast.LENGTH_LONG).show();
+                            "invalid layout", Toast.LENGTH_SHORT).show();
                     return;
                 }
             }

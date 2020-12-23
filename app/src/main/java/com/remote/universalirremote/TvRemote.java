@@ -27,6 +27,7 @@ import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.remote.universalirremote.database.DeviceButtonConfig;
@@ -48,7 +49,7 @@ public abstract class TvRemote extends AppCompatActivity {
     public static final String TAG = "TvRemote";
 
     protected void renameOkOrConfig(String name) {
-        ((TextView)findViewById(R.id.btn_okConfig)).setText(name);
+        ((Button)findViewById(R.id.btn_okConfig)).setText(name);
     }
 
     @Override
@@ -81,6 +82,11 @@ public abstract class TvRemote extends AppCompatActivity {
                     public void doesEntryExist(boolean doesExist) {
 
                     }
+
+                    @Override
+                    public void buttonConfig(DeviceButtonConfig buttonConfigData) {
+
+                    }
                 });
         _deviceInfoRepo = new DeviceInfoRepository(getApplication(), null);
 
@@ -96,9 +102,7 @@ public abstract class TvRemote extends AppCompatActivity {
                 ApplicationWideSingleton.refreshSelectedDevice(device);
                 Log.d(TAG, "refreshing device");
 
-                _deviceButtonConfigRepo.useDatabaseExecutor(
-                        () -> _deviceButtonConfigRepo.getAllRawData(device.getDeviceName())
-                );
+                _deviceButtonConfigRepo.getAllRawData(device.getDeviceName());
             }
         }
 
@@ -107,9 +111,7 @@ public abstract class TvRemote extends AppCompatActivity {
             NsdServiceInfo service = savedInstanceState.getParcelable(Constant.INT_SERVICE_KEY);
             ApplicationWideSingleton.refreshSelectedDevice(device);
             ApplicationWideSingleton.refreshSelectedService(service);
-            _deviceButtonConfigRepo.useDatabaseExecutor(
-                    () -> _deviceButtonConfigRepo.getAllRawData(device.getDeviceName())
-            );
+            _deviceButtonConfigRepo.getAllRawData(device.getDeviceName());
         }
     }
 
@@ -139,9 +141,7 @@ public abstract class TvRemote extends AppCompatActivity {
             if(device != null) {
                 ApplicationWideSingleton.refreshSelectedDevice(device);
                 Log.d(TAG, "refreshing device");
-                _deviceButtonConfigRepo.useDatabaseExecutor(
-                        () -> _deviceButtonConfigRepo.getAllRawData(device.getDeviceName())
-                );
+                _deviceButtonConfigRepo.getAllRawData(device.getDeviceName());
             }
         }
         super.onStart();

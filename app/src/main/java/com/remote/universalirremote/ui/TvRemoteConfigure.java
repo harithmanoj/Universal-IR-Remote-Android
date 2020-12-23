@@ -32,8 +32,11 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NavUtils;
 
 import com.remote.universalirremote.ApplicationWideSingleton;
+import com.remote.universalirremote.Constant;
 import com.remote.universalirremote.TvRemote;
 import com.remote.universalirremote.database.DeviceButtonConfig;
+import com.remote.universalirremote.database.DeviceDataParcelable;
+import com.remote.universalirremote.network.NetworkErrorCallback;
 import com.remote.universalirremote.network.RawGet;
 
 import java.util.ArrayList;
@@ -51,6 +54,17 @@ public class TvRemoteConfigure extends TvRemote {
 
     public static final String USE_MOD = "handler.mode";
     public static final int STORE_ALL = 3;
+
+    void terminate() {
+        _getRawIrTiming.terminate();
+        _getResponseHandlerThread.quitSafely();
+    }
+
+    @Override
+    protected void onStop() {
+        terminate();
+        super.onStop();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +99,6 @@ public class TvRemoteConfigure extends TvRemote {
                     for (int i = 0; i < _addedButtons.size(); ++i) {
                         if (_addedButtons.get(i).getButtonId() == id) {
                             DeviceButtonConfig current = _addedButtons.get(i);
-                            _addedButtons.remove(i);
                             _configuredButtons.add(
                                     new DeviceButtonConfig(
                                             id,
@@ -100,12 +113,13 @@ public class TvRemoteConfigure extends TvRemote {
                                     () -> Toast.makeText(
                                             getApplicationContext(),
                                             "button " + current.getDeviceButtonName() + " configured",
-                                            Toast.LENGTH_LONG).show()
+                                            Toast.LENGTH_SHORT).show()
                             );
 
                             break;
                         }
                     }
+                    _addedButtons.clear();
                 } else if (mode == STORE_ALL) {
                     synchronized (_waitOnWriteCompletion) {
                         for ( DeviceButtonConfig i : _configuredButtons ) {
@@ -122,7 +136,11 @@ public class TvRemoteConfigure extends TvRemote {
             }
         };
         _getRawIrTiming = new RawGet(ApplicationWideSingleton.getSelectedService(),
-                _getResponseHandler);
+                _getResponseHandler,
+                errorString -> runOnUiThread(
+                        () -> Toast.makeText(getApplicationContext(),
+                                "Network error: " + errorString, Toast.LENGTH_SHORT).show()
+        ));
         super.onStart();
     }
 
@@ -145,6 +163,9 @@ public class TvRemoteConfigure extends TvRemote {
                         _btnNames[btnId]
                 )
         );
+        synchronized (_waitOnWriteCompletion) {
+            _hasCompletedSave = false;
+        }
         _getRawIrTiming.getData(btnId);
     }
 
@@ -168,7 +189,6 @@ public class TvRemoteConfigure extends TvRemote {
                     _waitOnWriteCompletion.wait();
             } catch (InterruptedException ex) {
                 Log.d(TAG, "interrupted ", ex);
-                ex.printStackTrace();
             }
         }
         dialog.dismiss();

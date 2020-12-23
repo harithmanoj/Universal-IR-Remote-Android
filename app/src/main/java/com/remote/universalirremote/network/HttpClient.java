@@ -35,8 +35,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.NoRouteToHostException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,6 +53,11 @@ public class HttpClient {
     public static final String RESPONSE_KEY = "response.transaction";
     public static final String RESPONSE_CODE_KEY = "response.key.transaction";
     public static final String TRANSACTION_KEY = "transaction.request";
+    public static final String EXCEPTION_KEY = "transaction.exception";
+    public static final int NO_ROUTE_TO_HOST = 10;
+    public static final int IO_EXCEPTION = 20;
+    public static final int CONNECT_EXCEPTION = 30;
+    public static final String EXCEPTION_DATA_KEY = "exception.key";
 
     private final HandlerThread _transactionHandlerThread;
     private final Handler _transactionHandler;
@@ -75,10 +82,8 @@ public class HttpClient {
                         _httpConnection = (HttpURLConnection)url.openConnection();
                     } catch (MalformedURLException ex) {
                         Log.e(TAG, "malformed url exception ", ex);
-                        ex.printStackTrace();
                     } catch (IOException ex) {
                         Log.e(TAG, "IO exception ", ex);
-                        ex.printStackTrace();
                     }
                     _httpConnection.setInstanceFollowRedirects(false);
                     if(request._requestMethod.equals("POST"))
@@ -124,9 +129,29 @@ public class HttpClient {
                     msgr.setData(msgBundle);
                     _responseHandler.sendMessage(msgr);
 
+                } catch (NoRouteToHostException ex) {
+                    Log.i(TAG, " no route to host exception");
+                    Bundle msgBundle = new Bundle();
+                    msgBundle.putInt(EXCEPTION_KEY, NO_ROUTE_TO_HOST);
+                    Message msgr = new Message();
+                    msgr.setData(msgBundle);
+                    _responseHandler.sendMessage(msgr);
+                } catch (ConnectException ex) {
+                    Log.i(TAG, "exception due to connection error", ex);
+                    Bundle msgBundle = new Bundle();
+                    msgBundle.putInt(EXCEPTION_KEY, CONNECT_EXCEPTION);
+                    msgBundle.putString(EXCEPTION_DATA_KEY, ex.getMessage());
+                    Message msgr = new Message();
+                    msgr.setData(msgBundle);
+                    _responseHandler.sendMessage(msgr);
                 } catch (IOException ex) {
-                    Log.e(TAG, " exception at transaction executor", ex);
-                    ex.printStackTrace();
+                    Log.i(TAG, " exception at transaction executor", ex);
+                    Bundle msgBundle = new Bundle();
+                    msgBundle.putInt(EXCEPTION_KEY, IO_EXCEPTION);
+                    msgBundle.putString(EXCEPTION_DATA_KEY, ex.getMessage());
+                    Message msgr = new Message();
+                    msgr.setData(msgBundle);
+                    _responseHandler.sendMessage(msgr);
                 }
 
             }
