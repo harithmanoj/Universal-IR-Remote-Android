@@ -88,6 +88,19 @@ public class AcRemote extends AppCompatActivity {
 
     public static final String TAG = "AcRemote";
 
+    private void updateSelfCleanMode() {
+        int cleanColor = R.color.transparent;
+        if(_isSelfCleanModeOn)
+            cleanColor = R.color.translucentGreen;
+        ((Button)findViewById(R.id.btn_clean)).setBackgroundColor(cleanColor);
+    }
+
+    public void clickClean() {
+        _isSelfCleanModeOn = !_isSelfCleanModeOn;
+        sendDataNow(BTN_CLEAN);
+        updateSelfCleanMode();
+    }
+
     private void updateEconomy() {
         int ecoColor = R.color.transparent;
         if(_isEconomy)
