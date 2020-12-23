@@ -298,4 +298,28 @@ public class AcRemote extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void sendDataNow(String btnName) {
+        _sendAcStatusUpdate.sendData(
+                ApplicationWideSingleton.getSelectedDevice().getProtocolInfo(),
+                0,
+                _powerStatus,
+                _modeStatus,
+                _temperatureStatus,
+                _isTemperatureInCelsius,
+                _fanSpeed,
+                _swingVertical,
+                _swingHorizontal,
+                _isQuiet,
+                _isTurboing,
+                _isEconomy,
+                _isDisplayOn,
+                _isFilterModeOn,
+                _isSelfCleanModeOn,
+                _isReceivingBeepOn,
+                _sleepMinutes,
+                _clockMinutesSinceMidnight,
+                btnName
+        );
+    }
+
 }
