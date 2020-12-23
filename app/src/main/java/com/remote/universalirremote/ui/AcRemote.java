@@ -228,7 +228,7 @@ public class AcRemote extends AppCompatActivity {
                 break;
             }
         }
-        ((TextView)findViewById()).setText(swingVertical);
+        ((TextView)findViewById(R.id.text_swingVertical)).setText(swingVertical);
     }
 
     private void updateSwingHorizontal() {
@@ -260,7 +260,7 @@ public class AcRemote extends AppCompatActivity {
                 break;
             }
         }
-        ((TextView)findViewById()).setText(swingHorizontal);
+        ((TextView)findViewById(R.id.text_swingHorizontal)).setText(swingHorizontal);
     }
 
     public void clickSwingVertical(View view) {
@@ -330,7 +330,7 @@ public class AcRemote extends AppCompatActivity {
                 break;
             }
         }
-        ((TextView)findViewById()).setText(mode);
+        ((TextView)findViewById(R.id.text_mode)).setText(mode);
     }
 
     public void clickMode(View view) {
