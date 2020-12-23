@@ -31,6 +31,7 @@ import android.os.HandlerThread;
 import android.os.Message;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,6 +56,7 @@ public class AcRemote extends AppCompatActivity {
     private int _temperatureStatus = 16;
     private boolean _isTemperatureInCelsius = true; // false is Fahrenheit
     private int _fanSpeed = Constant.AcFan.kLow;
+    private int _fanSpeedPrevious = Constant.AcFan.kLow;
     private int _swingVertical = Constant.AcSwingv.kAuto;
     private int _swingHorizontal = Constant.AcSwingh.kAuto;
     private boolean _isQuiet = false;
@@ -66,6 +68,23 @@ public class AcRemote extends AppCompatActivity {
     private boolean _isReceivingBeepOn = true;
     private int _sleepMinutes = 0;
     private int _clockMinutesSinceMidnight = -10;
+
+    public static final String BTN_TEMP_INC = "TemperatureIncrease",
+            BTN_CLEAN = "SelfCleanMode",
+            BTN_VSWING = "VerticalSwing",
+            BTN_HSWING = "HorizontalSwing",
+            BTN_TEMP_DEC = "TemperatureDecrease",
+            BTN_TURBO = "Turbo",
+            BTN_ECO = "Economy",
+            BTN_REC_BEEP = "BeepOnRecieve",
+            BTN_MODE = "Mode",
+            BTN_POWER = "Power",
+            BTN_DISPLAY_LIGHT = "DisplayLight",
+            BTN_SPEED_HIGH = "HighFanSpeed",
+            BTN_SPEED_LOW = "LowFanSpeed",
+            BTN_SPEED_MID = "MediumFanSpeed";
+
+
 
     public static final String TAG = "AcRemote";
 
@@ -207,6 +226,42 @@ public class AcRemote extends AppCompatActivity {
                 getResources().getColor(lowBack));
         ((Button)findViewById(R.id.btn_speedMedium)).setBackgroundColor(
                 getResources().getColor(medBack));
+    }
+
+    public void clickFanHigh(View view) {
+        if(_fanSpeed == Constant.AcFan.kHigh) {
+            Toast.makeText(getApplicationContext(),
+                    "Fan speed is already high", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        _fanSpeedPrevious = _fanSpeed;
+        _fanSpeed = Constant.AcFan.kHigh;
+        sendDataNow(BTN_SPEED_HIGH);
+        updateFanSpeed();
+    }
+
+    public void clickFanLow(View view) {
+        if(_fanSpeed == Constant.AcFan.kLow) {
+            Toast.makeText(getApplicationContext(),
+                    "Fan speed is already low", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        _fanSpeedPrevious = _fanSpeed;
+        _fanSpeed = Constant.AcFan.kLow;
+        sendDataNow(BTN_SPEED_LOW);
+        updateFanSpeed();
+    }
+
+    public void clickFanMedium(View view) {
+        if(_fanSpeed == Constant.AcFan.kMedium) {
+            Toast.makeText(getApplicationContext(),
+                    "Fan speed is already medium", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        _fanSpeedPrevious = _fanSpeed;
+        _fanSpeed = Constant.AcFan.kMedium;
+        sendDataNow(BTN_SPEED_MID);
+        updateFanSpeed();
     }
     
 
