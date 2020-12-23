@@ -193,6 +193,7 @@ public class AcRemote extends AppCompatActivity {
         }
         ((TextView)findViewById()).setText(mode);
     }
+    
 
     private void updatePowerStatus() {
         if(_powerStatus) {
@@ -202,6 +203,12 @@ public class AcRemote extends AppCompatActivity {
             ((Button)findViewById(R.id.btn_power)).setBackgroundColor(
                     getResources().getColor(R.color.transparent));
         }
+    }
+
+    public void clickPower(View view) {
+        _powerStatus = !_powerStatus;
+        sendDataNow(BTN_POWER);
+        updatePowerStatus();
     }
 
     private void updateFanSpeed() {
