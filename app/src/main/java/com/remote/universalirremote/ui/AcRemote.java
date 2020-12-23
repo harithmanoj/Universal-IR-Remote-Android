@@ -156,6 +156,26 @@ public class AcRemote extends AppCompatActivity {
         ((TextView)findViewById()).setText(swingHorizontal);
     }
 
+    public void clickSwingVertical(View view) {
+        if(_swingVertical == 5) {
+            _swingVertical = 0;
+        } else {
+            ++_swingVertical;
+        }
+        sendDataNow(BTN_VSWING);
+        updateSwingVertical();
+    }
+
+    public void clickSwingHorizontal(View view) {
+        if(_swingHorizontal == 6) {
+            _swingHorizontal = 0;
+        } else {
+            ++_swingHorizontal;
+        }
+        sendDataNow(BTN_HSWING);
+        updateSwingHorizontal();
+    }
+
     private String getTemperatureUnit() {
         if(_isTemperatureInCelsius)
             return "C";
