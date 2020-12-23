@@ -56,15 +56,14 @@ public class GenRemoteTransmit extends GenRemote {
 
     @Override
     protected void onStop() {
-        terminate();
         super.onStop();
+        terminate();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
     // Menu item selected process
     @Override
@@ -79,7 +78,7 @@ public class GenRemoteTransmit extends GenRemote {
     }
     @Override
     protected void onStart() {
-
+        super.onStart();
         _deviceButtonConfigRepo.useDatabaseExecutor(
                 () -> {
                     _buttonConfigList = _deviceButtonConfigRepo
@@ -128,14 +127,13 @@ public class GenRemoteTransmit extends GenRemote {
                         () -> Toast.makeText(getApplicationContext(),
                                 "Network error: " + errorString, Toast.LENGTH_SHORT).show()
                 ));
-        super.onStart();
     }
 
     @Override
     protected void onResume() {
+        super.onResume();
         renameOkOrConfig("Config");
         _deviceButtonConfigRepo.getAllRawData(ApplicationWideSingleton.getSelectedDeviceName());
-        super.onResume();
     }
 
     @Override

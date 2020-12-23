@@ -141,26 +141,26 @@ public class NewDevice extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-        _deviceDataRepository = new DeviceInfoRepository(getApplication(), null);
         super.onStart();
+        _deviceDataRepository = new DeviceInfoRepository(getApplication(), null);
     }
 
     @Override
     protected void onResume() {
-
+        super.onResume();
         ApplicationWideSingleton.refreshSelectedService(
                 getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY)
         );
         ((TextView)findViewById(R.id.text_selectedBlaster_add_remote))
                 .setText(ApplicationWideSingleton.getSelectedService().getServiceName());
-        super.onResume();
+
     }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-
-        outState.putParcelable(Constant.INT_SERVICE_KEY, ApplicationWideSingleton.getSelectedService());
         super.onSaveInstanceState(outState);
+        outState.putParcelable(Constant.INT_SERVICE_KEY, ApplicationWideSingleton.getSelectedService());
+
     }
 
     // Menu item selected process

@@ -62,16 +62,16 @@ public class TvRemoteConfigure extends TvRemote {
 
     @Override
     protected void onStop() {
-        terminate();
         super.onStop();
+        terminate();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         _addedButtons = new ArrayList<>();
         _configuredButtons = new ArrayList<>();
-        super.onCreate(savedInstanceState);
     }
     // Menu item selected process
     @Override
@@ -86,6 +86,7 @@ public class TvRemoteConfigure extends TvRemote {
     }
     @Override
     protected void onStart() {
+        super.onStart();
         _getResponseHandlerThread = new HandlerThread("RawTvRemoteGetResponse");
         _getResponseHandlerThread.start();
         _hasCompletedSave = false;
@@ -141,14 +142,13 @@ public class TvRemoteConfigure extends TvRemote {
                         () -> Toast.makeText(getApplicationContext(),
                                 "Network error: " + errorString, Toast.LENGTH_SHORT).show()
         ));
-        super.onStart();
     }
 
     @Override
     protected void onResume() {
+        super.onResume();
         renameOkOrConfig("OK");
         _deviceButtonConfigRepo.getAllRawData(ApplicationWideSingleton.getSelectedDeviceName());
-        super.onResume();
     }
 
     @Override

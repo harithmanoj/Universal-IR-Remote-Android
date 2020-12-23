@@ -229,23 +229,21 @@ public class DeviceSelect extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-
+        super.onSaveInstanceState(outState);
         if(ApplicationWideSingleton.isSelectedDeviceValid())
             outState.putString(Constant.INT_SELECTED_DEVICE, ApplicationWideSingleton.getSelectedDevice().getDeviceName());
         outState.putParcelable(Constant.INT_SERVICE_KEY, ApplicationWideSingleton.getSelectedService());
-        super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onStart() {
-
+        super.onStart();
         NsdServiceInfo selectedService = getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY);
         if(selectedService == null)
             selectedService = ApplicationWideSingleton.getSelectedService();
         else
             ApplicationWideSingleton.refreshSelectedService(selectedService);
         ((TextView)findViewById(R.id.text_selectedBlaster)).setText(selectedService.getServiceName());
-        super.onStart();
     }
 
     @Override

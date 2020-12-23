@@ -158,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
     // [ starts discovery ]
     @Override
     protected void onStart() {
+        super.onStart();
         Log.d(TAG, "Starting ");
         _discoveryThread = new HandlerThread("DiscoverHandler");
         _discoveryThread.start();
@@ -199,21 +200,20 @@ public class MainActivity extends AppCompatActivity {
         _networkManager = new NetworkManager(this, _discoveryHandler);
         refreshSpinner();
         _networkManager.discoverServices();     // start discovery
-        super.onStart();
     }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-
+        super.onSaveInstanceState(outState);
         if(ApplicationWideSingleton.isSelectedDeviceValid())
             outState.putString(Constant.INT_SELECTED_DEVICE, ApplicationWideSingleton.getSelectedDevice().getDeviceName());
         if(ApplicationWideSingleton.isSelectedServiceValid())
             outState.putParcelable(Constant.INT_SERVICE_KEY, ApplicationWideSingleton.getSelectedService());
-        super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onResume() {
+        super.onResume();
         Log.d(TAG, "Resuming");
         if (_networkManager != null) {
             _networkManager.discoverServices();
@@ -221,22 +221,21 @@ public class MainActivity extends AppCompatActivity {
         ProgressBar circle = findViewById(R.id.prg_resolveProgress);
         circle.setVisibility(View.GONE);
         ApplicationWideSingleton.refreshSelectedService(_selectedService);
-        super.onResume();
     }
 
     @Override
     protected void onPause() {
+        super.onPause();
         Log.d(TAG, "Pausing");
         if(_networkManager != null)
             _networkManager.stopDiscover();
-        super.onPause();
     }
 
     @Override
     protected void onStop() {
+        super.onStop();
         Log.d(TAG, "stopped");
         terminate();
-        super.onStop();
     }
 
 

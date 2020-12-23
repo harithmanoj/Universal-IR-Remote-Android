@@ -51,15 +51,14 @@ public class TvRemoteTransmit extends TvRemote {
 
     @Override
     protected void onStop() {
-        terminate();
         super.onStop();
+        terminate();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
     // Menu item selected process
     @Override
@@ -74,6 +73,7 @@ public class TvRemoteTransmit extends TvRemote {
     }
     @Override
     protected void onStart() {
+        super.onStart();
         _sendResponseThread = new HandlerThread("RawTvRemoteSendResponse");
         _sendResponseThread.start();
         Handler sendResponse = new Handler(_sendResponseThread.getLooper()) {
@@ -94,14 +94,13 @@ public class TvRemoteTransmit extends TvRemote {
                         () -> Toast.makeText(getApplicationContext(),
                                 "Network error: " + errorString, Toast.LENGTH_SHORT).show()
                 ));
-        super.onStart();
     }
 
     @Override
     protected void onResume() {
+        super.onResume();
         renameOkOrConfig("Config");
         _deviceButtonConfigRepo.getAllRawData(ApplicationWideSingleton.getSelectedDeviceName());
-        super.onResume();
     }
 
     @Override
