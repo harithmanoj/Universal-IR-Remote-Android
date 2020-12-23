@@ -69,11 +69,42 @@ public class AcRemote extends AppCompatActivity {
 
     public static final String TAG = "AcRemote";
 
+    private String getTemperatureUnit() {
+        if(_isTemperatureInCelsius)
+            return "C";
+        else
+            return "F";
+    }
+
     private int updateTemperature() {
         ((TextView)findViewById(R.id.text_temperatureDisplay)).setText(
-                ((Integer)_temperatureStatus).toString() + getString(R.string.degree) + " C"
+                ((Integer)_temperatureStatus).toString() + getString(R.string.degree)
+                        + " " + getTemperatureUnit()
         );
         return _temperatureStatus;
+    }
+
+    private void updateModeStatus() {
+        String mode = null;
+        switch(_modeStatus) {
+            case Constant.AcMode.kAuto: {
+                mode = "Auto Mode";
+                break;
+            } case Constant.AcMode.kCool: {
+                mode = "Cool Mode";
+                break;
+            } case Constant.AcMode.kDry: {
+                mode = "Dry Mode";
+                break;
+            } case Constant.AcMode.kFan: {
+                mode = "Fan Mode";
+                break;
+            } case Constant.AcMode.kHeat: {
+                mode = "Heat Mode";
+                break;
+            }
+        }
+        ((TextView)findViewById()).setText(mode);
     }
 
     private void updatePowerStatus() {
@@ -86,7 +117,25 @@ public class AcRemote extends AppCompatActivity {
         }
     }
 
-
+    private void updateFanSpeed() {
+        String fan = null;
+        switch(_fanSpeed) {
+            case Constant.AcFan.kAuto: {
+                fan = "Auto Speed";
+                break;
+            } case Constant.AcFan.kHigh: {
+                fan = "High Speed";
+                break;
+            } case Constant.AcFan.kLow: {
+                fan = "Low Speed";
+                break;
+            } case Constant.AcFan.kMedium: {
+                fan = "Medium Speed";
+                break;
+            }
+        }
+        ((TextView)findViewById()).setText(fan);
+    }
     
 
     @Override
