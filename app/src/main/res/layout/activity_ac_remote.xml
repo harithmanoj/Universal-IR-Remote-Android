@@ -26,6 +26,8 @@
     tools:context=".ui.AcRemote">
 
 
+
+
     <Button
         android:id="@+id/btn_sleep"
         android:layout_width="100dp"
@@ -229,5 +231,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.959" />
+
+    <TextView
+        android:id="@+id/text_temperatureDisplay"
+        android:layout_width="63dp"
+        android:layout_height="47dp"
+        android:text="16&#xb0; C"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.084" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
