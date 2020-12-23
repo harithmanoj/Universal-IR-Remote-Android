@@ -144,7 +144,7 @@ public class AcRemote extends AppCompatActivity {
         ((Button)findViewById(R.id.btn_light)).setBackgroundColor(dispColor);
     }
 
-    public void clickDisplayLight() {
+    public void clickDisplayLight(View view) {
         _isDisplayOn = !_isDisplayOn;
         sendDataNow(BTN_DISPLAY_LIGHT);
         updateDisplayLight();
@@ -157,7 +157,7 @@ public class AcRemote extends AppCompatActivity {
         ((Button)findViewById(R.id.btn_silent)).setBackgroundColor(recColor);
     }
 
-    public void clickSilent() {
+    public void clickSilent(View view) {
         _isReceivingBeepOn = !_isReceivingBeepOn;
         sendDataNow(BTN_REC_BEEP);
         updateReceiveBeep();
@@ -170,7 +170,7 @@ public class AcRemote extends AppCompatActivity {
         ((Button)findViewById(R.id.btn_clean)).setBackgroundColor(cleanColor);
     }
 
-    public void clickClean() {
+    public void clickClean(View view) {
         _isSelfCleanModeOn = !_isSelfCleanModeOn;
         sendDataNow(BTN_CLEAN);
         updateSelfCleanMode();
@@ -183,7 +183,7 @@ public class AcRemote extends AppCompatActivity {
         ((Button)findViewById(R.id.btn_economy)).setBackgroundColor(ecoColor);
     }
 
-    public void clickEconomy() {
+    public void clickEconomy(View view) {
         _isEconomy = !_isEconomy;
         sendDataNow(BTN_ECO);
         updateEconomy();
