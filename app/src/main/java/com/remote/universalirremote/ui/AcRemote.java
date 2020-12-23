@@ -85,6 +85,56 @@ public class AcRemote extends AppCompatActivity {
             BTN_SPEED_MID = "MediumFanSpeed";
 
 
+    private void undoButtonClick(String btnName) {
+        if(btnName.equals(BTN_TEMP_INC)) {
+            --_temperatureStatus;
+            updateTemperature();
+        } else if (btnName.equals(BTN_TEMP_DEC)) {
+            ++_temperatureStatus;
+            updateTemperature();
+        } else if (btnName.equals(BTN_CLEAN)) {
+            _isSelfCleanModeOn = !_isSelfCleanModeOn;
+            updateSelfCleanMode();
+        } else if (btnName.equals(BTN_VSWING)) {
+            if(_swingVertical == 0)
+                _swingVertical = 5;
+            else
+                --_swingVertical;
+            updateSwingVertical();
+        } else if (btnName.equals(BTN_HSWING)) {
+            if(_swingHorizontal == 0)
+                _swingHorizontal = 6;
+            else
+                -- _swingHorizontal;
+            updateSwingHorizontal();
+        } else if (btnName.equals(BTN_TURBO)) {
+            _isTurboing = !_isTurboing;
+            updateTurbo();
+        } else if (btnName.equals(BTN_ECO)) {
+            _isEconomy = !_isEconomy;
+            updateEconomy();
+        } else if (btnName.equals(BTN_REC_BEEP)) {
+            _isReceivingBeepOn = !_isReceivingBeepOn;
+            updateReceiveBeep();
+        } else if (btnName.equals(BTN_MODE)) {
+            if(_modeStatus == 0)
+                _modeStatus = 4;
+            else
+                --_modeStatus;
+            updateModeStatus();
+        } else if (btnName.equals(BTN_POWER)) {
+            _powerStatus = !_powerStatus;
+            updatePowerStatus();
+        } else if (btnName.equals(BTN_DISPLAY_LIGHT)) {
+            _isDisplayOn = !_isDisplayOn;
+            updateDisplayLight();
+        } else if (btnName.equals(BTN_SPEED_HIGH)
+                        || btnName.equals(BTN_SPEED_LOW)
+                        || btnName.equals(BTN_SPEED_MID)) {
+            _fanSpeed = _fanSpeedPrevious;
+            updateFanSpeed();
+        }
+    }
 
     public static final String TAG = "AcRemote";
 
@@ -486,8 +536,5 @@ public class AcRemote extends AppCompatActivity {
         );
     }
 
-    private void undoButtonClick(String btnName) {
-
-    }
 
 }
