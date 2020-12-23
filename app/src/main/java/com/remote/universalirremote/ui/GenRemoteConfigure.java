@@ -217,7 +217,7 @@ public class GenRemoteConfigure extends GenRemote {
                 _getResponseHandler,
                 errorString -> runOnUiThread(
                         () -> Toast.makeText(getApplicationContext(),
-                                "Network error: " + errorString, Toast.LENGTH_SHORT)
+                                "Network error: " + errorString, Toast.LENGTH_SHORT).show()
                 ));
 
         setOnLongClick(BTN_GEN_2);
