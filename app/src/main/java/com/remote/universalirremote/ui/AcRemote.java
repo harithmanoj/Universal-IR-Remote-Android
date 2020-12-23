@@ -171,6 +171,18 @@ public class AcRemote extends AppCompatActivity {
         return _temperatureStatus;
     }
 
+    public void clickTemperatureIncrement(View view) {
+        ++_temperatureStatus;
+        sendDataNow(BTN_TEMP_INC);
+        updateTemperature();
+    }
+
+    public void clickTemperatureDecrement(View view) {
+        --_temperatureStatus;
+        sendDataNow(BTN_TEMP_DEC);
+        updateTemperature();
+    }
+
     private void updateModeStatus() {
         String mode = null;
         switch(_modeStatus) {
