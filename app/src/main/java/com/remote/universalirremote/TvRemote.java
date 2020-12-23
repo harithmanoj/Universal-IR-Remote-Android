@@ -102,9 +102,7 @@ public abstract class TvRemote extends AppCompatActivity {
 
                 _deviceButtonConfigRepo.getAllRawData(device.getDeviceName());
             }
-        }
-
-        if(savedInstanceState != null) {
+        } else if(savedInstanceState != null) {
             DeviceDataParcelable device = savedInstanceState.getParcelable(Constant.INT_SELECTED_DEVICE);
             NsdServiceInfo service = savedInstanceState.getParcelable(Constant.INT_SERVICE_KEY);
             ApplicationWideSingleton.refreshSelectedDevice(device);

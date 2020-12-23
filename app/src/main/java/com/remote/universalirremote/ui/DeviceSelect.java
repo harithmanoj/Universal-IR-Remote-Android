@@ -209,7 +209,14 @@ public class DeviceSelect extends AppCompatActivity {
 
         _deviceDataRepository.getNames();
 
-        if(savedInstanceState != null) {
+        Intent intent = getIntent();
+        if(intent != null) {
+            Log.d(TAG, "intent called now saving");
+            NsdServiceInfo service = intent.getParcelableExtra(Constant.INT_SERVICE_KEY);
+
+            if(service != null )
+                ApplicationWideSingleton.refreshSelectedService(service);
+        } else if(savedInstanceState != null) {
             String device = savedInstanceState.getString(Constant.INT_SELECTED_DEVICE);
             NsdServiceInfo service = savedInstanceState.getParcelable(Constant.INT_SERVICE_KEY);
             _deviceDataRepository.useDatabaseExecutor(
