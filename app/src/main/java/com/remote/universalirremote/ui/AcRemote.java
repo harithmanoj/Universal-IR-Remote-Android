@@ -21,16 +21,50 @@ package com.remote.universalirremote.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
+import android.os.HandlerThread;
+import android.util.Log;
 
+import com.remote.universalirremote.ApplicationWideSingleton;
+import com.remote.universalirremote.Constant;
 import com.remote.universalirremote.R;
+import com.remote.universalirremote.database.DeviceDataParcelable;
+import com.remote.universalirremote.network.ACSend;
 
 public class AcRemote extends AppCompatActivity {
+
+    private HandlerThread _sendResponseHandlerThread;
+    private ACSend _sendAcStatusUpdate;
+
+    public static final String TAG = "AcRemote";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ac_remote);
+
+        Intent intent = getIntent();
+        if(intent != null) {
+            Log.d(TAG, "intent called now saving");
+            DeviceDataParcelable device = intent.getParcelableExtra(Constant.INT_SELECTED_DEVICE);
+            NsdServiceInfo service = intent.getParcelableExtra(Constant.INT_SERVICE_KEY);
+
+            if(service != null )
+                ApplicationWideSingleton.refreshSelectedService(service);
+            if(device != null) {
+                ApplicationWideSingleton.refreshSelectedDevice(device);
+                Log.d(TAG, "refreshing device");
+            }
+        }
+
+        if(savedInstanceState != null) {
+            DeviceDataParcelable device = savedInstanceState.getParcelable(Constant.INT_SELECTED_DEVICE);
+            NsdServiceInfo service = savedInstanceState.getParcelable(Constant.INT_SERVICE_KEY);
+            ApplicationWideSingleton.refreshSelectedDevice(device);
+            ApplicationWideSingleton.refreshSelectedService(service);
+        }
     }
 
 

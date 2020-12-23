@@ -110,7 +110,7 @@ public class GenRemoteTransmit extends GenRemote {
 
         _sendResponseThread = new HandlerThread("RawTvRemoteSendResponse");
         _sendResponseThread.start();
-        Handler _sendResponse = new Handler(_sendResponseThread.getLooper()) {
+        Handler sendResponse = new Handler(_sendResponseThread.getLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
                 if (msg.getData().getInt(RawSend.CODE_KEY) != HttpURLConnection.HTTP_OK) {
@@ -123,7 +123,7 @@ public class GenRemoteTransmit extends GenRemote {
             }
         };
         _sendRawIrTiming = new RawSend(ApplicationWideSingleton.getSelectedService(),
-                _sendResponse,
+                sendResponse,
                 errorString -> runOnUiThread(
                         () -> Toast.makeText(getApplicationContext(),
                                 "Network error: " + errorString, Toast.LENGTH_SHORT)
