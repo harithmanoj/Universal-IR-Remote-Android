@@ -315,7 +315,7 @@ public final class Constant {
     }
 
     public static class AcMode{
-        public static int kOff  = -1,
+        public static final int kOff  = -1,
             kAuto =  0,
             kCool =  1,
             kHeat =  2,
@@ -324,7 +324,7 @@ public final class Constant {
     };
 
     public static class AcFan{
-        public static int  kAuto =   0,
+        public static final int  kAuto =   0,
             kMin =    1,
             kLow =    2,
             kMedium = 3,
@@ -333,7 +333,7 @@ public final class Constant {
     }
 
     public static class AcSwingv{
-        public static int kOff =    -1,
+        public static final int kOff =    -1,
             kAuto =    0,
             kHighest = 1,
             kHigh =    2,
@@ -343,7 +343,7 @@ public final class Constant {
     }
 
     public static class AcSwingh{
-        public static int  kOff =     -1,
+        public static final int  kOff =     -1,
             kAuto =     0,  // a.k.a. On.
             kLeftMax =  1,
             kLeft =     2,

@@ -28,6 +28,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -75,7 +76,7 @@ public class NewDevice extends AppCompatActivity {
     private static final int _layoutDropdownId = R.id.spnr_DeviceSelect;
     private static final int _editTextName = R.id.editTextName;
     private static final int _protocolDropDownId = R.id.spnr_protocolSelect;
-
+    public static final String TAG = "NewDevice";
     private final Context _context = this;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +125,14 @@ public class NewDevice extends AppCompatActivity {
         protocolUI.setAdapter(protocolAdapter);
         protocolUI.setVisibility(View.INVISIBLE);
 
-        if(savedInstanceState != null) {
+        Intent intent = getIntent();
+        if(intent != null) {
+            Log.d(TAG, "intent called now saving");
+            NsdServiceInfo service = intent.getParcelableExtra(Constant.INT_SERVICE_KEY);
+
+            if(service != null )
+                ApplicationWideSingleton.refreshSelectedService(service);
+        } else if(savedInstanceState != null) {
             NsdServiceInfo service = savedInstanceState.getParcelable(Constant.INT_SERVICE_KEY);
 
             ApplicationWideSingleton.refreshSelectedService(service);
@@ -133,26 +141,26 @@ public class NewDevice extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-        _deviceDataRepository = new DeviceInfoRepository(getApplication(), null);
         super.onStart();
+        _deviceDataRepository = new DeviceInfoRepository(getApplication(), null);
     }
 
     @Override
     protected void onResume() {
-
+        super.onResume();
         ApplicationWideSingleton.refreshSelectedService(
                 getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY)
         );
         ((TextView)findViewById(R.id.text_selectedBlaster_add_remote))
                 .setText(ApplicationWideSingleton.getSelectedService().getServiceName());
-        super.onResume();
+
     }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-
-        outState.putParcelable(Constant.INT_SERVICE_KEY, ApplicationWideSingleton.getSelectedService());
         super.onSaveInstanceState(outState);
+        outState.putParcelable(Constant.INT_SERVICE_KEY, ApplicationWideSingleton.getSelectedService());
+
     }
 
     // Menu item selected process

@@ -51,15 +51,14 @@ public class TvRemoteTransmit extends TvRemote {
 
     @Override
     protected void onStop() {
-        terminate();
         super.onStop();
+        terminate();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
     // Menu item selected process
     @Override
@@ -74,9 +73,10 @@ public class TvRemoteTransmit extends TvRemote {
     }
     @Override
     protected void onStart() {
+        super.onStart();
         _sendResponseThread = new HandlerThread("RawTvRemoteSendResponse");
         _sendResponseThread.start();
-        Handler _sendResponse = new Handler(_sendResponseThread.getLooper()) {
+        Handler sendResponse = new Handler(_sendResponseThread.getLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
                 if (msg.getData().getInt(RawSend.CODE_KEY) != HttpURLConnection.HTTP_OK) {
@@ -89,19 +89,18 @@ public class TvRemoteTransmit extends TvRemote {
             }
         };
         _sendRawIrTiming = new RawSend(ApplicationWideSingleton.getSelectedService(),
-                _sendResponse,
+                sendResponse,
                 errorString -> runOnUiThread(
                         () -> Toast.makeText(getApplicationContext(),
                                 "Network error: " + errorString, Toast.LENGTH_SHORT).show()
                 ));
-        super.onStart();
     }
 
     @Override
     protected void onResume() {
+        super.onResume();
         renameOkOrConfig("Config");
         _deviceButtonConfigRepo.getAllRawData(ApplicationWideSingleton.getSelectedDeviceName());
-        super.onResume();
     }
 
     @Override

@@ -23,84 +23,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/ac"
-    tools:context=".ac_remote_">
+    tools:context=".ui.AcRemote">
 
-    <TextView
-        android:id="@+id/textViewSpeedMedium"
-        android:layout_width="68dp"
-        android:layout_height="30dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.51"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.211" />
 
-    <TextView
-        android:id="@+id/textViewSpeedLow5"
-        android:layout_width="68dp"
-        android:layout_height="30dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.113"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.211" />
 
-    <TextView
-        android:id="@+id/textViewClean"
-        android:layout_width="68dp"
-        android:layout_height="30dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.801"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.271" />
-
-    <TextView
-        android:id="@+id/textViewTurbo"
-        android:layout_width="68dp"
-        android:layout_height="30dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.603"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.271" />
-
-    <TextView
-        android:id="@+id/textViewSilent"
-        android:layout_width="68dp"
-        android:layout_height="30dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.405"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.271" />
-
-    <TextView
-        android:id="@+id/textViewEconomy"
-        android:layout_width="68dp"
-        android:layout_height="30dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.206"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.271" />
-
-    <TextView
-        android:id="@+id/textViewSpeedHigh"
-        android:layout_width="68dp"
-        android:layout_height="30dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.906"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.211" />
 
     <Button
         android:id="@+id/btn_sleep"
@@ -127,9 +53,10 @@
         app:layout_constraintVertical_bias="0.959" />
 
     <Button
-        android:id="@+id/btn_tempDecrement"
+        android:id="@+id/btn_tempIncrement"
         android:layout_width="125dp"
         android:layout_height="60dp"
+        android:onClick="clickTemperatureIncrement"
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -142,6 +69,7 @@
         android:id="@+id/btn_clean"
         android:layout_width="100dp"
         android:layout_height="60dp"
+        android:onClick="clickClean"
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -154,6 +82,7 @@
         android:id="@+id/btn_verticalSwing"
         android:layout_width="100dp"
         android:layout_height="60dp"
+        android:onClick="clickSwingVertical"
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -166,6 +95,7 @@
         android:id="@+id/btn_horizontalSwing"
         android:layout_width="100dp"
         android:layout_height="60dp"
+        android:onClick="clickSwingHorizontal"
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -175,9 +105,10 @@
         app:layout_constraintVertical_bias="0.716" />
 
     <Button
-        android:id="@+id/btn_tempIncrement"
+        android:id="@+id/btn_tempDecrement"
         android:layout_width="125dp"
         android:layout_height="60dp"
+        android:onClick="clickTemperatureDecrement"
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -190,6 +121,7 @@
         android:id="@+id/btn_turbo"
         android:layout_width="100dp"
         android:layout_height="60dp"
+        android:onClick="clickTurbo"
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -202,6 +134,7 @@
         android:id="@+id/btn_economy"
         android:layout_width="100dp"
         android:layout_height="60dp"
+        android:onClick="clickEconomy"
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -214,6 +147,7 @@
         android:id="@+id/btn_silent"
         android:layout_width="100dp"
         android:layout_height="60dp"
+        android:onClick="clickSilent"
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -226,6 +160,7 @@
         android:id="@+id/btn_mode"
         android:layout_width="100dp"
         android:layout_height="60dp"
+        android:onClick="clickMode"
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -238,6 +173,7 @@
         android:id="@+id/btn_power"
         android:layout_width="100dp"
         android:layout_height="60dp"
+        android:onClick="clickPower"
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -250,6 +186,7 @@
         android:id="@+id/btn_light"
         android:layout_width="100dp"
         android:layout_height="60dp"
+        android:onClick="clickDisplayLight"
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -262,6 +199,7 @@
         android:id="@+id/btn_speedHigh"
         android:layout_width="100dp"
         android:layout_height="60dp"
+        android:onClick="clickFanHigh"
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -274,6 +212,7 @@
         android:id="@+id/btn_speedMedium"
         android:layout_width="100dp"
         android:layout_height="60dp"
+        android:onClick="clickFanMedium"
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -286,6 +225,7 @@
         android:id="@+id/btn_speedLow"
         android:layout_width="100dp"
         android:layout_height="60dp"
+        android:onClick="clickFanLow"
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -307,35 +247,49 @@
         app:layout_constraintVertical_bias="0.959" />
 
     <TextView
-        android:id="@+id/textViewTemp"
-        android:layout_width="366dp"
-        android:layout_height="123dp"
+        android:id="@+id/text_temperatureDisplay"
+        android:layout_width="63dp"
+        android:layout_height="47dp"
+        android:text="16&#xb0; C"
+        android:textAlignment="center"
+        android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.575"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.029" />
+        app:layout_constraintVertical_bias="0.043" />
 
     <TextView
-        android:id="@+id/textViewVerticalSwing"
-        android:layout_width="68dp"
-        android:layout_height="30dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.708"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.211" />
+        android:id="@+id/text_swingVertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="Auto Vertical Swing"
+        app:layout_constraintBaseline_toBaselineOf="@+id/text_mode"
+        app:layout_constraintEnd_toStartOf="@+id/text_mode"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/textViewHorivontalSwing"
-        android:layout_width="68dp"
-        android:layout_height="30dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/text_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="Auto Mode"
+        app:layout_constraintBottom_toTopOf="@+id/btn_speedMedium"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.311"
+        app:layout_constraintHorizontal_bias="0.507"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.211" />
+        app:layout_constraintTop_toBottomOf="@+id/text_temperatureDisplay"
+        app:layout_constraintVertical_bias="0.401" />
+
+    <TextView
+        android:id="@+id/text_swingHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="Auto Horizontal Swing"
+        app:layout_constraintBaseline_toBaselineOf="@+id/text_mode"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/text_mode" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

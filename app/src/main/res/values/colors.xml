@@ -23,4 +23,5 @@
     <color name="colorAccent">#03DAC5</color>
     <color name="transparent">@android:color/transparent</color>
     <color name="buttonWhite">#FFFFFF</color>
+    <color name="translucentGreen">#6B6EBA20</color>
 </resources>

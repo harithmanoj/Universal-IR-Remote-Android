@@ -69,16 +69,17 @@ public class GenRemoteConfigure extends GenRemote {
 
     @Override
     protected void onStop() {
-        terminate();
         super.onStop();
+        terminate();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         _allButtons = new ArrayList<>();
-        super.onCreate(savedInstanceState);
+
     }
 
     // Menu item selected process
@@ -95,6 +96,7 @@ public class GenRemoteConfigure extends GenRemote {
 
     @Override
     protected void onStart() {
+        super.onStart();
         _deviceButtonConfigRepo.useDatabaseExecutor(
                 () -> {
                     _buttonConfigList = _deviceButtonConfigRepo
@@ -236,9 +238,6 @@ public class GenRemoteConfigure extends GenRemote {
         setOnLongClick(BTN_GEN_A_DOWN);
         setOnLongClick(BTN_GEN_X_DOWN);
         setOnLongClick(BTN_GEN_X_UP);
-
-
-        super.onStart();
     }
 
     private void setOnLongClick(int btnId) {
@@ -323,9 +322,9 @@ public class GenRemoteConfigure extends GenRemote {
 
     @Override
     protected void onResume() {
+        super.onResume();
         renameOkOrConfig("OK");
         _deviceButtonConfigRepo.getAllRawData(ApplicationWideSingleton.getSelectedDeviceName());
-        super.onResume();
     }
 
     @Override
