@@ -76,7 +76,7 @@ public class AcRemote extends AppCompatActivity {
             BTN_TEMP_DEC = "TemperatureDecrease",
             BTN_TURBO = "Turbo",
             BTN_ECO = "Economy",
-            BTN_REC_BEEP = "BeepOnRecieve",
+            BTN_REC_BEEP = "BeepOnReceive",
             BTN_MODE = "Mode",
             BTN_POWER = "Power",
             BTN_DISPLAY_LIGHT = "DisplayLight",
@@ -87,6 +87,32 @@ public class AcRemote extends AppCompatActivity {
 
 
     public static final String TAG = "AcRemote";
+
+    private void updateDisplayLight() {
+        int dispColor = R.color.transparent;
+        if(_isDisplayOn)
+            dispColor = R.color.translucentGreen;
+        ((Button)findViewById(R.id.btn_light)).setBackgroundColor(dispColor);
+    }
+
+    public void clickDisplayLight() {
+        _isDisplayOn = !_isDisplayOn;
+        sendDataNow(BTN_DISPLAY_LIGHT);
+        updateDisplayLight();
+    }
+
+    private void updateReceiveBeep() {
+        int recColor = R.color.transparent;
+        if(_isReceivingBeepOn)
+            recColor = R.color.translucentGreen;
+        ((Button)findViewById(R.id.btn_silent)).setBackgroundColor(recColor);
+    }
+
+    public void clickSilent() {
+        _isReceivingBeepOn = !_isReceivingBeepOn;
+        sendDataNow(BTN_REC_BEEP);
+        updateReceiveBeep();
+    }
 
     private void updateSelfCleanMode() {
         int cleanColor = R.color.transparent;
