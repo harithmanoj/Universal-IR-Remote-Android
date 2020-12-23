@@ -40,6 +40,7 @@ public class ACSend {
     public static final String CODE_KEY = "response.code";
     public static final String POST_MSG_KEY = "post.msg.key";
     public static final String POST_META_KEY = "post.meta.key";
+    public static final String POST_META_FAN_KEY = "post.meta.fan.key";
 
     public static final String AC_URI = "/ac";
 
@@ -80,6 +81,9 @@ public class ACSend {
                                 ._postData));
                 msgBundle.putParcelable(POST_META_KEY, ((HttpClient.Request) msg.getData()
                         .getParcelable(HttpClient.TRANSACTION_KEY))._requestMeta.get(0)
+                );
+                msgBundle.putParcelable(POST_META_FAN_KEY, ((HttpClient.Request) msg.getData()
+                        .getParcelable(HttpClient.TRANSACTION_KEY))._requestMeta.get(1)
                 );
                 Message msgr = new Message();
                 msgr.setData(msgBundle);
@@ -140,7 +144,7 @@ public class ACSend {
                          int fan, int swingv, int swingh,
                          boolean quiet, boolean turbo, boolean econo,
                          boolean light, boolean filter, boolean clean,
-                         boolean beep, int sleep, int clock, String btnname) {
+                         boolean beep, int sleep, int clock, String btnname, int prevFan) {
         String msg = intEncode(protocol) + DELIMITER +
                 intEncode(model) + DELIMITER +
                 boolEncode(power) + DELIMITER +
@@ -168,7 +172,8 @@ public class ACSend {
                         new HttpClient.Request.Property("Connection", "close")
                 },
                 new HttpClient.Request.Property[]{
-                        new HttpClient.Request.Property("buttonName", btnname)
+                        new HttpClient.Request.Property("buttonName", btnname),
+                        new HttpClient.Request.Property("prevFanSpeed", ((Integer)prevFan).toString())
                 }));
 
     }
