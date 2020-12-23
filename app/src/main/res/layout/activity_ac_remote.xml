@@ -243,6 +243,39 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.084" />
+        app:layout_constraintVertical_bias="0.043" />
+
+    <TextView
+        android:id="@+id/text_swingVertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="Auto Vertical Swing"
+        app:layout_constraintBaseline_toBaselineOf="@+id/text_mode"
+        app:layout_constraintEnd_toStartOf="@+id/text_mode"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/text_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="Auto Mode"
+        app:layout_constraintBottom_toTopOf="@+id/btn_speedMedium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.507"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_temperatureDisplay"
+        app:layout_constraintVertical_bias="0.401" />
+
+    <TextView
+        android:id="@+id/text_swingHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="Auto Horizontal Swing"
+        app:layout_constraintBaseline_toBaselineOf="@+id/text_mode"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/text_mode" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
