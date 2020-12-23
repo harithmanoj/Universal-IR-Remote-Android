@@ -69,6 +69,13 @@ public class AcRemote extends AppCompatActivity {
 
     public static final String TAG = "AcRemote";
 
+    private void updateTurbo() {
+        int turboColor = R.color.transparent;
+        if(_isTurboing)
+            turboColor = R.color.translucentGreen;
+        ((Button)findViewById(R.id.btn_turbo)).setBackgroundColor(turboColor);
+    }
+
     private void updateSwingVertical() {
         String swingVertical = null;
         switch (_swingVertical) {
