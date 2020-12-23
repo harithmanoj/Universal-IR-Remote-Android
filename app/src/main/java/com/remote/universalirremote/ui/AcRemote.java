@@ -65,6 +65,7 @@ public class AcRemote extends AppCompatActivity {
             ApplicationWideSingleton.refreshSelectedDevice(device);
             ApplicationWideSingleton.refreshSelectedService(service);
         }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
 
