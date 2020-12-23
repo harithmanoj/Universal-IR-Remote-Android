@@ -69,6 +69,67 @@ public class AcRemote extends AppCompatActivity {
 
     public static final String TAG = "AcRemote";
 
+    private void updateSwingVertical() {
+        String swingVertical = null;
+        switch (_swingVertical) {
+            case Constant.AcSwingv.kAuto: {
+                swingVertical = "Auto Vertical Swing";
+                break;
+            } case Constant.AcSwingv.kHigh: {
+                swingVertical = "High Vertical Swing";
+                break;
+            } case Constant.AcSwingv.kHighest: {
+                swingVertical = "Highest Vertical Swing";
+                break;
+            } case Constant.AcSwingv.kLow: {
+                swingVertical = "Low Vertical Swing";
+                break;
+            } case Constant.AcSwingv.kLowest: {
+                swingVertical = "Lowest Vertical Swing";
+                break;
+            } case Constant.AcSwingv.kMiddle: {
+                swingVertical = "Middle Vertical Swing";
+                break;
+            } case Constant.AcSwingv.kOff: {
+                swingVertical = "Vertical Swing Off";
+                break;
+            }
+        }
+        ((TextView)findViewById()).setText(swingVertical);
+    }
+
+    private void updateSwingHorizontal() {
+        String swingHorizontal = null;
+        switch (_swingHorizontal) {
+            case Constant.AcSwingh.kAuto: {
+                swingHorizontal = "Auto Horizontal Swing";
+                break;
+            } case Constant.AcSwingh.kLeft: {
+                swingHorizontal = "left Horizontal Swing";
+                break;
+            } case Constant.AcSwingh.kLeftMax: {
+                swingHorizontal = "Left Max Horizontal Swing";
+                break;
+            } case Constant.AcSwingh.kRight: {
+                swingHorizontal = "Right Horizontal Swing";
+                break;
+            } case Constant.AcSwingh.kRightMax: {
+                swingHorizontal = "Right Max Horizontal Swing";
+                break;
+            } case Constant.AcSwingh.kMiddle: {
+                swingHorizontal = "Middle Horizontal Swing";
+                break;
+            } case Constant.AcSwingh.kOff: {
+                swingHorizontal = "Horizontal Swing Off";
+                break;
+            } case Constant.AcSwingh.kWide: {
+                swingHorizontal = "Wide Horizontal Swing";
+                break;
+            }
+        }
+        ((TextView)findViewById()).setText(swingHorizontal);
+    }
+
     private String getTemperatureUnit() {
         if(_isTemperatureInCelsius)
             return "C";
