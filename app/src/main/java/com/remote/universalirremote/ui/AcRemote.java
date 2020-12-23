@@ -193,7 +193,15 @@ public class AcRemote extends AppCompatActivity {
         }
         ((TextView)findViewById()).setText(mode);
     }
-    
+
+    public void clickMode(View view) {
+        if(_modeStatus == 4)
+            _modeStatus = 0;
+        else
+            ++_modeStatus;
+        sendDataNow(BTN_MODE);
+        updateModeStatus();
+    }
 
     private void updatePowerStatus() {
         if(_powerStatus) {
