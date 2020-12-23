@@ -139,7 +139,7 @@ public class TvRemoteConfigure extends TvRemote {
                 _getResponseHandler,
                 errorString -> runOnUiThread(
                         () -> Toast.makeText(getApplicationContext(),
-                                "Network error: " + errorString, Toast.LENGTH_SHORT)
+                                "Network error: " + errorString, Toast.LENGTH_SHORT).show()
         ));
         super.onStart();
     }

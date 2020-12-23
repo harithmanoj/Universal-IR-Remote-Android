@@ -60,6 +60,10 @@ public class ACSend {
                     errorCallback.errorResponse("IO exception "
                             + msg.getData().getString(HttpClient.EXCEPTION_DATA_KEY));
                     return;
+                } else if (msg.getData().getInt(
+                        HttpClient.EXCEPTION_KEY, 0) == HttpClient.CONNECT_EXCEPTION) {
+                    errorCallback.errorResponse("Connection error, check if blaster is active");
+                    return;
                 }
 
                 String response = msg.getData().getString(HttpClient.RESPONSE_KEY);
