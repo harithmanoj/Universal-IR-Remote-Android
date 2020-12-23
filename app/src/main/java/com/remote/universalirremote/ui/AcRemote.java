@@ -54,7 +54,7 @@ public class AcRemote extends AppCompatActivity {
     private int _modeStatus = Constant.AcMode.kAuto;
     private int _temperatureStatus = 16;
     private boolean _isTemperatureInCelsius = true; // false is Fahrenheit
-    private int _fanSpeed = Constant.AcFan.kAuto;
+    private int _fanSpeed = Constant.AcFan.kLow;
     private int _swingVertical = Constant.AcSwingv.kAuto;
     private int _swingHorizontal = Constant.AcSwingh.kAuto;
     private boolean _isQuiet = false;
@@ -179,23 +179,27 @@ public class AcRemote extends AppCompatActivity {
     }
 
     private void updateFanSpeed() {
-        String fan = null;
+        int highBack = R.color.transparent;
+        int lowBack = R.color.transparent;
+        int medBack = R.color.transparent;
         switch(_fanSpeed) {
-            case Constant.AcFan.kAuto: {
-                fan = "Auto Speed";
-                break;
-            } case Constant.AcFan.kHigh: {
-                fan = "High Speed";
+            case Constant.AcFan.kHigh: {
+                highBack = R.color.translucentGreen;
                 break;
             } case Constant.AcFan.kLow: {
-                fan = "Low Speed";
+                lowBack = R.color.translucentGreen;
                 break;
             } case Constant.AcFan.kMedium: {
-                fan = "Medium Speed";
+                medBack = R.color.translucentGreen;
                 break;
             }
         }
-        ((TextView)findViewById()).setText(fan);
+        ((Button)findViewById(R.id.btn_speedHigh)).setBackgroundColor(
+                getResources().getColor(highBack));
+        ((Button)findViewById(R.id.btn_speedLow)).setBackgroundColor(
+                getResources().getColor(lowBack));
+        ((Button)findViewById(R.id.btn_speedMedium)).setBackgroundColor(
+                getResources().getColor(medBack));
     }
     
 
