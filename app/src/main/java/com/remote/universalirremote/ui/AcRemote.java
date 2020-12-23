@@ -68,6 +68,33 @@ public class AcRemote extends AppCompatActivity {
     private int _sleepMinutes = 0;
     private int _clockMinutesSinceMidnight = -10;
 
+    void terminate() {
+        _sendResponseHandlerThread.quitSafely();
+        _sendAcStatusUpdate.terminate();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        terminate();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updatePowerStatus();
+        updateModeStatus();
+        updateTemperature();
+        updateFanSpeed();
+        updateSwingVertical();
+        updateSwingHorizontal();
+        updateTurbo();
+        updateEconomy();
+        updateDisplayLight();
+        updateSelfCleanMode();
+        updateReceiveBeep();
+    }
+
     public static final String BTN_TEMP_INC = "TemperatureIncrease",
             BTN_CLEAN = "SelfCleanMode",
             BTN_VSWING = "VerticalSwing",
@@ -500,6 +527,7 @@ public class AcRemote extends AppCompatActivity {
                         () -> Toast.makeText(getApplicationContext(),
                                 "Network error: " + errorString, Toast.LENGTH_SHORT).show()
                 ));
+        sendDataNow("Initialize");
     }
 
     // Menu item selected process
