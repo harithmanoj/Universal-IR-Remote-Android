@@ -25,14 +25,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.remote.universalirremote.ApplicationWideSingleton;
 import com.remote.universalirremote.Constant;
 import com.remote.universalirremote.R;
 import com.remote.universalirremote.database.DeviceDataParcelable;
 import com.remote.universalirremote.network.ACSend;
+import com.remote.universalirremote.network.HttpClient;
+import com.remote.universalirremote.network.RawSend;
+
+import java.net.HttpURLConnection;
 
 public class AcRemote extends AppCompatActivity {
 
@@ -78,5 +85,45 @@ public class AcRemote extends AppCompatActivity {
         super.onSaveInstanceState(outState);
     }
 
+    @Override
+    protected void onStart() {
+
+        Intent intent = getIntent();
+        if(intent != null) {
+            Log.d(TAG, "intent called now saving");
+
+            DeviceDataParcelable device = intent.getParcelableExtra(Constant.INT_SELECTED_DEVICE);
+            NsdServiceInfo service = intent.getParcelableExtra(Constant.INT_SERVICE_KEY);
+
+            if(service != null )
+                ApplicationWideSingleton.refreshSelectedService(service);
+            if(device != null) {
+                ApplicationWideSingleton.refreshSelectedDevice(device);
+                Log.d(TAG, "refreshing device");
+            }
+        }
+
+        _sendResponseHandlerThread = new HandlerThread("AcRemoteSendResponse");
+        _sendResponseHandlerThread.start();
+        Handler sendResponse = new Handler(_sendResponseHandlerThread.getLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                if (msg.getData().getInt(RawSend.CODE_KEY) != HttpURLConnection.HTTP_OK) {
+                    Toast.makeText(getApplicationContext(),
+                            "button send fail "
+                                    + ((HttpClient.Request.Property) msg.getData()
+                                    .getParcelable(RawSend.POST_META_KEY)).getValue(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+        _sendAcStatusUpdate = new ACSend(ApplicationWideSingleton.getSelectedService(),
+                sendResponse,
+                errorString -> runOnUiThread(
+                        () -> Toast.makeText(getApplicationContext(),
+                                "Network error: " + errorString, Toast.LENGTH_SHORT).show()
+                ));
+        super.onStart();
+    }
 
 }

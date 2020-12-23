@@ -113,18 +113,17 @@ public abstract class TvRemote extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-
+        super.onSaveInstanceState(outState);
         if(ApplicationWideSingleton.isSelectedDeviceValid())
             outState.putParcelable(Constant.INT_SELECTED_DEVICE,
                     new DeviceDataParcelable(ApplicationWideSingleton.getSelectedDevice()));
         if(ApplicationWideSingleton.isSelectedServiceValid())
             outState.putParcelable(Constant.INT_SERVICE_KEY, ApplicationWideSingleton.getSelectedService());
-        super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onStart() {
-
+        super.onStart();
         Intent intent = getIntent();
         if(intent != null) {
             Log.d(TAG, "intent called now saving");
@@ -140,7 +139,6 @@ public abstract class TvRemote extends AppCompatActivity {
                 _deviceButtonConfigRepo.getAllRawData(device.getDeviceName());
             }
         }
-        super.onStart();
     }
 
     protected DeviceButtonConfig lookupButton(int btnId) {

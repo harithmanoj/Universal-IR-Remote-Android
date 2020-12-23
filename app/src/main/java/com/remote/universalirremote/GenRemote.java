@@ -133,18 +133,17 @@ public abstract class GenRemote extends AppCompatActivity {
             NsdServiceInfo service = savedInstanceState.getParcelable(Constant.INT_SERVICE_KEY);
             ApplicationWideSingleton.refreshSelectedDevice(device);
             ApplicationWideSingleton.refreshSelectedService(service);
-
         }
     }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
         if(ApplicationWideSingleton.isSelectedDeviceValid())
             outState.putParcelable(Constant.INT_SELECTED_DEVICE,
                     new DeviceDataParcelable(ApplicationWideSingleton.getSelectedDevice()));
         if(ApplicationWideSingleton.isSelectedServiceValid())
             outState.putParcelable(Constant.INT_SERVICE_KEY, ApplicationWideSingleton.getSelectedService());
-        super.onSaveInstanceState(outState);
     }
 
     protected DeviceButtonConfig lookupButton(int btnId) {
@@ -166,7 +165,7 @@ public abstract class GenRemote extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-
+        super.onStart();
         Intent intent = getIntent();
         if(intent != null) {
             Log.d(TAG, "intent called now saving");
@@ -181,7 +180,6 @@ public abstract class GenRemote extends AppCompatActivity {
                 Log.d(TAG, "refreshing device");
             }
         }
-        super.onStart();
     }
 
     public abstract void handleButtonClicks(int btnId);
