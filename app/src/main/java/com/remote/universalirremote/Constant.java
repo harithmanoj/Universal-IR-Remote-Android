@@ -213,7 +213,6 @@ public final class Constant {
                 "PANASONIC_AC32"
         };
 
-
         public static final int UNKNOWN = -1;
         public static final int UNUSED = 0;
         public static final int RC5 = 1;
@@ -366,13 +365,102 @@ public final class Constant {
     }
 
     public static class AllModes {
-        public static final ModeList PLACEHOLDER = new ModeList(
-                protocol,
-                new int[] {
-                        integers
+        public static final ModeList FUJITSU_AC = new ModeList(
+                Protocols.FUJITSU_AC,
+                new int[] {1,
+                        2,
+                        3,
+                        4,
+                        5
                 },
                 new String[] {
-                        names
+                        "ARRAH2E",
+                        "ARDB1",
+                        "ARREB1E",
+                        "ARJW2",
+                        "ARRY4"
+                }
+        );
+
+        public static final ModeList GREE = new ModeList(
+                Protocols.GREE,
+                new int[] {
+                        1,
+                        2
+                },
+                new String[] {
+                        "YAW1F",
+                        "YBOFB"
+                }
+        );
+
+        public static final ModeList HITACHI_AC = new ModeList(
+                Protocols.HITACHI_AC,
+                new int[] {
+                        1,
+                        2
+                },
+                new String[] {
+                        "R_LT0541_HTA_A",
+                        "R_LT0541_HTA_B"
+                }
+        );
+
+        public static final ModeList PANASONIC_AC = new ModeList(
+                Protocols.PANASONIC_AC,
+                new int[] {
+                        0,
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6
+                },
+                new String[] {
+                        "kPanasonicUnknown",
+                        "kPanasonicLke",
+                        "kPanasonicNke",
+                        "kPanasonicDke",
+                        "kPanasonicJke",
+                        "kPanasonicCkp",
+                        "kPanasonicRkr"
+                }
+        );
+
+        public static final ModeList VOLTAS = new ModeList(
+                Protocols.VOLTAS,
+                new int[] {
+                        0,
+                        1
+                },
+                new String[] {
+                        "kVoltasUnknown",
+                        "kVoltas122LZF"
+                }
+        );
+
+        public static final ModeList WHIRLPOOL_AC = new ModeList(
+                Protocols.WHIRLPOOL_AC,
+                new int[] {
+                        1,
+                        2
+                },
+                new String[] {
+                        "DG11J13A",
+                        "DG11J191"
+                }
+        );
+
+        public static final ModeList LG_AC = new ModeList(
+                Protocols.LG,
+                new int[] {
+                        1,
+                        2
+                },
+                new String[] {
+                        "GE6711AR2853M",
+                        "AKB75215403"
                 }
         );
     }
