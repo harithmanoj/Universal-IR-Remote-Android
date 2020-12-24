@@ -126,6 +126,17 @@ public class NewDevice extends AppCompatActivity {
         protocolUI.setAdapter(protocolAdapter);
         protocolUI.setVisibility(View.INVISIBLE);
 
+        ArrayAdapter<String> modeAdapter = new ArrayAdapter<>(
+                this, R.layout.support_simple_spinner_dropdown_item,
+
+        );
+        Spinner modeUI = findViewById(_modeDropDownId);
+        modeUI.setAdapter(modeAdapter);
+        modeUI.setVisibility(View.INVISIBLE);
+
+
+
+
         Intent intent = getIntent();
         if(intent != null) {
             Log.d(TAG, "intent called now saving");
