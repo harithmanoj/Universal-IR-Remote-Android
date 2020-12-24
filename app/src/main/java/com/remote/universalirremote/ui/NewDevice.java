@@ -76,6 +76,7 @@ public class NewDevice extends AppCompatActivity {
     private static final int _layoutDropdownId = R.id.spnr_DeviceSelect;
     private static final int _editTextName = R.id.editTextName;
     private static final int _protocolDropDownId = R.id.spnr_protocolSelect;
+    private static final int _modeDropDownId = R.id.spnr_modelSelect;
     public static final String TAG = "NewDevice";
     private final Context _context = this;
     @Override
