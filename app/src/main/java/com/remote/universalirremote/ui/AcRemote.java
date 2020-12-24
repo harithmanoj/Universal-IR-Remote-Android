@@ -65,8 +65,8 @@ public class AcRemote extends AppCompatActivity {
     private boolean _isFilterModeOn = true;
     private boolean _isSelfCleanModeOn = true;
     private boolean _isReceivingBeepOn = true;
-    private int _sleepMinutes = 0;
-    private int _clockMinutesSinceMidnight = -10;
+    private int _sleepMinutes = -1;
+    private int _clockMinutesSinceMidnight = -1;
 
     void terminate() {
         _sendResponseHandlerThread.quitSafely();
@@ -549,7 +549,7 @@ public class AcRemote extends AppCompatActivity {
     private void sendDataNow(String btnName, int prevFan) {
         _sendAcStatusUpdate.sendData(
                 ApplicationWideSingleton.getSelectedDevice().getProtocolInfo(),
-                0,
+                1,
                 _powerStatus,
                 _modeStatus,
                 _temperatureStatus,
