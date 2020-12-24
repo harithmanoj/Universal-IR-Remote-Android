@@ -352,4 +352,28 @@ public final class Constant {
             kRightMax = 5,
             kWide =     6;
     }
+
+    public static class ModeList {
+        public final int _protocolId;
+        public final int[] _modeId;
+        public final String[] _modeName;
+
+        public ModeList(int proto, int[] mode, String[] modeName) {
+            _protocolId = proto;
+            _modeId = mode;
+            _modeName = modeName;
+        }
+    }
+
+    public static class AllModes {
+        public static final ModeList PLACEHOLDER = new ModeList(
+                protocol,
+                new int[] {
+                        integers
+                },
+                new String[] {
+                        names
+                }
+        );
+    }
 }
