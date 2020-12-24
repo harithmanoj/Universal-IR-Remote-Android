@@ -160,6 +160,7 @@ public class HttpClient {
     }
 
     public void transaction(Request request) {
+        Log.i(TAG, String.format(" Type :%s,URI :%s, Data :%s",request.getMethod(), _serviceUrl, new String(request.getPostData())));
 
         Message msg = new Message();
         Bundle msgBundle = new Bundle();
