@@ -364,6 +364,14 @@ public final class Constant {
         }
     }
 
+    public static ModelProtocolList getModelListForProtocol(int protocol) {
+        for(ModelProtocolList i : _allProtocolModels) {
+            if(i._protocolId == protocol)
+                return i;
+        }
+        return null;
+    }
+
     public static final ModelProtocolList[] _allProtocolModels = new ModelProtocolList[] {
             new ModelProtocolList(
                     Protocols.FUJITSU_AC,
