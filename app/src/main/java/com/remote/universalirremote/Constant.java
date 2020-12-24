@@ -56,7 +56,7 @@ public final class Constant {
     public static int getProtocol(String prt) {
         for( int i = 0; i< Protocols._protocolList.length; ++ i) {
             if (prt.equals(Protocols._protocolList[i]))
-                return i;
+                return i-1;
         }
         return -1;
     }
