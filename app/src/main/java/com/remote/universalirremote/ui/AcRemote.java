@@ -32,7 +32,6 @@ import android.os.Message;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,7 +41,6 @@ import com.remote.universalirremote.R;
 import com.remote.universalirremote.database.DeviceDataParcelable;
 import com.remote.universalirremote.network.ACSend;
 import com.remote.universalirremote.network.HttpClient;
-import com.remote.universalirremote.network.RawSend;
 
 import java.net.HttpURLConnection;
 
@@ -112,53 +110,66 @@ public class AcRemote extends AppCompatActivity {
 
 
     private void undoButtonClick(String btnName, int prevFanSpeed) {
-        if(btnName.equals(BTN_TEMP_INC)) {
-            --_temperatureStatus;
-            updateTemperature();
-        } else if (btnName.equals(BTN_TEMP_DEC)) {
-            ++_temperatureStatus;
-            updateTemperature();
-        } else if (btnName.equals(BTN_CLEAN)) {
-            _isSelfCleanModeOn = !_isSelfCleanModeOn;
-            updateSelfCleanMode();
-        } else if (btnName.equals(BTN_VSWING)) {
-            if(_swingVertical == 0)
-                _swingVertical = 5;
-            else
-                --_swingVertical;
-            updateSwingVertical();
-        } else if (btnName.equals(BTN_HSWING)) {
-            if(_swingHorizontal == 0)
-                _swingHorizontal = 6;
-            else
-                -- _swingHorizontal;
-            updateSwingHorizontal();
-        } else if (btnName.equals(BTN_TURBO)) {
-            _isTurboing = !_isTurboing;
-            updateTurbo();
-        } else if (btnName.equals(BTN_ECO)) {
-            _isEconomy = !_isEconomy;
-            updateEconomy();
-        } else if (btnName.equals(BTN_REC_BEEP)) {
-            _isReceivingBeepOn = !_isReceivingBeepOn;
-            updateReceiveBeep();
-        } else if (btnName.equals(BTN_MODE)) {
-            if(_modeStatus == 0)
-                _modeStatus = 4;
-            else
-                --_modeStatus;
-            updateModeStatus();
-        } else if (btnName.equals(BTN_POWER)) {
-            _powerStatus = !_powerStatus;
-            updatePowerStatus();
-        } else if (btnName.equals(BTN_DISPLAY_LIGHT)) {
-            _isDisplayOn = !_isDisplayOn;
-            updateDisplayLight();
-        } else if (btnName.equals(BTN_SPEED_HIGH)
-                        || btnName.equals(BTN_SPEED_LOW)
-                        || btnName.equals(BTN_SPEED_MID)) {
-            _fanSpeed = prevFanSpeed;
-            updateFanSpeed();
+        switch (btnName) {
+            case BTN_TEMP_INC:
+                --_temperatureStatus;
+                updateTemperature();
+                break;
+            case BTN_TEMP_DEC:
+                ++_temperatureStatus;
+                updateTemperature();
+                break;
+            case BTN_CLEAN:
+                _isSelfCleanModeOn = !_isSelfCleanModeOn;
+                updateSelfCleanMode();
+                break;
+            case BTN_VSWING:
+                if (_swingVertical == 0)
+                    _swingVertical = 5;
+                else
+                    --_swingVertical;
+                updateSwingVertical();
+                break;
+            case BTN_HSWING:
+                if (_swingHorizontal == 0)
+                    _swingHorizontal = 6;
+                else
+                    --_swingHorizontal;
+                updateSwingHorizontal();
+                break;
+            case BTN_TURBO:
+                _isTurboing = !_isTurboing;
+                updateTurbo();
+                break;
+            case BTN_ECO:
+                _isEconomy = !_isEconomy;
+                updateEconomy();
+                break;
+            case BTN_REC_BEEP:
+                _isReceivingBeepOn = !_isReceivingBeepOn;
+                updateReceiveBeep();
+                break;
+            case BTN_MODE:
+                if (_modeStatus == 0)
+                    _modeStatus = 4;
+                else
+                    --_modeStatus;
+                updateModeStatus();
+                break;
+            case BTN_POWER:
+                _powerStatus = !_powerStatus;
+                updatePowerStatus();
+                break;
+            case BTN_DISPLAY_LIGHT:
+                _isDisplayOn = !_isDisplayOn;
+                updateDisplayLight();
+                break;
+            case BTN_SPEED_HIGH:
+            case BTN_SPEED_LOW:
+            case BTN_SPEED_MID:
+                _fanSpeed = prevFanSpeed;
+                updateFanSpeed();
+                break;
         }
     }
 
@@ -168,7 +179,7 @@ public class AcRemote extends AppCompatActivity {
         int dispColor = R.color.transparent;
         if(_isDisplayOn)
             dispColor = R.color.translucentGreen;
-        ((Button)findViewById(R.id.btn_light)).setBackgroundColor(dispColor);
+        findViewById(R.id.btn_light).setBackgroundColor(dispColor);
     }
 
     public void clickDisplayLight(View view) {
@@ -181,7 +192,7 @@ public class AcRemote extends AppCompatActivity {
         int recColor = R.color.transparent;
         if(_isReceivingBeepOn)
             recColor = R.color.translucentGreen;
-        ((Button)findViewById(R.id.btn_silent)).setBackgroundColor(recColor);
+        findViewById(R.id.btn_silent).setBackgroundColor(recColor);
     }
 
     public void clickSilent(View view) {
@@ -194,7 +205,7 @@ public class AcRemote extends AppCompatActivity {
         int cleanColor = R.color.transparent;
         if(_isSelfCleanModeOn)
             cleanColor = R.color.translucentGreen;
-        ((Button)findViewById(R.id.btn_clean)).setBackgroundColor(cleanColor);
+        findViewById(R.id.btn_clean).setBackgroundColor(cleanColor);
     }
 
     public void clickClean(View view) {
@@ -207,7 +218,7 @@ public class AcRemote extends AppCompatActivity {
         int ecoColor = R.color.transparent;
         if(_isEconomy)
             ecoColor = R.color.translucentGreen;
-        ((Button)findViewById(R.id.btn_economy)).setBackgroundColor(ecoColor);
+        findViewById(R.id.btn_economy).setBackgroundColor(ecoColor);
     }
 
     public void clickEconomy(View view) {
@@ -220,7 +231,7 @@ public class AcRemote extends AppCompatActivity {
         int turboColor = R.color.transparent;
         if(_isTurboing)
             turboColor = R.color.translucentGreen;
-        ((Button)findViewById(R.id.btn_turbo)).setBackgroundColor(turboColor);
+        findViewById(R.id.btn_turbo).setBackgroundColor(turboColor);
     }
 
     public void clickTurbo(View view) {
@@ -317,12 +328,10 @@ public class AcRemote extends AppCompatActivity {
             return "F";
     }
 
-    private int updateTemperature() {
+    private void updateTemperature() {
         ((TextView)findViewById(R.id.text_temperatureDisplay)).setText(
-                ((Integer)_temperatureStatus).toString() + getString(R.string.degree)
-                        + " " + getTemperatureUnit()
+                String.format("%s%s %s", ((Integer) _temperatureStatus).toString(), getString(R.string.degree), getTemperatureUnit())
         );
-        return _temperatureStatus;
     }
 
     public void clickTemperatureIncrement(View view) {
@@ -371,10 +380,10 @@ public class AcRemote extends AppCompatActivity {
 
     private void updatePowerStatus() {
         if(_powerStatus) {
-            ((Button)findViewById(R.id.btn_power)).setBackgroundColor(
+            findViewById(R.id.btn_power).setBackgroundColor(
                     getResources().getColor(R.color.translucentGreen));
         } else {
-            ((Button)findViewById(R.id.btn_power)).setBackgroundColor(
+            findViewById(R.id.btn_power).setBackgroundColor(
                     getResources().getColor(R.color.transparent));
         }
     }
@@ -401,11 +410,11 @@ public class AcRemote extends AppCompatActivity {
                 break;
             }
         }
-        ((Button)findViewById(R.id.btn_speedHigh)).setBackgroundColor(
+        findViewById(R.id.btn_speedHigh).setBackgroundColor(
                 getResources().getColor(highBack));
-        ((Button)findViewById(R.id.btn_speedLow)).setBackgroundColor(
+        findViewById(R.id.btn_speedLow).setBackgroundColor(
                 getResources().getColor(lowBack));
-        ((Button)findViewById(R.id.btn_speedMedium)).setBackgroundColor(
+        findViewById(R.id.btn_speedMedium).setBackgroundColor(
                 getResources().getColor(medBack));
     }
 
