@@ -1,18 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--	
-    Copyright (C) 2020  Contributors (in contributors file)	
-    This program is free software: you can redistribute it and/or modify	
-    it under the terms of the GNU General Public License as published by	
-    the Free Software Foundation, either version 3 of the License, or	
-    (at your option) any later version.	
-    This program is distributed in the hope that it will be useful,	
-    but WITHOUT ANY WARRANTY; without even the implied warranty of	
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the	
-    GNU General Public License for more details.	
-    You should have received a copy of the GNU General Public License	
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.	
- -->	
-
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.remote.universalirremote">
 
@@ -28,37 +14,32 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-
+        <activity android:name=".ui.WifiConfig"></activity>
         <activity android:name=".ui.GenRemoteConfigure">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.remote.universalirremote.ui.GenRemoteTransmit" />
         </activity>
-
-        <activity android:name=".ui.GenRemoteTransmit" >
+        <activity android:name=".ui.GenRemoteTransmit">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.remote.universalirremote.ui.DeviceSelect" />
         </activity>
-
-        <activity android:name=".ui.TvRemoteConfigure" >
+        <activity android:name=".ui.TvRemoteConfigure">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.remote.universalirremote.ui.TvRemoteTransmit" />
         </activity>
-
-        <activity android:name=".ui.TvRemoteTransmit" >
+        <activity android:name=".ui.TvRemoteTransmit">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.remote.universalirremote.ui.DeviceSelect" />
         </activity>
-
         <activity android:name=".ui.AcRemote">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.remote.universalirremote.ui.DeviceSelect" />
         </activity>
-
         <activity android:name=".ui.NewDevice">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
