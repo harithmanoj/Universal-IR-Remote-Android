@@ -362,6 +362,14 @@ public final class Constant {
             _modeId = mode;
             _modeName = modeName;
         }
+
+        public Integer getModelId(String name) {
+            for (int i = 0; i< _modeName.length; ++i) {
+                if(name.equals(_modeName[i]))
+                    return _modeId[i];
+            }
+            return null;
+        }
     }
 
     public static ModelProtocolList getModelListForProtocol(int protocol) {
