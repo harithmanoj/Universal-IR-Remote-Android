@@ -558,7 +558,7 @@ public class AcRemote extends AppCompatActivity {
     private void sendDataNow(String btnName, int prevFan) {
         _sendAcStatusUpdate.sendData(
                 ApplicationWideSingleton.getSelectedDevice().getProtocolInfo(),
-                1,
+                ApplicationWideSingleton.getSelectedDevice().getDeviceModel(),
                 _powerStatus,
                 _modeStatus,
                 _temperatureStatus,
