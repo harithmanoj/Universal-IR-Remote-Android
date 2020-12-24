@@ -219,6 +219,8 @@ public class NewDevice extends AppCompatActivity {
         String name = ((EditText) findViewById(_editTextName)).getText().toString();
         String layout = ((Spinner)findViewById(_layoutDropdownId)).getSelectedItem().toString();
         String protocol = ((Spinner) findViewById(_protocolDropDownId)).getSelectedItem().toString();
+        String model = ((Spinner) findViewById(_modelDropDownId)).getSelectedItem().toString();
+        int modelId = 0;
 
         if(name == null || name.equals(Constant.NO_SELECT)) {
             Toast.makeText(getApplicationContext(), "No name selected", Toast.LENGTH_SHORT).show();
@@ -235,6 +237,16 @@ public class NewDevice extends AppCompatActivity {
             return;
         }
 
+        if(Constant.getModelListForProtocol(Constant.getProtocol(protocol)) != null) {
+            if (model == null || model.equals(Constant.NO_SELECT)) {
+                Toast.makeText(getApplicationContext(), "No model selected", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            modelId = Constant.getModelListForProtocol(Constant.getProtocol(protocol)).getModelId(model);
+        }
+
+
+        int finalModelId = modelId;
         _deviceDataRepository.useDatabaseExecutor(
                 () -> {
                     if(_deviceDataRepository.getDao().doesDeviceExist(name)) {
@@ -243,7 +255,7 @@ public class NewDevice extends AppCompatActivity {
                                         "Device name exists", Toast.LENGTH_SHORT).show());
                         return;
                     }
-                    DeviceData device = new DeviceData(name, Constant.getProtocol(protocol), Constant.getLayout(layout));
+                    DeviceData device = new DeviceData(name, Constant.getProtocol(protocol), Constant.getLayout(layout), finalModelId);
                     ApplicationWideSingleton.setSelectedDevice(device);
 
                     _deviceDataRepository.getDao().insert(device);
