@@ -20,6 +20,5 @@
     <string name="app_name">   Universal Remote control</string>
     <string name="device_name">Device Name</string>
     <string name="devicename">DeviceName</string>
-
-
+    <string name="degree">&#xb0;</string>
 </resources>

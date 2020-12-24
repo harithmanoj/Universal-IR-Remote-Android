@@ -209,7 +209,14 @@ public class DeviceSelect extends AppCompatActivity {
 
         _deviceDataRepository.getNames();
 
-        if(savedInstanceState != null) {
+        Intent intent = getIntent();
+        if(intent != null) {
+            Log.d(TAG, "intent called now saving");
+            NsdServiceInfo service = intent.getParcelableExtra(Constant.INT_SERVICE_KEY);
+
+            if(service != null )
+                ApplicationWideSingleton.refreshSelectedService(service);
+        } else if(savedInstanceState != null) {
             String device = savedInstanceState.getString(Constant.INT_SELECTED_DEVICE);
             NsdServiceInfo service = savedInstanceState.getParcelable(Constant.INT_SERVICE_KEY);
             _deviceDataRepository.useDatabaseExecutor(
@@ -222,23 +229,21 @@ public class DeviceSelect extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-
+        super.onSaveInstanceState(outState);
         if(ApplicationWideSingleton.isSelectedDeviceValid())
             outState.putString(Constant.INT_SELECTED_DEVICE, ApplicationWideSingleton.getSelectedDevice().getDeviceName());
         outState.putParcelable(Constant.INT_SERVICE_KEY, ApplicationWideSingleton.getSelectedService());
-        super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onStart() {
-
+        super.onStart();
         NsdServiceInfo selectedService = getIntent().getParcelableExtra(Constant.INT_SERVICE_KEY);
         if(selectedService == null)
             selectedService = ApplicationWideSingleton.getSelectedService();
         else
             ApplicationWideSingleton.refreshSelectedService(selectedService);
         ((TextView)findViewById(R.id.text_selectedBlaster)).setText(selectedService.getServiceName());
-        super.onStart();
     }
 
     @Override
