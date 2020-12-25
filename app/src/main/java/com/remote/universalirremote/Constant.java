@@ -56,7 +56,7 @@ public final class Constant {
     public static int getProtocol(String prt) {
         for( int i = 0; i< Protocols._protocolList.length; ++ i) {
             if (prt.equals(Protocols._protocolList[i]))
-                return i;
+                return i-1;
         }
         return -1;
     }
@@ -107,8 +107,8 @@ public final class Constant {
         public static final String TV_SPINNER = "TV layout";
         public static final String GEN_SPINNER = "Generic layout";
     }
-    
-    
+
+
     // Values for protocols (compatible with decode_type_t enumeration in ESP32 code)
     public static final class Protocols {
 
@@ -213,7 +213,6 @@ public final class Constant {
                 "PANASONIC_AC32"
         };
 
-
         public static final int UNKNOWN = -1;
         public static final int UNUSED = 0;
         public static final int RC5 = 1;
@@ -316,40 +315,164 @@ public final class Constant {
 
     public static class AcMode{
         public static final int kOff  = -1,
-            kAuto =  0,
-            kCool =  1,
-            kHeat =  2,
-            kDry  =  3,
-            kFan  =  4;
+                kAuto =  0,
+                kCool =  1,
+                kHeat =  2,
+                kDry  =  3,
+                kFan  =  4;
     };
 
     public static class AcFan{
         public static final int  kAuto =   0,
-            kMin =    1,
-            kLow =    2,
-            kMedium = 3,
-            kHigh =   4,
-            kMax =    5;
+                kMin =    1,
+                kLow =    2,
+                kMedium = 3,
+                kHigh =   4,
+                kMax =    5;
     }
 
     public static class AcSwingv{
         public static final int kOff =    -1,
-            kAuto =    0,
-            kHighest = 1,
-            kHigh =    2,
-            kMiddle =  3,
-            kLow =     4,
-            kLowest =  5;
+                kAuto =    0,
+                kHighest = 1,
+                kHigh =    2,
+                kMiddle =  3,
+                kLow =     4,
+                kLowest =  5;
     }
 
     public static class AcSwingh{
         public static final int  kOff =     -1,
-            kAuto =     0,  // a.k.a. On.
-            kLeftMax =  1,
-            kLeft =     2,
-            kMiddle =   3,
-            kRight =    4,
-            kRightMax = 5,
-            kWide =     6;
+                kAuto =     0,  // a.k.a. On.
+                kLeftMax =  1,
+                kLeft =     2,
+                kMiddle =   3,
+                kRight =    4,
+                kRightMax = 5,
+                kWide =     6;
     }
+
+    public static class ModelProtocolList {
+        public final int _protocolId;
+        public final int[] _modeId;
+        public final String[] _modeName;
+
+        public ModelProtocolList(int proto, int[] mode, String[] modeName) {
+            _protocolId = proto;
+            _modeId = mode;
+            _modeName = modeName;
+        }
+
+        public Integer getModelId(String name) {
+            for (int i = 0; i< _modeName.length; ++i) {
+                if(name.equals(_modeName[i]))
+                    return _modeId[i];
+            }
+            return null;
+        }
+    }
+
+    public static ModelProtocolList getModelListForProtocol(int protocol) {
+        for(ModelProtocolList i : _allProtocolModels) {
+            if(i._protocolId == protocol)
+                return i;
+        }
+        return null;
+    }
+
+    public static final ModelProtocolList[] _allProtocolModels = new ModelProtocolList[] {
+            new ModelProtocolList(
+                    Protocols.FUJITSU_AC,
+                    new int[]{1,
+                            2,
+                            3,
+                            4,
+                            5
+                    },
+                    new String[]{
+                            "ARRAH2E",
+                            "ARDB1",
+                            "ARREB1E",
+                            "ARJW2",
+                            "ARRY4"
+                    }
+            ),
+            new ModelProtocolList(
+                    Protocols.GREE,
+                    new int[]{
+                            1,
+                            2
+                    },
+                    new String[]{
+                            "YAW1F",
+                            "YBOFB"
+                    }
+            ),
+            new ModelProtocolList(
+                    Protocols.HITACHI_AC,
+                    new int[]{
+                            1,
+                            2
+                    },
+                    new String[]{
+                            "R_LT0541_HTA_A",
+                            "R_LT0541_HTA_B"
+                    }
+            ),
+            new ModelProtocolList(
+                    Protocols.PANASONIC_AC,
+                    new int[]{
+                            0,
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6
+                    },
+                    new String[]{
+                            "kPanasonicUnknown",
+                            "kPanasonicLke",
+                            "kPanasonicNke",
+                            "kPanasonicDke",
+                            "kPanasonicJke",
+                            "kPanasonicCkp",
+                            "kPanasonicRkr"
+                    }
+            ),
+            new ModelProtocolList(
+                    Protocols.VOLTAS,
+                    new int[]{
+                            0,
+                            1
+                    },
+                    new String[]{
+                            "kVoltasUnknown",
+                            "kVoltas122LZF"
+                    }
+            ),
+            new ModelProtocolList(
+                    Protocols.WHIRLPOOL_AC,
+                    new int[]{
+                            1,
+                            2
+                    },
+                    new String[]{
+                            "DG11J13A",
+                            "DG11J191"
+                    }
+            ),
+            new ModelProtocolList(
+                    Protocols.LG,
+                    new int[]{
+                            1,
+                            2
+                    },
+                    new String[]{
+                            "GE6711AR2853M",
+                            "AKB75215403"
+                    }
+            )
+    };
+
 }

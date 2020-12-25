@@ -45,11 +45,15 @@ public class DeviceData {
     @ColumnInfo(name = "deviceLayout")
     private final int _deviceLayout;
 
+    @ColumnInfo(name = "modelInfo")
+    private final int _deviceModel;
+
     // Constructor
-    public DeviceData(@NonNull String _deviceName, int _protocolInfo, int _deviceLayout) {
+    public DeviceData(@NonNull String _deviceName, int _protocolInfo, int _deviceLayout, int _deviceModel) {
         this._deviceLayout = _deviceLayout;
         this._deviceName = _deviceName;
         this._protocolInfo = _protocolInfo;
+        this._deviceModel = _deviceModel;
     }
 
     // name getter
@@ -61,8 +65,9 @@ public class DeviceData {
     }
 
     // layout getter
-    public int getDeviceLayout() {
-        return _deviceLayout;
-    }
+    public int getDeviceLayout() { return _deviceLayout; }
+
+    // model getter
+    public int getDeviceModel() { return _deviceModel; }
 
 }

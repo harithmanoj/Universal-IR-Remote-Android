@@ -76,6 +76,7 @@ public class NewDevice extends AppCompatActivity {
     private static final int _layoutDropdownId = R.id.spnr_DeviceSelect;
     private static final int _editTextName = R.id.editTextName;
     private static final int _protocolDropDownId = R.id.spnr_protocolSelect;
+    private static final int _modelDropDownId = R.id.spnr_modelSelect;
     public static final String TAG = "NewDevice";
     private final Context _context = this;
     @Override
@@ -105,7 +106,7 @@ public class NewDevice extends AppCompatActivity {
                 } else {
 
                     findViewById(_protocolDropDownId).setVisibility(View.INVISIBLE);
-                    ((Spinner)findViewById(_protocolDropDownId)).setSelection(Constant.Protocols.RAW);
+                    ((Spinner)findViewById(_protocolDropDownId)).setSelection(Constant.Protocols.RAW + 1);
 
                 }
             }
@@ -113,7 +114,7 @@ public class NewDevice extends AppCompatActivity {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 findViewById(_protocolDropDownId).setVisibility(View.INVISIBLE);
-                ((Spinner)findViewById(_protocolDropDownId)).setSelection(Constant.Protocols.RAW);
+                ((Spinner)findViewById(_protocolDropDownId)).setSelection(Constant.Protocols.RAW + 1);
             }
         });
 
@@ -124,6 +125,45 @@ public class NewDevice extends AppCompatActivity {
         Spinner protocolUI = findViewById(_protocolDropDownId);
         protocolUI.setAdapter(protocolAdapter);
         protocolUI.setVisibility(View.INVISIBLE);
+
+        ArrayAdapter<String> modelAdapter = new ArrayAdapter<>(
+                this, R.layout.support_simple_spinner_dropdown_item,
+                new String[] { Constant.NO_SELECT }
+        );
+        Spinner modelUI = findViewById(_modelDropDownId);
+        modelUI.setAdapter(modelAdapter);
+        modelUI.setVisibility(View.INVISIBLE);
+
+        protocolUI.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                int protocol = Constant.getProtocol(
+                        protocolAdapter.getItem(position)
+                );
+                Constant.ModelProtocolList modelList = Constant.getModelListForProtocol(protocol);
+                if(modelList == null)
+                    onNothingSelected(parent);
+                else {
+                    ArrayAdapter<String> model = new ArrayAdapter<>(
+                            _context, R.layout.support_simple_spinner_dropdown_item,
+                            modelList._modeName
+                    );
+                    modelUI.setAdapter(model);
+                    modelUI.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                ArrayAdapter<String> model = new ArrayAdapter<>(
+                        _context, R.layout.support_simple_spinner_dropdown_item,
+                        new String[] {Constant.NO_SELECT}
+                );
+                modelUI.setAdapter(model);
+                modelUI.setVisibility(View.INVISIBLE);
+            }
+        });
+
 
         Intent intent = getIntent();
         if(intent != null) {
@@ -179,6 +219,8 @@ public class NewDevice extends AppCompatActivity {
         String name = ((EditText) findViewById(_editTextName)).getText().toString();
         String layout = ((Spinner)findViewById(_layoutDropdownId)).getSelectedItem().toString();
         String protocol = ((Spinner) findViewById(_protocolDropDownId)).getSelectedItem().toString();
+        String model = ((Spinner) findViewById(_modelDropDownId)).getSelectedItem().toString();
+        int modelId = 0;
 
         if(name == null || name.equals(Constant.NO_SELECT)) {
             Toast.makeText(getApplicationContext(), "No name selected", Toast.LENGTH_SHORT).show();
@@ -195,6 +237,16 @@ public class NewDevice extends AppCompatActivity {
             return;
         }
 
+        if(Constant.getModelListForProtocol(Constant.getProtocol(protocol)) != null) {
+            if (model == null || model.equals(Constant.NO_SELECT)) {
+                Toast.makeText(getApplicationContext(), "No model selected", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            modelId = Constant.getModelListForProtocol(Constant.getProtocol(protocol)).getModelId(model);
+        }
+
+
+        int finalModelId = modelId;
         _deviceDataRepository.useDatabaseExecutor(
                 () -> {
                     if(_deviceDataRepository.getDao().doesDeviceExist(name)) {
@@ -203,7 +255,7 @@ public class NewDevice extends AppCompatActivity {
                                         "Device name exists", Toast.LENGTH_SHORT).show());
                         return;
                     }
-                    DeviceData device = new DeviceData(name, Constant.getProtocol(protocol), Constant.getLayout(layout));
+                    DeviceData device = new DeviceData(name, Constant.getProtocol(protocol), Constant.getLayout(layout), finalModelId);
                     ApplicationWideSingleton.setSelectedDevice(device);
 
                     _deviceDataRepository.getDao().insert(device);

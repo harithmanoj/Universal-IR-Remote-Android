@@ -26,12 +26,12 @@ import androidx.annotation.NonNull;
 
 public class DeviceDataParcelable extends DeviceData implements Parcelable {
 
-    public DeviceDataParcelable(@NonNull String _deviceName, int _protocolInfo, int _deviceLayout) {
-        super(_deviceName, _protocolInfo, _deviceLayout);
+    public DeviceDataParcelable(@NonNull String _deviceName, int _protocolInfo, int _deviceLayout, int _deviceModel) {
+        super(_deviceName, _protocolInfo, _deviceLayout, _deviceModel);
     }
 
     public DeviceDataParcelable(DeviceData data) {
-        super(data.getDeviceName(), data.getProtocolInfo(), data.getDeviceLayout());
+        super(data.getDeviceName(), data.getProtocolInfo(), data.getDeviceLayout(), data.getDeviceModel());
     }
 
     public static final Creator<DeviceDataParcelable> CREATOR = new Creator<DeviceDataParcelable>() {
@@ -39,6 +39,7 @@ public class DeviceDataParcelable extends DeviceData implements Parcelable {
         public DeviceDataParcelable createFromParcel(Parcel in) {
             return new DeviceDataParcelable(
                     in.readString(),
+                    in.readInt(),
                     in.readInt(),
                     in.readInt()
             );
@@ -60,6 +61,6 @@ public class DeviceDataParcelable extends DeviceData implements Parcelable {
         dest.writeString(getDeviceName());
         dest.writeInt(getProtocolInfo());
         dest.writeInt(getDeviceLayout());
-
+        dest.writeInt(getDeviceModel());
     }
 }
