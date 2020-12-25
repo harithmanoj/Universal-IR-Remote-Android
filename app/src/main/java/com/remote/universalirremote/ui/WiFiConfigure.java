@@ -20,17 +20,63 @@
 
 package com.remote.universalirremote.ui;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.media.session.MediaSession;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Message;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
+import com.remote.universalirremote.Constant;
 import com.remote.universalirremote.R;
+import com.remote.universalirremote.network.WifiConfigure;
+
+import java.util.ArrayList;
 
 public class WiFiConfigure extends AppCompatActivity {
+    private WiFiConfigure _configurationManager;
+
+    private ArrayAdapter<String> _wifiScanAdapter;
+
+    private Handler _scanHandler;
+
+    private HandlerThread _scanHandlerThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi_config);
+
+        ArrayList<String> servicesList = new ArrayList<>();
+        servicesList.add(Constant.NO_SELECT);
+        _wifiScanAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, servicesList);
+        _wifiScanAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ((Spinner)findViewById(R.id.spnr_wifiScan)).setAdapter(_wifiScanAdapter);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        _scanHandlerThread = new HandlerThread("Scan Handler");
+        _scanHandlerThread.start();
+
+        _scanHandler = new Handler(_scanHandlerThread.getLooper()) {
+            public void HandleMessage(@NonNull Message msg) {
+                _wifiScanAdapter.clear();
+
+                String[] ssids = msg.getData().getStringArray(WifiConfigure.SCAN_KEY);
+
+                _wifiScanAdapter.addAll(ssids);
+            }
+        };
+    }
+
+    public void clickRefresh() {
+
     }
 }
