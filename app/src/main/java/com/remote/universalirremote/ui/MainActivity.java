@@ -245,6 +245,13 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    public void clickConfigDevice( View view) {
+        Intent intent = new Intent(this, WiFiSetup.class);
+        intent.putExtra(Constant.INT_LAUNCHER_KEY, Constant.INT_LAUNCHER_MAIN);
+        intent.putExtra(Constant.INT_SERVICE_KEY, _selectedService);
+        startActivity(intent);
+    }
+
     // Resolves Selected service and acquires address and port
     // executes on clicking OK button
     // Waits on resolve synchronisation
