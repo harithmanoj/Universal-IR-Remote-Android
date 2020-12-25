@@ -13,6 +13,7 @@ public class WifiConfigure {
     public static final String CONFIG_URI = "/wificonfig";
 
     public static final String SCAN_KEY = "response.scan_key";
+    public static final String RESP_KEY = "response.config_key";
 
     private String[] scanResults;
 
@@ -30,6 +31,9 @@ public class WifiConfigure {
 
     public WifiConfigure(Handler updatehandler, Handler scanHandler)
     {
+        _userUpdateHandler = updatehandler;
+        _userScanHandler   = scanHandler;
+
         _scanResponseHandlerThread = new HandlerThread("ScanResponseHandlerThread");
         _scanResponseHandlerThread.start();
         _scanResponseHandler = new Handler(_scanResponseHandlerThread.getLooper()) {
@@ -39,7 +43,7 @@ public class WifiConfigure {
 
                 Log.i(TAG, " Received message: " + response);
 
-                scanResults = response.split("$");
+                scanResults = response.split("\\$", 0);
 
                 Bundle bundle = new Bundle();
                 bundle.putStringArray(SCAN_KEY, scanResults);
@@ -61,15 +65,18 @@ public class WifiConfigure {
                 String response = msg.getData().getString(_httpScanClient.RESPONSE_KEY);
 
                 Log.i(TAG, "Received message : " + response);
-                _userUpdateHandler.sendMessage(msg);
+
+                Message resp = new Message();
+                Bundle respBundle = new Bundle();
+                respBundle.putString(RESP_KEY, response);
+                resp.setData(respBundle);
+
+                _userUpdateHandler.sendMessage(resp);
             }
         };
 
         _httpScanClient   = new HttpClient(SERVER_ADDRESS+SCAN_URI  , _scanResponseHandler);
         _httpConfigClient = new HttpClient(SERVER_ADDRESS+CONFIG_URI, _configResponseHandler);
-
-        _userUpdateHandler = updatehandler;
-        _userScanHandler   = scanHandler;
     }
 
     public void getAccessPoints()
@@ -84,8 +91,8 @@ public class WifiConfigure {
 
     public void sendAccessPointData(String ssid, String password, String hostname)
     {
-        _httpScanClient.transaction(new HttpClient.Request(
-                (ssid + "$" + password + "$" + hostname).getBytes(), "POST",
+        _httpConfigClient.transaction(new HttpClient.Request(
+                (hostname + "$" + ssid + "$" + password + "$").getBytes(), "POST",
                 new HttpClient.Request.Property("Content-Type", "application/xml"),
                 new HttpClient.Request.Property("charset", "utf-8"),
                 new HttpClient.Request.Property("Connection", "close")

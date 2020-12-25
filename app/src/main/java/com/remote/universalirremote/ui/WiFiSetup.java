@@ -27,6 +27,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
+import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -40,6 +42,8 @@ import com.remote.universalirremote.network.WifiConfigure;
 import java.util.ArrayList;
 
 public class WiFiSetup extends AppCompatActivity {
+    public static final String TAG = "Wifisetup";
+
     private WifiConfigure _configurationManager;
 
     private ArrayAdapter<String> _wifiScanAdapter;
@@ -74,12 +78,20 @@ public class WiFiSetup extends AppCompatActivity {
         _scanHandlerThread.start();
 
         _scanHandler = new Handler(_scanHandlerThread.getLooper()) {
-            public void HandleMessage(@NonNull Message msg) {
-                _wifiScanAdapter.clear();
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                runOnUiThread(() -> _wifiScanAdapter.clear());
 
                 String[] ssids = msg.getData().getStringArray(WifiConfigure.SCAN_KEY);
 
-                _wifiScanAdapter.addAll(ssids);
+                Toast.makeText(getApplicationContext(), "Got scan", Toast.LENGTH_SHORT);
+
+                Log.i(TAG, "Got response.");
+
+                for(String s : ssids)
+                    Log.i(TAG, String.format("SSID: %s", s));
+
+                runOnUiThread(() -> _wifiScanAdapter.addAll(ssids));
             }
         };
 
@@ -87,19 +99,22 @@ public class WiFiSetup extends AppCompatActivity {
         _updateHandlerThread.start();
 
         _updateHandler = new Handler(_updateHandlerThread.getLooper()) {
-            public void HandleMessage(@NonNull Message msg) {
-                Toast.makeText(getApplicationContext(), String.format("Response : %s", msg.getData().getString(HttpClient.RESPONSE_KEY)), Toast.LENGTH_LONG);
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                Toast.makeText(getApplicationContext(), String.format("Response : %s", msg.getData().getString(_configurationManager.RESP_KEY)), Toast.LENGTH_LONG);
             }
         };
 
-        _configurationManager = new WifiConfigure(_scanHandler, _updateHandler);
-    }
+        _configurationManager = new WifiConfigure(_updateHandler, _scanHandler);
 
-    public void clickRefresh() {
         _configurationManager.getAccessPoints();
     }
 
-    public void clickOk() {
+    public void clickRefresh(View view) {
+        _configurationManager.getAccessPoints();
+    }
+
+    public void clickOk(View view) {
         String hostname = ((EditText) findViewById(R.id.editTextTextPostalAddress)).getText().toString();
         String ssid = ((Spinner)findViewById(R.id.spnr_wifiScan)).getSelectedItem().toString();
         String password = ((EditText) findViewById(R.id.editTextTextPassword)).getText().toString();
