@@ -42,7 +42,7 @@ import com.remote.universalirremote.network.WifiConfigure;
 import java.util.ArrayList;
 
 public class WiFiSetup extends AppCompatActivity {
-    public static final String TAG = "Wifisetup";
+    public static final String TAG = "WifiSetup";
 
     private WifiConfigure _configurationManager;
 
@@ -84,7 +84,7 @@ public class WiFiSetup extends AppCompatActivity {
 
                 String[] ssids = msg.getData().getStringArray(WifiConfigure.SCAN_KEY);
 
-                Toast.makeText(getApplicationContext(), "Got scan", Toast.LENGTH_SHORT);
+                runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Got scan", Toast.LENGTH_SHORT));
 
                 Log.i(TAG, "Got response.");
 
@@ -101,7 +101,7 @@ public class WiFiSetup extends AppCompatActivity {
         _updateHandler = new Handler(_updateHandlerThread.getLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
-                Toast.makeText(getApplicationContext(), String.format("Response : %s", msg.getData().getString(_configurationManager.RESP_KEY)), Toast.LENGTH_LONG);
+                runOnUiThread(() -> Toast.makeText(getApplicationContext(), String.format("Response : %s", msg.getData().getString(_configurationManager.RESP_KEY)), Toast.LENGTH_LONG));
             }
         };
 
