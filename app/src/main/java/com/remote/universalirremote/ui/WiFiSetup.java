@@ -23,7 +23,6 @@ package com.remote.universalirremote.ui;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.media.session.MediaSession;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -37,8 +36,8 @@ import com.remote.universalirremote.network.WifiConfigure;
 
 import java.util.ArrayList;
 
-public class WiFiConfigure extends AppCompatActivity {
-    private WiFiConfigure _configurationManager;
+public class WiFiSetup extends AppCompatActivity {
+    private WiFiSetup _configurationManager;
 
     private ArrayAdapter<String> _wifiScanAdapter;
 
@@ -49,7 +48,7 @@ public class WiFiConfigure extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_wifi_config);
+        setContentView(R.layout.activity_wifi_setup);
 
         ArrayList<String> servicesList = new ArrayList<>();
         servicesList.add(Constant.NO_SELECT);

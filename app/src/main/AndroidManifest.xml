@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.WiFiConfigure"></activity>
+        <activity android:name=".ui.WiFiSetup"></activity>
         <activity android:name=".ui.GenRemoteConfigure">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
