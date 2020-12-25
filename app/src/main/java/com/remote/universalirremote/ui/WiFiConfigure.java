@@ -18,11 +18,13 @@
 */
 
 
-package com.remote.universalirremote;
+package com.remote.universalirremote.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.remote.universalirremote.R;
 
 public class config extends AppCompatActivity {
 
