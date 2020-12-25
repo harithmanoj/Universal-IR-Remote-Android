@@ -28,22 +28,31 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.remote.universalirremote.Constant;
 import com.remote.universalirremote.R;
+import com.remote.universalirremote.network.HttpClient;
 import com.remote.universalirremote.network.WifiConfigure;
 
 import java.util.ArrayList;
 
 public class WiFiSetup extends AppCompatActivity {
-    private WiFiSetup _configurationManager;
+    private WifiConfigure _configurationManager;
 
     private ArrayAdapter<String> _wifiScanAdapter;
 
-    private Handler _scanHandler;
 
     private HandlerThread _scanHandlerThread;
+
+    private HandlerThread _updateHandlerThread;
+
+    private Handler _scanHandler;
+
+    private Handler _updateHandler;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,9 +82,28 @@ public class WiFiSetup extends AppCompatActivity {
                 _wifiScanAdapter.addAll(ssids);
             }
         };
+
+        _updateHandlerThread = new HandlerThread("Update Handler");
+        _updateHandlerThread.start();
+
+        _updateHandler = new Handler(_updateHandlerThread.getLooper()) {
+            public void HandleMessage(@NonNull Message msg) {
+                Toast.makeText(getApplicationContext(), String.format("Response : %s", msg.getData().getString(HttpClient.RESPONSE_KEY)), Toast.LENGTH_LONG);
+            }
+        };
+
+        _configurationManager = new WifiConfigure(_scanHandler, _updateHandler);
     }
 
     public void clickRefresh() {
+        _configurationManager.getAccessPoints();
+    }
 
+    public void clickOk() {
+        String hostname = ((EditText) findViewById(R.id.editTextTextPostalAddress)).getText().toString();
+        String ssid = ((Spinner)findViewById(R.id.spnr_wifiScan)).getSelectedItem().toString();
+        String password = ((EditText) findViewById(R.id.editTextTextPassword)).getText().toString();
+
+        _configurationManager.sendAccessPointData(ssid, password, hostname);
     }
 }
