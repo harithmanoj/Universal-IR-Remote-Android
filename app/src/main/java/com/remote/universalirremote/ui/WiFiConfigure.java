@@ -26,11 +26,11 @@ import android.os.Bundle;
 
 import com.remote.universalirremote.R;
 
-public class config extends AppCompatActivity {
+public class WiFiConfigure extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_config);
+        setContentView(R.layout.activity_wifi_config);
     }
 }
