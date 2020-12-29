@@ -60,4 +60,7 @@ public interface DeviceDao {
 
     @Query("SELECT EXISTS(SELECT * FROM DeviceData WHERE deviceNameId = :name)")
     boolean doesDeviceExist(String name);
+
+    @Query("SELECT count(*) FROM DeviceData")
+    int tableSize();
 }
