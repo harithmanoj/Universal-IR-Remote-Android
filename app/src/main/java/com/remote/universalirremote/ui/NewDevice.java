@@ -21,6 +21,7 @@
 package com.remote.universalirremote.ui;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 
@@ -28,12 +29,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Message;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +49,8 @@ import com.remote.universalirremote.R;
 import com.remote.universalirremote.database.DeviceData;
 import com.remote.universalirremote.database.DeviceDataParcelable;
 import com.remote.universalirremote.database.DeviceInfoRepository;
+import com.remote.universalirremote.network.NetworkErrorCallback;
+import com.remote.universalirremote.network.RawGet;
 
 //
 // Activity to add new device
@@ -71,7 +78,10 @@ import com.remote.universalirremote.database.DeviceInfoRepository;
 //
 public class NewDevice extends AppCompatActivity {
 
-    DeviceInfoRepository _deviceDataRepository;
+    private DeviceInfoRepository _deviceDataRepository;
+    private RawGet _getProtocolInfo;
+    private Handler _getProtocolHandler;
+    private HandlerThread _getProtocolHandlerThread;
 
     private static final int _layoutDropdownId = R.id.spnr_DeviceSelect;
     private static final int _editTextName = R.id.editTextName;
@@ -89,6 +99,48 @@ public class NewDevice extends AppCompatActivity {
                 this, R.layout.support_simple_spinner_dropdown_item,
                 new String[] {
                         Constant.NO_SELECT, Constant.Layout.AC_SPINNER, Constant.Layout.TV_SPINNER, Constant.Layout.GEN_SPINNER });
+        ArrayAdapter<String> protocolAdapter = new ArrayAdapter<>(
+                this, R.layout.support_simple_spinner_dropdown_item,
+                Constant.Protocols._protocolList
+        );
+        Spinner protocolUI = findViewById(_protocolDropDownId);
+        _getProtocolHandlerThread = new HandlerThread("protocolGet");
+        _getProtocolHandlerThread.start();
+        _getProtocolHandler = new Handler(_getProtocolHandlerThread.getLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                int protocol = msg.getData().getInt(RawGet.PROTOCOL_KEY);
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(NewDevice.this);
+                alertDialog.setTitle("Protocol AutoDetect");
+                alertDialog.setMessage("Protocol " + Constant.getProtocol(protocol) + " detected, Use this?");
+
+                alertDialog.setPositiveButton("OK",
+                        (dialog, which) -> {
+                            runOnUiThread(
+                                    ()-> {
+                                        protocolUI.setSelection(protocolAdapter.getPosition(Constant.getProtocol(protocol)));
+                                    }
+                            );
+                            dialog.dismiss();
+                        });
+
+                alertDialog.setNegativeButton("Cancel",
+                        (dialog, which) -> dialog.cancel());
+
+                alertDialog.show();
+            }
+        };
+
+        _getProtocolInfo = new RawGet(ApplicationWideSingleton.getSelectedService(), _getProtocolHandler, new NetworkErrorCallback() {
+            @Override
+            public void errorResponse(String errorString) {
+                runOnUiThread(
+                        () -> Toast.makeText(getApplicationContext(),
+                                "Protocol auto detect failed due to network error",
+                                Toast.LENGTH_SHORT).show()
+                );
+            }
+        });
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         Spinner layoutUI = findViewById(_layoutDropdownId);
@@ -102,7 +154,7 @@ public class NewDevice extends AppCompatActivity {
                 if(layout == Constant.Layout.LAY_AC) {
 
                     findViewById(_protocolDropDownId).setVisibility(View.VISIBLE);
-
+                    _getProtocolInfo.getData(0);
                 } else {
 
                     findViewById(_protocolDropDownId).setVisibility(View.INVISIBLE);
@@ -118,11 +170,7 @@ public class NewDevice extends AppCompatActivity {
             }
         });
 
-        ArrayAdapter<String> protocolAdapter = new ArrayAdapter<>(
-                this, R.layout.support_simple_spinner_dropdown_item,
-                Constant.Protocols._protocolList
-        );
-        Spinner protocolUI = findViewById(_protocolDropDownId);
+
         protocolUI.setAdapter(protocolAdapter);
         protocolUI.setVisibility(View.INVISIBLE);
 

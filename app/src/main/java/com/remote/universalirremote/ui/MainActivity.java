@@ -37,6 +37,9 @@ import android.widget.Toast;
 import com.remote.universalirremote.ApplicationWideSingleton;
 import com.remote.universalirremote.Constant;
 import com.remote.universalirremote.R;
+import com.remote.universalirremote.database.DeviceDao;
+import com.remote.universalirremote.database.DeviceInfoRepository;
+import com.remote.universalirremote.database.UniversalRemoteDatabase;
 import com.remote.universalirremote.network.NetworkManager;
 
 import java.util.ArrayList;
@@ -305,7 +308,6 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             }
-            circle.setVisibility(View.GONE);
             if(_networkManager.getChosenServiceInfo() == null) {
                 Toast.makeText(getApplicationContext(),
                         "cannot resolve " + _selectedService.getServiceName(),
@@ -367,10 +369,36 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             } else {
-                intent = new Intent(this, DeviceSelect.class);
+                DeviceInfoRepository repo = new DeviceInfoRepository(getApplication(), null);
+                final Integer[] size = {-1};
+                final Object waitObj = new Object();
+                repo.useDatabaseExecutor(
+                        () -> {
+                            synchronized (waitObj) {
+                                size[0] = repo.getDao().tableSize();
+                                waitObj.notifyAll();
+                            }
+                        }
+                );
+                synchronized (waitObj) {
+                    while (size[0] == -1) {
+                        try {
+                            waitObj.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+                if(size[0] == 0) {
+                    intent = new Intent(this, NewDevice.class);
+                } else {
+                    intent = new Intent(this, DeviceSelect.class);
+                }
             }
             intent.putExtra(Constant.INT_LAUNCHER_KEY, Constant.INT_LAUNCHER_MAIN);
             intent.putExtra(Constant.INT_SERVICE_KEY, _selectedService);
+            circle.setVisibility(View.GONE);
             startActivity(intent);
         }
     }
