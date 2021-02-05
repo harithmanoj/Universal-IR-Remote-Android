@@ -112,7 +112,7 @@ public class NewDevice extends AppCompatActivity {
                 int protocol = msg.getData().getInt(RawGet.PROTOCOL_KEY);
                 if(protocol == -1)
                 {
-                    Toast.makeText(getApplicationContext(), "No response from blaster", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Unknown Protocol", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
