@@ -110,6 +110,12 @@ public class NewDevice extends AppCompatActivity {
             @Override
             public void handleMessage(@NonNull Message msg) {
                 int protocol = msg.getData().getInt(RawGet.PROTOCOL_KEY);
+                if(protocol == -1)
+                {
+                    Toast.makeText(getApplicationContext(), "No response from blaster", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(NewDevice.this);
                 alertDialog.setTitle("Protocol AutoDetect");
                 alertDialog.setMessage("Protocol " + Constant.getProtocol(protocol) + " detected, Use this?");
@@ -131,16 +137,11 @@ public class NewDevice extends AppCompatActivity {
             }
         };
 
-        _getProtocolInfo = new RawGet(ApplicationWideSingleton.getSelectedService(), _getProtocolHandler, new NetworkErrorCallback() {
-            @Override
-            public void errorResponse(String errorString) {
-                runOnUiThread(
-                        () -> Toast.makeText(getApplicationContext(),
-                                "Protocol auto detect failed due to network error",
-                                Toast.LENGTH_SHORT).show()
-                );
-            }
-        });
+        _getProtocolInfo = new RawGet(ApplicationWideSingleton.getSelectedService(), _getProtocolHandler, errorString -> runOnUiThread(
+                () -> Toast.makeText(getApplicationContext(),
+                        "Protocol auto detect failed due to network error",
+                        Toast.LENGTH_SHORT).show()
+        ));
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         Spinner layoutUI = findViewById(_layoutDropdownId);
