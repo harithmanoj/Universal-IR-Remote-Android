@@ -139,9 +139,7 @@ public class NewDevice extends AppCompatActivity {
 
         _getProtocolInfo = new RawGet(ApplicationWideSingleton.getSelectedService(), _getProtocolHandler, errorString -> runOnUiThread(
                 () -> Toast.makeText(getApplicationContext(),
-                        "Protocol auto detect failed due to network error",
-                        Toast.LENGTH_SHORT).show()
-        ));
+                        errorString, Toast.LENGTH_SHORT).show() ));
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         Spinner layoutUI = findViewById(_layoutDropdownId);
