@@ -66,6 +66,11 @@ public class RawGet {
 
                 String response = msg.getData().getString(HttpClient.RESPONSE_KEY);
 
+                if(response.indexOf(';') == -1) {
+                    errorCallback.errorResponse("IR get response Timeout");
+                    return;
+                }
+
                 int protocol = Integer.parseInt(response.substring(0, response.indexOf(';')));
 
                 Bundle msgBundle = new Bundle();
